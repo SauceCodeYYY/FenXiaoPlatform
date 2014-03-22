@@ -1,0 +1,19 @@
+[{
+    text:'系统管理',
+    expanded: true,
+    children:[{
+        text:'用户管理',
+        id:'user-manage',
+        leaf:true
+    }]
+},{
+    text:'商品管理',
+    children:[{
+        text:'商品管理',
+        id:'subject-manage',
+        leaf:true
+    }]
+    
+}]
+    
+
