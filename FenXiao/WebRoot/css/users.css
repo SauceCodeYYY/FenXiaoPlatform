@@ -1,0 +1,11 @@
+.icon-add {
+	background-image: url(../js/extjs/images/dd/drop-add.gif);
+}
+
+.icon-edit {
+	background-image: url(../images/edit.gif);
+}
+
+.icon-del {
+	background-image: url(../images/del.gif);
+}
