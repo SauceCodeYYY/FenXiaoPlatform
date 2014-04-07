@@ -92,8 +92,11 @@ public class RechargeAction extends BaseAction {
 			}
 		}
 		pageBean = new Page();
-		pageBean.setUserId(((User) getSession().getAttribute("user"))
-				.getUserId());
+		User loginUser = (User) getSession().getAttribute("user");
+		if (null == loginUser) {
+			return ERROR;
+		}
+		pageBean.setUserId(loginUser.getUserId());
 		pageBean.setConditions(utf8Conditions);
 		int start = Integer.valueOf(getRequest().getParameter("start"));
 		int limit = Integer.valueOf(getRequest().getParameter("limit"));

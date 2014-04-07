@@ -14,7 +14,7 @@ var userInfo = function(tabId, tabText){
 		}
 	});
 	
-	var toolbar = Ext.create('Ext.toolbar.Toolbar', {
+	var toolbarUserInfo = Ext.create('Ext.toolbar.Toolbar', {
 		items: [
 			{
 				text: '添加用户',
@@ -74,11 +74,13 @@ var userInfo = function(tabId, tabText){
 						},{
 							xtype: 'numberfield',
 							fieldLabel: '积分',
-							name: 'user.points'
+							name: 'user.points',
+							value: 0
 						},{
 							xtype: 'numberfield',
 							fieldLabel: '余额',
-							name: 'user.balance'
+							name: 'user.balance',
+							value: 0.00
 						}],
 			
 						// Reset and Submit buttons
@@ -263,14 +265,14 @@ var userInfo = function(tabId, tabText){
 			{ text: '旺旺ID', dataIndex: 'wwId', flex: 3},
 			{ text: '余额', dataIndex: 'balance', flex:3 }
 		],
-		dockedItems: [{
+		dockedItems: [toolbarUserInfo,{
 	        xtype: 'pagingtoolbar',
 	        store: Ext.data.StoreManager.lookup('userStore'),   // same store GridPanel is using
 	        dock: 'bottom',
-	        displayInfo: true
-	    }],
+	        displayInfo: true,
+	    }]
 	});
-	createTab(tabId, tabText, gridPanel, toolbar);
+	createTab(tabId, tabText, gridPanel, toolbarUserInfo);
 };
 
 var rechargeInfo = function(tabId, tabText){
@@ -286,29 +288,8 @@ var rechargeInfo = function(tabId, tabText){
 			}
 		}
 	});
-	var gridPanel = Ext.create('Ext.grid.Panel', {
-		store: rechargeStore.load({ params: {} }),
-		columns: [
-			{ text: '编号', dataIndex: 'rechargeId'},				
-			{ text: '用户编号', dataIndex: 'userId'},
-			{ text: '充值方式', dataIndex: 'method'},
-			{ text: '账户名称', dataIndex: 'accountName'},
-			{ text: '充值金额', dataIndex: 'amount'},
-			{ text: '淘宝订单编号', dataIndex: 'tbOrderId' },
-			{ text: '提交日期', dataIndex: 'submitTime' },
-			{ text: '结算日期', dataIndex: 'closeTime' },
-			{ text: '充值状态', dataIndex: 'state' },
-			{ text: '备注', dataIndex: 'note' }
-		],
-		dockedItems: [{
-	        xtype: 'pagingtoolbar',
-	        store: rechargeStore,   // same store GridPanel is using
-	        dock: 'bottom',
-	        displayInfo: true
-	    }],
-	});
 	
-	var toolbar = Ext.create('Ext.toolbar.Toolbar', {
+	var toolbarRechargeInfo = Ext.create('Ext.toolbar.Toolbar', {
 		items: [{
 				xtype: 'datefield',
                 id: 'manage_recharge_search_time_from',
@@ -403,5 +384,27 @@ var rechargeInfo = function(tabId, tabText){
 		]
 	});
 	
-	createTab(tabId, tabText, gridPanel, toolbar);
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: rechargeStore.load({ params: {} }),
+		columns: [
+			{ text: '编号', dataIndex: 'rechargeId'},				
+			{ text: '用户编号', dataIndex: 'userId'},
+			{ text: '充值方式', dataIndex: 'method'},
+			{ text: '账户名称', dataIndex: 'accountName'},
+			{ text: '充值金额', dataIndex: 'amount'},
+			{ text: '淘宝订单编号', dataIndex: 'tbOrderId' },
+			{ text: '提交日期', dataIndex: 'submitTime' },
+			{ text: '结算日期', dataIndex: 'closeTime' },
+			{ text: '充值状态', dataIndex: 'state' },
+			{ text: '备注', dataIndex: 'note' }
+		],
+		dockedItems: [toolbarRechargeInfo, {
+	        xtype: 'pagingtoolbar',
+	        store: rechargeStore,   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true
+	    }],
+	});
+	
+	createTab(tabId, tabText, gridPanel);
 };

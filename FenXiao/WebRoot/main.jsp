@@ -37,14 +37,14 @@
 	}
 	var userId = "${ user.userId }";
 	
-	var selfWithdrawBalance = function(tabId, tabText){
+	var selfWithdraw = function(tabId, tabText){
 		Ext.create('Ext.data.Store', {
 			storeId:'withdrawStore',
 			autoLoad: true,
 			fields:['编号', '银行', '户名', '汇款账户名', '汇款账户名', '提现金额', '提交日期', '状态', '备注'],
 			proxy: {
 				type: 'ajax',
-				url: 'data/selfWithdrawBalance.json',
+				url: 'data/selfWithdraw.json',
 				reader: {
 					type: 'json',
 					root: 'items'
@@ -155,13 +155,13 @@
 	
 	
 	
-	function createTab(tabId, tabText, cmp, toolbar){
+	function createTab(tabId, tabText, cmp){
 		var tab = Ext.create('Ext.panel.Panel', {
 			id: tabId,
 			title: tabText,
-			closable: true
+			closable: true,
+			layout: 'fit'
 		});	
-		if (toolbar) tab.add(toolbar);
 		tab.add(cmp);
 		rightPanel.add(tab);
 		tab.show();
@@ -222,7 +222,8 @@
 	                              		switch (id){
 	                              			case "selfInfo": selfInfo(id, text); break;
 	                              			case "selfRecharge": selfRecharge(id, text); break;
-	                              			case "selfWithdraw": selfWithdrawBalance(id, text); break;
+	                              			case "selfWithdraw": selfWithdraw(id, text); break;
+	                              			case "selfAddr": selfAddr(id, text); break;
 	                              			case "manageUsers": userInfo(id, text); break;
 	           								case "manageRecharges": rechargeInfo(id, text); break;
 	                              		}

@@ -19,4 +19,7 @@
 		<property name="userService" ref="userService" />
 	</bean>
 	
+	<bean name="addressAction" class="com.lhq.prj.bms.action.AddressAction" scope="prototype">
+		<property name="addressService" ref="addressService" />
+	</bean>
 </beans>

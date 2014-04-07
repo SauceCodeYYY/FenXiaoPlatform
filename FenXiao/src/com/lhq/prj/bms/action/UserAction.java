@@ -1,5 +1,6 @@
 package com.lhq.prj.bms.action;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,9 @@ import com.lhq.prj.bms.service.IUserService;
  * 
  * 用户处理
  * 
- * Copyright (c) 2008 by MTA.
- * Download by http://www.codefans.net
- * @author 
+ * Copyright (c) 2008 by MTA. Download by http://www.codefans.net
+ * 
+ * @author
  * @version 1.0
  */
 @SuppressWarnings("serial")
@@ -33,7 +34,7 @@ public class UserAction extends BaseAction {
 	private Page page;
 
 	private Integer pageS;
-	
+
 	private Integer userId;
 
 	private String userName;
@@ -90,10 +91,18 @@ public class UserAction extends BaseAction {
 	public String findAllUser() {
 		System.out.println("===");
 		String strCondition = getRequest().getParameter("conditions");
-		List conditions = new ArrayList();
+		List<String> conditions = new ArrayList<String>();
 		MyUtils.addToCollection(conditions, MyUtils.split(strCondition, " ,"));
+		List<String> utf8Condition = new ArrayList<String>();
+		for (String c: conditions){
+			try {
+				utf8Condition.add(new String(c.getBytes("iso-8859-1"), "utf-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		page = new Page();
-		page.setConditions(conditions);
+		page.setConditions(utf8Condition);
 		int start = Integer.valueOf(getRequest().getParameter("start"));
 		int limit = Integer.valueOf(getRequest().getParameter("limit"));
 		page.setStart(++start);
@@ -114,10 +123,7 @@ public class UserAction extends BaseAction {
 	 * @return
 	 */
 	public String deleteUser() {
-		String strUserId = getRequest().getParameter("userId");
-		if (strUserId != null && !"".equals(strUserId)) {
-			success = userService.deleteUser(Long.parseLong(strUserId));
-		}
+		success = userService.deleteUser(Long.parseLong(userId.toString()));
 		return SUCCESS;
 	}
 
@@ -128,8 +134,7 @@ public class UserAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String updateUser() throws Exception {
-		if (user.getUserId()!= null && user.getEmail() != null
-				&& !user.getEmail().isEmpty() && user.getPhone() != null && !user.getPhone().isEmpty()) {
+		if (user.getUserId() != null) {
 			success = userService.updateUser(user);
 		}
 		return SUCCESS;

@@ -18,4 +18,7 @@
 		<property name="rechargeDao" ref="rechargeDao" />
 	</bean>
 	
+	<bean id="addressService" class="com.lhq.prj.bms.service.impl.AddressService">
+		<property name="addressDao" ref="addressDao" />
+	</bean>
 </beans>

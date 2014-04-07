@@ -104,16 +104,6 @@
 		</isNotEmpty>
 	</sql>
 	
-	<sql id="findRechargeByUserCondition">
-		<isNotEmpty property="conditions">
-			<iterate property="conditions" open="(" close=")" conjunction="OR">
-				<![CDATA[
-					userId = convert(numeric, #conditions[0]:VARCHAR#)
-		    	]]>
-			</iterate>
-		</isNotEmpty>
-	</sql>
-	
 	<select id="findByPageAndUser" parameterClass="page" resultClass="recharge">
 		<![CDATA[
 			SELECT TOP $limit$ * FROM t_recharge 

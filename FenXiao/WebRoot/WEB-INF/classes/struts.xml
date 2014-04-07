@@ -97,6 +97,7 @@
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
+			<result name="error">/index.jsp</result>
 		</action>
 		<action name="findRechargeByExample" class="rechargeAction" method="findByExample">
 			<result type="json">
@@ -104,17 +105,36 @@
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-		<action name="findRechargeByTime" class="rechargeAction" method="findRechargeByTime">
+		
+		<!-- 地址管理 -->
+		<action name="saveAddress" class="addressAction" method="saveAddress">
 			<result type="json">
-				<param name="root">pageBean</param>
-				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+				<param name="includeProperties">success,addressId</param>
 			</result>
 		</action>
-		<action name="findRechargeByTimeAndUser" class="rechargeAction" method="findRechargeByTimeAndUser">
+		<action name="deleteAddress" class="addressAction" method="deleteAddress">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="updateAddress" class="addressAction" method="updateAddress">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="findAllAddress" class="addressAction" method="findAllAddress">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		<action name="findAddressByExample" class="addressAction" method="findByExample">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+			<result name="error">/index.jsp</result>
 		</action>
 	</package>
 </struts>
