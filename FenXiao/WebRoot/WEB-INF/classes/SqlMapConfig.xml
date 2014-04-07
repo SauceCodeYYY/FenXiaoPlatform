@@ -9,4 +9,5 @@
 
 	<sqlMap resource="com/lhq/prj/bms/po/xml/Subject.xml" />
 	<sqlMap resource="com/lhq/prj/bms/po/xml/User.xml" />
+	<sqlMap resource="com/lhq/prj/bms/po/xml/Recharge.xml" />
 </sqlMapConfig>

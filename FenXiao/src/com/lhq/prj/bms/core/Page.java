@@ -1,4 +1,5 @@
 package com.lhq.prj.bms.core;
+
 // Download by http://www.codefans.net
 import java.util.List;
 
@@ -17,11 +18,13 @@ public class Page {
 
 	/** 成功与否 */
 	private boolean success;
-	
+
 	/** 查询条件 */
 	private List conditions;
-	
+
 	private Object objCondition;
+
+	private long userId;
 
 	public Object getObjCondition() {
 		return objCondition;
@@ -77,6 +80,14 @@ public class Page {
 
 	public void setConditions(List conditions) {
 		this.conditions = conditions;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 }

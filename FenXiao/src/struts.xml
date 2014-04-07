@@ -5,10 +5,10 @@
 
 <struts>
 	<include file="struts-default.xml" />
-	
+
 	<package name="json" extends="json-default">
-	
-	
+
+
 
 		<!-- 科目管理 -->
 		<action name="saveSubject" class="subjectAction" method="saveSubject">
@@ -32,8 +32,8 @@
 				<param name="excludeProperties">totalProperty,conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-		
-		
+
+
 		<!-- 用户管理 -->
 		<action name="saveUser" class="userAction" method="saveUser">
 			<result type="json">
@@ -70,6 +70,51 @@
 			<result type="redirect">index.jsp</result>
 		</action>
 
-
+		<!-- 充值管理 -->
+		<action name="saveRecharge" class="rechargeAction" method="saveRecharge">
+			<result type="json">
+				<param name="includeProperties">success,rechargeId</param>
+			</result>
+		</action>
+		<action name="deleteRecharge" class="rechargeAction" method="deleteRecharge">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="updateRecharge" class="rechargeAction" method="updateRecharge">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="findAllRecharge" class="rechargeAction" method="findAllRecharge">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findAllRechargeByUser" class="rechargeAction" method="findAllRechargeByUser">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findRechargeByExample" class="rechargeAction" method="findByExample">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findRechargeByTime" class="rechargeAction" method="findRechargeByTime">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findRechargeByTimeAndUser" class="rechargeAction" method="findRechargeByTimeAndUser">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
 	</package>
 </struts>

@@ -17,7 +17,7 @@
 		<parameter property="password" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="points" javaType="integer" jdbcType="NUMBER" />
 		<parameter property="wwId" javaType="string" jdbcType="VARCHAR" />
-		<parameter property="balance" javaType="double" jdbcType="FLOAT" />
+		<parameter property="balance" javaType="float" jdbcType="NUMBER" />
 	</parameterMap>
 	<sql id="byUserIdCondition">
 		<![CDATA[
@@ -68,11 +68,23 @@
 		</dynamic>
 	</update>
 
+	<update id="updateBalance" parameterClass="user">
+		<![CDATA[
+			update t_user set balance = balance + #balance:NUMBER#
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</update>
+
 	<sql id="findUserByPageCondition">
 		<isNotEmpty property="conditions">
 			<iterate property="conditions" open="(" close=")" conjunction="OR">
 				<![CDATA[
 					upper(userName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					 OR upper(email) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(phone) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(wwId) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
 		    	]]>
 			</iterate>
 		</isNotEmpty>

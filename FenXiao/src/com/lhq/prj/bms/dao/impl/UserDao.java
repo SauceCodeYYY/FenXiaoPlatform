@@ -48,4 +48,8 @@ public class UserDao extends SqlMapClientDaoSupport implements IUserDao {
 		return getSqlMapClientTemplate().queryForList("User.findByExample",user);
 	}
 
+	public Integer updateBalance(User user) {
+		return getSqlMapClientTemplate().update("User.updateBalance",user);
+	}
+
 }

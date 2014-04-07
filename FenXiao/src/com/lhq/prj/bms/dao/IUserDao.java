@@ -79,5 +79,6 @@ public interface IUserDao {
 	 */
 	public List findByExample(User user);
 
+	public Integer updateBalance(User user);
 }
  

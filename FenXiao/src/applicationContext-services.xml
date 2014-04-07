@@ -14,4 +14,8 @@
 		<property name="userDao" ref="userDao" />
 	</bean>
 	
+	<bean id="rechargeService" class="com.lhq.prj.bms.service.impl.RechargeService">
+		<property name="rechargeDao" ref="rechargeDao" />
+	</bean>
+	
 </beans>

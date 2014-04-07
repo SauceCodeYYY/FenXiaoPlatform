@@ -43,7 +43,7 @@ public class User implements Serializable {
 	private String wwId;
 
 	/** ”‡∂Ó */
-	private Double balance;
+	private Float balance;
 
 	public Long getUserId() {
 		return userId;
@@ -109,11 +109,11 @@ public class User implements Serializable {
 		this.wwId = wwId;
 	}
 
-	public Double getBalance() {
+	public Float getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Double balance) {
+	public void setBalance(Float balance) {
 		this.balance = balance;
 	}
 

@@ -58,4 +58,8 @@ public class UserService implements IUserService {
 	public List findByExample(User user) {
 		return userDao.findByExample(user);
 	}
+
+	public Integer updateBalance(User user) {
+		return userDao.updateBalance(user);
+	}
 }

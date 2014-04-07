@@ -64,5 +64,7 @@ public interface IUserService {
 	 * @return
 	 */
 	List findByExample(User user);
+	
+	Integer updateBalance(User user);
 }
  
