@@ -15,72 +15,71 @@ import com.opensymphony.xwork2.ActionSupport;
 @SuppressWarnings("serial")
 public class BaseAction extends ActionSupport {
 
-	public String jsonString;
+    public String jsonString;
 
-	public void outJsonString(String str) {
-		getResponse().setContentType("text/javascript;charset=UTF-8");
-		outString(str);
-	}
+    public void outJsonString(String str) {
+        getResponse().setContentType("text/javascript;charset=UTF-8");
+        outString(str);
+    }
 
-	/*
-	 * public void outJson(Object obj) {
-	 * outJsonString(JSONObject.fromObject(obj).toString()); }
-	 * 
-	 * public void outJsonArray(Object array) {
-	 * outJsonArray(JSONArray.fromObject(array).toString()); }
-	 */
+    /*
+     * public void outJson(Object obj) {
+     * outJsonString(JSONObject.fromObject(obj).toString()); }
+     *
+     * public void outJsonArray(Object array) {
+     * outJsonArray(JSONArray.fromObject(array).toString()); }
+     */
+    public void outString(String str) {
+        try {
+            PrintWriter out = getResponse().getWriter();
+            out.write(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void outString(String str) {
-		try {
-			PrintWriter out = getResponse().getWriter();
-			out.write(str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public void outXMLString(String xmlStr) {
+        getResponse().setContentType("application/xml;charset=UTF-8");
+        outString(xmlStr);
+    }
 
-	public void outXMLString(String xmlStr) {
-		getResponse().setContentType("application/xml;charset=UTF-8");
-		outString(xmlStr);
-	}
+    /**
+     * ï¿½ï¿½ï¿½request
+     *
+     * @return
+     */
+    public HttpServletRequest getRequest() {
+        return ServletActionContext.getRequest();
+    }
 
-	/**
-	 * »ñµÃrequest
-	 * 
-	 * @return
-	 */
-	public HttpServletRequest getRequest() {
-		return ServletActionContext.getRequest();
-	}
+    /**
+     * ï¿½ï¿½ï¿½response
+     *
+     * @return
+     */
+    public HttpServletResponse getResponse() {
+        return ServletActionContext.getResponse();
+    }
 
-	/**
-	 * »ñµÃresponse
-	 * 
-	 * @return
-	 */
-	public HttpServletResponse getResponse() {
-		return ServletActionContext.getResponse();
-	}
+    /**
+     * ï¿½ï¿½ï¿½session
+     *
+     * @return
+     */
+    public HttpSession getSession() {
+        return getRequest().getSession();
+    }
 
-	/**
-	 * »ñµÃsession
-	 * 
-	 * @return
-	 */
-	public HttpSession getSession() {
-		return getRequest().getSession();
-	}
+    /**
+     * ï¿½ï¿½ï¿½servletï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     *
+     * @return
+     */
+    public ServletContext getServletContext() {
+        return ServletActionContext.getServletContext();
+    }
 
-	/**
-	 * »ñµÃservletÉÏÏÂÎÄ
-	 * 
-	 * @return
-	 */
-	public ServletContext getServletContext() {
-		return ServletActionContext.getServletContext();
-	}
-
-	public String getRealyPath(String path) {
-		return getServletContext().getRealPath(path);
-	}
+    public String getRealyPath(String path) {
+        return getServletContext().getRealPath(path);
+    }
 }

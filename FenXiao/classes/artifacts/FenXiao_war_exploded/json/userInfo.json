@@ -1,0 +1,33 @@
+{"page":
+	{
+		"conditions":[],
+		"limit":5,
+		"objCondition":null,
+		"root":[{
+					"balance":null,
+					"email":"admin@fxp.com",
+					"password":"123",
+					"phone":"13213131313",
+					"points":null,
+					"role":"admin",
+					"userId":"1",
+					"userName":"admin",
+					"wwId":null
+				},{
+					"balance":null,
+					"email":"2@fxp.com",
+					"password":"123",
+					"phone":"13232233333",
+					"points":null,
+					"role":"admin",
+					"userId":"2",
+					"userName":"2",
+					"wwId":null
+				}],
+		"start":1,
+		"success":false,
+		"totalProperty":2
+	},
+"pageS":null
+}
+		

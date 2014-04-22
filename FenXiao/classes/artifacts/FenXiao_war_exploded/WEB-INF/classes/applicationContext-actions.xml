@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+	<bean name="subjectAction" class="com.lhq.prj.bms.action.SubjectAction" scope="prototype">
+		<property name="subjectService" ref="subjectService" />
+	</bean>
+	
+	<bean name="userAction" class="com.lhq.prj.bms.action.UserAction" scope="prototype">
+		<property name="userService" ref="userService" />
+	</bean>
+	
+	<bean name="rechargeAction" class="com.lhq.prj.bms.action.RechargeAction" scope="prototype">
+		<property name="rechargeService" ref="rechargeService" />
+		<property name="userService" ref="userService" />
+	</bean>
+	
+	<bean name="addressAction" class="com.lhq.prj.bms.action.AddressAction" scope="prototype">
+		<property name="addressService" ref="addressService" />
+	</bean>
+</beans>

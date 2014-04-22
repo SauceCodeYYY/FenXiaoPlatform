@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <conelement value="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER" />
+    <conelement value="org.eclipse.jst.j2ee.internal.web.container" />
+    <conelement value="org.eclipse.jst.j2ee.internal.module.container" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="FacetManager">
+    <facet type="javaeeApplication" name="javaEEApplication">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="application.xml" url="file://$MODULE_DIR$/META-INF/application.xml" />
+        </descriptors>
+      </configuration>
+    </facet>
+    <facet type="web" name="Web">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/WebRoot/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/WebRoot" relative="/" />
+        </webroots>
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/applicationContext-daos.xml</file>
+          <file>file://$MODULE_DIR$/src/applicationContext-common.xml</file>
+          <file>file://$MODULE_DIR$/src/applicationContext-services.xml</file>
+          <file>file://$MODULE_DIR$/classes/artifacts/FenXiao_war_exploded/WEB-INF/classes/applicationContext-actions.xml</file>
+          <file>file://$MODULE_DIR$/classes/artifacts/FenXiao_war_exploded/WEB-INF/classes/applicationContext-daos.xml</file>
+          <file>file://$MODULE_DIR$/classes/artifacts/FenXiao_war_exploded/WEB-INF/classes/applicationContext-common.xml</file>
+          <file>file://$MODULE_DIR$/classes/artifacts/FenXiao_war_exploded/WEB-INF/classes/applicationContext-services.xml</file>
+          <file>file://$MODULE_DIR$/src/applicationContext-actions.xml</file>
+        </fileset>
+      </configuration>
+    </facet>
+    <facet type="javaeeApplication" name="javaEEApplication2">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="application.xml" url="file://$MODULE_DIR$/classes/artifacts/FenXiao_war_exploded/META-INF/application.xml" />
+        </descriptors>
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/WebRoot/WEB-INF/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/WebRoot/WEB-INF/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/WebRoot/WEB-INF/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="Tomcat 7.0.4" level="application_server_libraries" />
+  </component>
+</module>
+

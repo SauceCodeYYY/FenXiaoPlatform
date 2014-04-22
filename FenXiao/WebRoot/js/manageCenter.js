@@ -108,7 +108,7 @@ var userInfo = function(tabId, tabText){
 									});
 								}
 							}
-						}],
+						}]
 					});
 					window.add(formPanel);
 				}
@@ -200,7 +200,7 @@ var userInfo = function(tabId, tabText){
 												});
 											}
 										}
-									}],
+									}]
 								});
 								window.add(formPanel);
 							}
@@ -269,7 +269,7 @@ var userInfo = function(tabId, tabText){
 	        xtype: 'pagingtoolbar',
 	        store: Ext.data.StoreManager.lookup('userStore'),   // same store GridPanel is using
 	        dock: 'bottom',
-	        displayInfo: true,
+	        displayInfo: true
 	    }]
 	});
 	createTab(tabId, tabText, gridPanel, toolbarUserInfo);
@@ -403,7 +403,7 @@ var rechargeInfo = function(tabId, tabText){
 	        store: rechargeStore,   // same store GridPanel is using
 	        dock: 'bottom',
 	        displayInfo: true
-	    }],
+	    }]
 	});
 	
 	createTab(tabId, tabText, gridPanel);

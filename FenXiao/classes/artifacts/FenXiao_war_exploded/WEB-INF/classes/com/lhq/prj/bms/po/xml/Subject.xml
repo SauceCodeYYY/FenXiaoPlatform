@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Subject">
+	<typeAlias alias="subject" type="com.lhq.prj.bms.po.Subject" />
+	<insert id="save" parameterClass="subject">
+		<![CDATA[
+			INSERT INTO commodity ( 
+			novid,
+	        brand,
+	        sizeone,
+	        sizetwo,
+	        largeclass,
+	        styles,
+            color,
+	        object,
+	       subjectName,
+	        tagprice,
+	        discount,
+	        season,
+	        series,
+	         sex,
+	        year,
+	       remarks,
+           province,
+            total
+ ) VALUES (
+			 #novid:VARCHAR#,
+			 #brand:VARCHAR#,
+			 #sizeone:VARCHAR#,
+			 #sizetwo:VARCHAR#,
+			 #largeclass:VARCHAR#,
+			 #styles:VARCHAR#,
+			  #color:VARCHAR#,
+			   #object:VARCHAR#, 
+			   #subjectName:VARCHAR#, 
+			   #tagprice:VARCHAR#, 
+			   #discount:VARCHAR#,
+			   #season:VARCHAR#,
+			     #series:VARCHAR#, 
+			   #sex:VARCHAR#, #year:VARCHAR#, #remarks:VARCHAR#, #province:VARCHAR#, #total:VARCHAR#
+ )
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				 SELECT @@IDENTITY AS ID  
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="integer">
+		<![CDATA[
+			delete commodity  WHERE subjectId = #subjectId:NUMBER#
+		]]>
+	</delete>
+
+	<update id="update" parameterClass="subject">
+		<![CDATA[
+			UPDATE commodity 
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="subjectName" prepend=",">
+					subjectName = #subjectName:VARCHAR#
+			</isNotNull>
+			<isNotNull property="novid" prepend=",">
+				<![CDATA[
+					novid = #novid:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="remarks" prepend=",">
+				<![CDATA[
+					remarks = #remarks:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="brand" prepend=",">
+				<![CDATA[
+					brand =  #brand:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="sizeone" prepend=",">
+				<![CDATA[
+					 sizeone=#sizeone:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="sizetwo" prepend=",">
+				<![CDATA[
+					 sizetwo=#sizetwo:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="largeclass" prepend=",">
+				<![CDATA[
+					largeclass=#largeclass:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="color" prepend=",">
+				<![CDATA[
+					color=#color:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="styles" prepend=",">
+				<![CDATA[
+					styles=#styles:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="object" prepend=",">
+				<![CDATA[
+					object=#object:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="tagprice" prepend=",">
+				<![CDATA[
+					tagprice=#tagprice:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="season" prepend=",">
+				<![CDATA[
+					season=#season:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="sex" prepend=",">
+				<![CDATA[
+					sex=#sex:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="year" prepend=",">
+				<![CDATA[
+					year=#year:VARCHAR#
+				]]>	
+			</isNotNull>
+			<isNotNull property="discount" prepend=",">
+				<![CDATA[
+					discount=#discount:VARCHAR#
+				]]>	
+			</isNotNull>
+			
+			
+				
+		</dynamic>
+		<![CDATA[
+			WHERE subjectId = #subjectId:NUMBER#
+		]]>
+	</update>
+
+	<select id="findAll" resultClass="subject">
+		<![CDATA[
+			SELECT * FROM commodity 
+		]]>
+	</select>
+</sqlMap>

@@ -1,0 +1,26 @@
+{"success":true,
+"data":[
+		{"id":"selfCenter","text":"个人中心","leaf":false,"children":
+			[
+				{"id":"selfInfo", "text":"个人信息","leaf":true},
+				{"id":"selfRecharge", "text":"帐户充值","leaf":true},
+				{"id":"selfWithdraw","text":"账户提现","leaf":true},
+				{"id":"selfAddr","text":"地址管理","leaf":true},
+				{"id":"selfPwd","text":"支付密码","leaf":true}
+			]
+		},
+		{"id":"prodCenter","text":"商品中心","leaf":false,"children":
+			[
+				{"id":"prodInfo","text":"商品信息","leaf":true},
+				{"id":"myOrders","text":"我的订单","leaf":true}
+			]
+		},
+		{"id":"manageCenter","text":"管理中心","leaf":false,"children":
+			[
+				{"id":"manageUsers","text":"用户管理","leaf":true},
+				{"id":"manageRecharges","text":"充值管理","leaf":true},
+				{"id":"manageProds","text":"商品管理","leaf":true},
+				{"id":"manageOrders","text":"订单管理","leaf":true},
+			]
+		}
+]}

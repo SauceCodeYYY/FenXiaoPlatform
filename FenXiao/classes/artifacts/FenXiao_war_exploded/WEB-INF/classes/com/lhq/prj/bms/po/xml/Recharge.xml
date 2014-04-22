@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Recharge">
+
+	<typeAlias alias="user" type="com.lhq.prj.bms.po.User" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+	<typeAlias alias="recharge" type="com.lhq.prj.bms.po.Recharge" />
+
+	<parameterMap class="recharge" id="pm_recharge_without_id">
+		<parameter property="userId" javaType="long" jdbcType="NUMBER" />
+		<parameter property="method" javaType="string" jdbcType="VARCHAR" />		
+		<parameter property="accountName" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="amount" javaType="float" jdbcType="NUMBER" />
+		<parameter property="tbOrderId" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="submitTime" javaType="java.util.Date" jdbcType="DATETIME" />
+		<parameter property="closeTime" javaType="java.util.Date" jdbcType="DATETIME" />
+		<parameter property="state" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="note" javaType="string" jdbcType="VARCHAR" />
+	</parameterMap>
+	
+	<sql id="byRechargeIdCondition">
+		<![CDATA[
+		   rechargeId = #rechargeId:INT#
+	    ]]>
+	</sql>
+
+	<insert id="save" parameterMap="pm_recharge_without_id">
+		<![CDATA[
+			INSERT INTO t_recharge 
+						(userId, method, accountName, amount, tbOrderId, submitTime, closeTime, state, note) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="long">
+		<![CDATA[
+			delete t_recharge
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byRechargeIdCondition" />
+		</dynamic>
+	</delete>
+	
+	<update id="update" parameterClass="recharge">
+		<![CDATA[
+			UPDATE t_recharge
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="state" prepend=",">
+				<![CDATA[
+					state = #state:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="closeTime" prepend=",">
+				<![CDATA[
+					closeTime = #closeTime:DATETIME#
+				]]>
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byRechargeIdCondition" />
+		</dynamic>
+	</update>
+
+	<sql id="findRechargeByPageCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")" conjunction="OR">
+				<![CDATA[
+					upper(state) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					or upper(method) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findRechargeByPageAndUserCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")" conjunction="OR">
+				<![CDATA[
+					upper(userId) = upper(#conditions[]:VARCHAR#)
+					or upper(state) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					or upper(method) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findRechargeByTimeCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")" conjunction="OR">
+				<![CDATA[
+					submitTime between convert(datetime, #conditions[0]:VARCHAR#) and convert(datetime, #conditions[1]:VARCHAR#)
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByPageAndUser" parameterClass="page" resultClass="recharge">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_recharge 
+					WHERE (rechargeId >= (SELECT MAX(rechargeId) FROM (SELECT TOP $start$ rechargeId FROM t_recharge 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByPageCondition" />
+		</dynamic>
+		<!--  -->
+		<![CDATA[
+			ORDER BY rechargeId
+		]]>
+	</select>
+	
+	<select id="findByPage" parameterClass="page" resultClass="recharge">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_recharge 
+					WHERE (rechargeId >= (SELECT MAX(rechargeId) FROM (SELECT TOP $start$ rechargeId FROM t_recharge 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findRechargeByPageAndUserCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByPageAndUserCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_recharge
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findRechargeByPageAndUserCondition" />
+		</dynamic>
+	</select>
+	
+	<select id="findByUserCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_recharge
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByPageCondition" />
+		</dynamic>
+	</select>
+	
+	<select id="findByExample" parameterClass="recharge" resultClass="recharge">
+		<![CDATA[
+			SELECT * FROM t_recharge 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="rechargeId" prepend="AND">
+				rechargeId = #rechargeId:INT#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="findByTime" parameterClass="page" resultClass="recharge">
+		<![CDATA[
+			SELECT * FROM t_recharge 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findRechargeByTimeCondition" />
+		</dynamic>
+	</select>
+	
+	<select id="findByTimeCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT count(*) FROM t_recharge
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findRechargeByTimeCondition" />
+		</dynamic>	
+	</select>
+	
+	<select id="findByTimeAndUser" parameterClass="page" resultClass="recharge">
+		<![CDATA[
+			SELECT * FROM t_recharge
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByTimeCondition" />
+		</dynamic>
+	</select>
+	
+	<select id="findByTimeAndUserCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT count(*) FROM t_recharge
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByTimeCondition" />
+		</dynamic>
+	</select>
+</sqlMap>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="User">
+
+	<typeAlias alias="user" type="com.lhq.prj.bms.po.User" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+
+	<parameterMap class="user" id="pm_user_without_id">
+		<parameter property="userName" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="email" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="phone" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="role" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="password" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="points" javaType="integer" jdbcType="NUMBER" />
+		<parameter property="wwId" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="balance" javaType="float" jdbcType="NUMBER" />
+	</parameterMap>
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   userId = #userId:INT#
+	    ]]>
+	</sql>
+
+	<insert id="save" parameterMap="pm_user_without_id">
+		<![CDATA[
+			INSERT INTO t_user 
+						(userName, email, phone, role, password, points, wwId, balance) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="long">
+		<![CDATA[
+			delete t_user
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</delete>
+	
+	<update id="update" parameterClass="user">
+		<![CDATA[
+			UPDATE t_user
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="email" prepend=",">
+				<![CDATA[
+					email = #email:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="phone" prepend=",">
+				<![CDATA[
+					phone = #phone:VARCHAR#
+				]]>
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</update>
+
+	<update id="updateBalance" parameterClass="user">
+		<![CDATA[
+			update t_user set balance = balance + #balance:NUMBER#
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</update>
+
+	<sql id="findUserByPageCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")" conjunction="OR">
+				<![CDATA[
+					upper(userName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					 OR upper(email) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(phone) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(wwId) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByPage" parameterClass="page" resultClass="user">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_user 
+					WHERE (userId >= (SELECT MAX(userId) FROM (SELECT TOP $start$ userId FROM t_user 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY userId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY userId
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_user 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+	</select>
+
+	<select id="login" parameterClass="user" resultClass="user">
+		<![CDATA[
+			SELECT * FROM t_user 
+					WHERE userName = #userName:VARCHAR# and password = #password:VARCHAR#
+		]]>
+	</select>
+	
+	<select id="findByExample" parameterClass="user" resultClass="user">
+		<![CDATA[
+			SELECT * FROM t_user 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId = #userId:INT#
+			</isNotNull>
+		</dynamic>
+	</select>
+</sqlMap>
