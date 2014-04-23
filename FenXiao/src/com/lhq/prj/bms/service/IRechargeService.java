@@ -4,12 +4,12 @@ import java.util.List;
 
 import com.lhq.prj.bms.core.Page;
 import com.lhq.prj.bms.po.Recharge;
-import com.lhq.prj.bms.po.Subject;
+import com.lhq.prj.bms.po.Commodity;
 import com.lhq.prj.bms.po.User;
 
 public interface IRechargeService {
 	/**
-	 * Ìí¼Ó³äÖµ
+	 * ï¿½ï¿½Ó³ï¿½Öµ
 	 * 
 	 * @param recharge
 	 * @return
@@ -17,16 +17,16 @@ public interface IRechargeService {
 	Object saveRecharge(Recharge recharge);
 
 	/**
-	 * ·ÖÒ³²éÕÒ
+	 * ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param page
-	 *            ·ÖÒ³¶ÔÏó
+	 *            ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
 	 * @return
 	 */
 	Page findByPage(Page page);
 
 	/**
-	 * ÐÞ¸Ä³äÖµÐÅÏ¢
+	 * ï¿½Þ¸Ä³ï¿½Öµï¿½ï¿½Ï¢
 	 * 
 	 * @param recharge
 	 * @return
@@ -35,7 +35,7 @@ public interface IRechargeService {
 	boolean updateRecharge(Recharge recharge) throws Exception;
 
 	/**
-	 * É¾³ý³äÖµ
+	 * É¾ï¿½ï¿½ï¿½Öµ
 	 * 
 	 * @param rechargeId
 	 * @return
@@ -43,7 +43,7 @@ public interface IRechargeService {
 	boolean deleteRecharge(Integer rechargeId);
 
 	/**
-	 * ¸ù¾ÝÊµÀý²éÕÒ³äÖµ¼ÇÂ¼
+	 * ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½Ò³ï¿½Öµï¿½ï¿½Â¼
 	 * 
 	 * @param recharge
 	 * @return
@@ -51,7 +51,7 @@ public interface IRechargeService {
 	List findByExample(Recharge recharge);
 	
 	/**
-	 * ¸ù¾ÝÌá½»Ê±¼ä²éÕÒ³äÖµ¼ÇÂ¼
+	 * ï¿½ï¿½ï¿½ï¿½á½»Ê±ï¿½ï¿½ï¿½ï¿½Ò³ï¿½Öµï¿½ï¿½Â¼
 	 * 
 	 * @param page
 	 * @return

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Commodity">
+	<typeAlias alias="commodity" type="com.lhq.prj.bms.po.Commodity" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+
+	<insert id="save" parameterClass="commodity">
+		<![CDATA[
+			INSERT INTO t_commodity ( 
+			novid,
+	        brand,
+	        sizeone,
+	        sizetwo,
+	        largeclass,
+	        styles,
+            color,
+	        object,
+	       subjectName,
+	        tagprice,
+	        discount,
+	        season,
+	        series,
+	        channel,
+	        sex,       
+	        year,
+	       remarks,
+           province,
+            total,
+            newNovid,
+            monthl,
+            numbers
+            
+ ) VALUES (
+			 #novid:VARCHAR#,
+			 #brand:VARCHAR#,
+			 #sizeone:VARCHAR#,
+			 #sizetwo:VARCHAR#,
+			 #largeclass:VARCHAR#,
+			 #styles:VARCHAR#,
+			  #color:VARCHAR#,
+			   #object:VARCHAR#, 
+			   #subjectName:VARCHAR#, 
+			   #tagprice:VARCHAR#, 
+			   #discount:VARCHAR#,
+			   #season:VARCHAR#,
+			     #series:VARCHAR#, 
+			      #channel:VARCHAR#,
+			   #sex:VARCHAR#, #year:VARCHAR#, #remarks:VARCHAR#, #province:VARCHAR#, #total:VARCHAR#,
+			    #newNovid:VARCHAR#, #monthl:VARCHAR#, #numbers:VARCHAR#
+ )
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				 SELECT @@IDENTITY AS ID  
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="integer">
+		<![CDATA[
+			delete t_commodity  WHERE subjectId = #subjectId:NUMBER#
+		]]>
+	</delete>
+
+	<update id="update" parameterClass="commodity">
+		<![CDATA[
+			UPDATE t_commodity 
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="subjectName" prepend=",">
+				subjectName = #subjectName:VARCHAR#
+			</isNotNull>
+			<isNotNull property="novid" prepend=",">
+				<![CDATA[
+					novid = #novid:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="remarks" prepend=",">
+				<![CDATA[
+					remarks = #remarks:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="brand" prepend=",">
+				<![CDATA[
+					brand =  #brand:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="sizeone" prepend=",">
+				<![CDATA[
+					 sizeone=#sizeone:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="sizetwo" prepend=",">
+				<![CDATA[
+					 sizetwo=#sizetwo:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="largeclass" prepend=",">
+				<![CDATA[
+					largeclass=#largeclass:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="color" prepend=",">
+				<![CDATA[
+					color=#color:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="styles" prepend=",">
+				<![CDATA[
+					styles=#styles:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="object" prepend=",">
+				<![CDATA[
+					object=#object:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="tagprice" prepend=",">
+				<![CDATA[
+					tagprice=#tagprice:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="season" prepend=",">
+				<![CDATA[
+					season=#season:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="sex" prepend=",">
+				<![CDATA[
+					sex=#sex:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="year" prepend=",">
+				<![CDATA[
+					year=#year:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="discount" prepend=",">
+				<![CDATA[
+					discount=#discount:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="total" prepend=",">
+				<![CDATA[
+					total=#total:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="channel" prepend=",">
+				<![CDATA[
+					channel=#channel:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="newNovid" prepend=",">
+				<![CDATA[
+					newNovid=#newNovid:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="monthl" prepend=",">
+				<![CDATA[
+					monthl=#monthl:VARCHAR#
+				]]>
+			</isNotNull>
+
+			<isNotNull property="numbers" prepend=",">
+				<![CDATA[
+					numbers=#numbers:VARCHAR#
+				]]>
+			</isNotNull>
+
+		</dynamic>
+		<![CDATA[
+			WHERE subjectId = #subjectId:NUMBER#
+		]]>
+	</update>
+
+	<sql id="findUserByPageCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")"
+				conjunction="OR">
+				<![CDATA[
+					upper(subjectName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					 OR upper(novid) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(brand) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(sizeone) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(sizetwo) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(largeclass) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(styles) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(color) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(object) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				     OR upper(subjectName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				      OR upper(tagprice) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				       OR upper(discount) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				        OR upper(sex) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				         OR upper(year) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(season) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(series) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(province) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(total) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				           OR upper(channel) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				            OR upper(newNovid) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(monthl) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				           OR upper(numbers) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByPage" parameterClass="page" resultClass="commodity">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_commodity 
+					WHERE (subjectId>= (SELECT MAX(subjectId) FROM (SELECT TOP $start$ subjectId FROM t_commodity  
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY subjectId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY subjectId
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_commodity  
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+	</select>
+
+	<select id="findAll" parameterClass="commodity" resultClass="commodity">
+		<![CDATA[
+			SELECT * FROM t_commodity 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="subjectId" prepend="AND">
+				subjectId =
+				#subjectId:NUMBER#
+			</isNotNull>
+			<isNotNull property="novid" prepend="AND">
+				novid LIKE '%' +
+				#novid:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="brand" prepend="AND">
+				brand LIKE '%' +
+				#brand:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="sizeone" prepend="AND">
+				sizeone LIKE '%' +
+				#sizeone:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="sizetwo" prepend="AND">
+				sizetwo LIKE '%' +
+				#sizetwo:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="largeclass" prepend="AND">
+				largeclass LIKE
+				'%' + #largeclass:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="styles" prepend="AND">
+				styles LIKE '%' +
+				#styles:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="color" prepend="AND">
+				color LIKE '%' +
+				#color:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="object" prepend="AND">
+				object LIKE '%' +
+				#object:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="subjectName" prepend="AND">
+				subjectName LIKE
+				'%' + #subjectName:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="tagprice" prepend="AND">
+				sizeone LIKE '%' +
+				#sizeone:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="discount" prepend="AND">
+				discount LIKE '%' +
+				#discount:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="season" prepend="AND">
+				season LIKE '%' +
+				#season:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="series" prepend="AND">
+				series LIKE '%' +
+				#series:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="sex" prepend="AND">
+				sex LIKE '%' +
+				#sex:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="year" prepend="AND">
+				year LIKE '%' +
+				#year:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="remarks" prepend="AND">
+				remarks LIKE '%' +
+				#remarks:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="province" prepend="AND">
+				province LIKE '%' +
+				#province:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="total" prepend="AND">
+				total LIKE '%' +
+				#total:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="channel" prepend="AND">
+				channel LIKE '%' +
+				#channel:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="newNovid" prepend="AND">
+				newNovid LIKE '%' +
+				#newNovid:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="monthl" prepend="AND">
+				monthl LIKE '%' +
+				#monthl:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="numbers" prepend="AND">
+				numbers LIKE '%' +
+				#numbers:VARCHAR# + '%'
+			</isNotNull>
+		</dynamic>
+	</select>
+</sqlMap>

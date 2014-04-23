@@ -225,6 +225,7 @@
 	                              			case "selfWithdraw": selfWithdraw(id, text); break;
 	                              			case "selfAddr": selfAddr(id, text); break;
 	                              			case "manageUsers": userInfo(id, text); break;
+											case "manageProds": prodInfo(id, text); break;
 	           								case "manageRecharges": rechargeInfo(id, text); break;
 	                              		}
 	                               }

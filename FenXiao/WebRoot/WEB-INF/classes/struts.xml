@@ -7,33 +7,40 @@
 	<include file="struts-default.xml" />
 
 	<package name="json" extends="json-default">
-
-
-
-		<!-- 科目管理 -->
-		<action name="saveSubject" class="subjectAction" method="saveSubject">
+		<!-- 商品管理 -->
+		<action name="saveCommodity" class="commodityAction" method="saveCommodity">
 			<result type="json">
 				<param name="includeProperties">success,dutyId</param>
 			</result>
 		</action>
-		<action name="deleteSubject" class="subjectAction" method="deleteSubject">
+		<action name="deleteCommodity" class="commodityAction" method="deleteCommodity">
 			<result type="json">
 				<param name="includeProperties">success</param>
 			</result>
 		</action>
-		<action name="updateSubject" class="subjectAction" method="updateSubject">
+		<action name="updateCommodity" class="commodityAction" method="updateCommodity">
 			<result type="json">
 				<param name="includeProperties">success</param>
 			</result>
 		</action>
-		<action name="findAllSubject" class="subjectAction" method="findAllSubject">
+		<action name="findCommodity" class="commodityAction" method="findCommodity">
 			<result type="json">
-				<param name="root">page</param>
-				<param name="excludeProperties">totalProperty,conditions,limit,start,success,objCondition</param>
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-
-
+		<action name="findAllCommodity" class="commodityAction" method="findAllCommodity">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="upload" class="commodityAction" method="upload">
+			<result type="json">
+			<param name="includeProperties">success</param>
+			</result>
+		</action>
+		
 		<!-- 用户管理 -->
 		<action name="saveUser" class="userAction" method="saveUser">
 			<result type="json">
@@ -92,20 +99,22 @@
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-		<action name="findAllRechargeByUser" class="rechargeAction" method="findAllRechargeByUser">
+		<action name="findAllRechargeByUser" class="rechargeAction"
+			method="findAllRechargeByUser">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-		<action name="findRechargeByExample" class="rechargeAction" method="findByExample">
+		<action name="findRechargeByExample" class="rechargeAction"
+			method="findByExample">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-		
+
 		<!-- 地址管理 -->
 		<action name="saveAddress" class="addressAction" method="saveAddress">
 			<result type="json">
@@ -129,7 +138,8 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-		<action name="findAddressByExample" class="addressAction" method="findByExample">
+		<action name="findAddressByExample" class="addressAction"
+			method="findByExample">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>

@@ -6,10 +6,6 @@
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
 
-	<bean name="subjectAction" class="com.lhq.prj.bms.action.SubjectAction" scope="prototype">
-		<property name="subjectService" ref="subjectService" />
-	</bean>
-	
 	<bean name="userAction" class="com.lhq.prj.bms.action.UserAction" scope="prototype">
 		<property name="userService" ref="userService" />
 	</bean>
@@ -21,5 +17,9 @@
 	
 	<bean name="addressAction" class="com.lhq.prj.bms.action.AddressAction" scope="prototype">
 		<property name="addressService" ref="addressService" />
+	</bean>
+	
+	<bean name="commodityAction" class="com.lhq.prj.bms.action.CommodityAction" scope="prototype">
+		<property name="commodityService" ref="commodityService" />
 	</bean>
 </beans>

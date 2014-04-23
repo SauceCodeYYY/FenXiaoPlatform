@@ -1,5 +1,6 @@
-{"success":true,
-"data":[
+{
+	"success":true,
+	"data":[
 		{"id":"selfCenter","text":"个人中心","leaf":false,"children":
 			[
 				{"id":"selfInfo", "text":"个人信息","leaf":true},
@@ -23,4 +24,5 @@
 				{"id":"manageOrders","text":"订单管理","leaf":true},
 			]
 		}
-]}
+	]
+}

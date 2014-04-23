@@ -6,10 +6,6 @@
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
 	
-	<bean id="subjectDao" class="com.lhq.prj.bms.dao.impl.SubjectDao">
-		<property name="sqlMapClient" ref="sqlMapClient" />
-	</bean>
-	
 	<bean id="userDao" class="com.lhq.prj.bms.dao.impl.UserDao">
 		<property name="sqlMapClient" ref="sqlMapClient" />
 	</bean>
@@ -19,6 +15,10 @@
 	</bean>
 	
 	<bean id="addressDao" class="com.lhq.prj.bms.dao.impl.AddressDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="commodityDao" class="com.lhq.prj.bms.dao.impl.CommodityDao">
 		<property name="sqlMapClient" ref="sqlMapClient" />
 	</bean>
 </beans>
