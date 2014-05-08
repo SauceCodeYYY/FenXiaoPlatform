@@ -101,11 +101,17 @@
 		<dynamic prepend="WHERE">
 			<include refid="byUserIdCondition" />
 		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="byIdPageCondition" />
+		</dynamic>
 		<![CDATA[
 			ORDER BY orderId desc) AS T)) 
 		]]>
 		<dynamic prepend="AND">
 			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="byIdPageCondition" />
 		</dynamic>
 		<![CDATA[
 			ORDER BY orderId desc
@@ -118,6 +124,9 @@
 		]]>
 		<dynamic prepend="WHERE">
 			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="byIdPageCondition" />
 		</dynamic>
 	</select>
 	
@@ -182,6 +191,9 @@
 		<![CDATA[
 			SELECT COUNT(*) FROM t_order 
 		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdPageCondition" />
+		</dynamic>
 	</select>
 	
 	<select id="findByTime" parameterClass="page"

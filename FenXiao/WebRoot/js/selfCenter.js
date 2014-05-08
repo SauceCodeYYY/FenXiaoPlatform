@@ -706,3 +706,77 @@ var selfPayPwd = function(tabId, tabText) {
 	});	
 	createTab(tabId, tabText, panel);
 };
+
+
+var selfOrders = function(tabId, tabText){
+	var selfOrderStore = Ext.create('Ext.data.Store', {
+		storeId:'selfOrderStore',
+		autoLoad: true,
+		fields:['orderId', 'userId', 'delivery', 'orderItem', 'submitTime', 'closeTime', 'state', 'note', 'total'],
+		proxy: {
+			type: 'ajax',
+			url: 'findAllOrderByUser.action',
+			reader: {
+				type: 'json',
+				root: 'root',
+				totalProperty: 'totalProperty'
+			}
+		}
+	});
+	
+	var toolbarSelfOrder = Ext.create('Ext.toolbar.Toolbar', {
+		items: [{
+				xtype: 'datefield',
+                id: 'manage_selforder_search_time_from',
+                value: new Date(),
+                format:'Y-m-d',
+                submitFormat:'Y-m-d'
+            }, '', {
+				xtype: 'datefield',
+                id: 'manage_selforder_search_time_to',
+                value: new Date(),
+                format:'Y-m-d',
+                submitFormat:'Y-m-d'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function() {
+					selfOrderStore.load({params: { from: Ext.getCmp('manage_selforder_search_time_from').getRawValue(), to: Ext.getCmp('manage_selforder_search_time_to').getRawValue(), userId: userId } });
+				}
+            }, {
+				xtype: 'textfield',
+                emptyText: '输入订单号搜索',
+                id: 'manage_selforder_search_text'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function() {
+					selfOrderStore.load({ params: { conditions: Ext.getCmp('manage_selforder_search_text').getValue() } });
+				}
+            }
+		]
+	});
+	
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: selfOrderStore,
+		columns: [
+			{ text: '编号', dataIndex: 'orderId', flex: 1 },				
+			{ text: '用户编号', dataIndex: 'userId', flex: 1 },
+			{ text: '合计', dataIndex: 'total', flex: 1 },
+			{ text: '提交日期', dataIndex: 'submitTime', flex: 2 },
+			{ text: '结算日期', dataIndex: 'closeTime', flex: 2 },
+			{ text: '订单状态', dataIndex: 'state', flex: 1 },
+			{ text: '备注', dataIndex: 'note', flex: 2 }
+		],
+		dockedItems: [toolbarSelfOrder, {
+	        xtype: 'pagingtoolbar',
+	        store: selfOrderStore,   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true
+	    }]
+	});
+	
+	createTab(tabId, tabText, gridPanel);
+};

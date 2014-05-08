@@ -237,6 +237,7 @@
 	                              			case "selfWithdraw": selfWithdraw(id, text); break;
 	                              			case "selfAddr": selfAddr(id, text); break;
 	                              			case "selfPayPwd": selfPayPwd(id, text); break;
+	                              			case "selfOrders": selfOrders(id, text); break;
 	                              			case "prodSearch": prodSearch(id, text); break;
 	                              			case "shoppingCart": shoppingCart(id, text); break;
 	                              			case "manageUsers": userInfo(id, text); break;

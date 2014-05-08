@@ -836,7 +836,7 @@ var orderInfo = function(tabId, tabText){
 			{ text: '合计', dataIndex: 'total', flex: 1 },
 			{ text: '提交日期', dataIndex: 'submitTime', flex: 2 },
 			{ text: '结算日期', dataIndex: 'closeTime', flex: 2 },
-			{ text: '充值状态', dataIndex: 'state', flex: 1 },
+			{ text: '订单状态', dataIndex: 'state', flex: 1 },
 			{ text: '备注', dataIndex: 'note', flex: 2 }
 		],
 		dockedItems: [toolbarOrderInfo, {

@@ -38,17 +38,17 @@ public class OrderDao extends SqlMapClientDaoSupport implements IOrderDao {
 
 	public List findByTimeAndUser(Page page) {
 		return getSqlMapClientTemplate().queryForList(
-				"Order.findByTimeAndUser", page);
+				"Order.findByUserAndTime", page);
 	}
 
 	public Integer findByTimeAndUserCount(Page page) {
 		return (Integer) getSqlMapClientTemplate().queryForObject(
-				"Order.findByTimeAndUserCount", page);
+				"Order.findByUserAndTimeCount", page);
 	}
 
 	public List findByUser(Page page) {
 		return getSqlMapClientTemplate().queryForList(
-				"Order.findByPageAndUser", page);
+				"Order.findByUser", page);
 	}
 
 	public Integer findByUserCount(Page page) {
