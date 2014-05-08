@@ -29,4 +29,8 @@
 	<bean id="orderService" class="com.lhq.prj.bms.service.impl.OrderService">
 		<property name="orderDao" ref="orderDao" />
 	</bean>
+	
+	<bean id="discountService" class="com.lhq.prj.bms.service.impl.DiscountService">
+		<property name="discountDao" ref="discountDao" />
+	</bean>
 </beans>

@@ -6,7 +6,6 @@
 
 <sqlMap namespace="Address">
 	<typeAlias alias="addr" type="com.lhq.prj.bms.po.Address" />
-	<typeAlias alias="user" type="com.lhq.prj.bms.po.User" />
 	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
 
 	<parameterMap class="addr" id="pm_addr_without_id">

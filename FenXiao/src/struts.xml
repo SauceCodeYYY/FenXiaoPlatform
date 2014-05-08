@@ -241,5 +241,32 @@
 		<!-- <action name="findOrderByExample" class="orderAction" method="findByExample"> 
 			<result type="json"> <param name="root">pageBean</param> <param name="excludeProperties">conditions,limit,start,success,objCondition</param> 
 			</result> </action> -->
+			
+		<!-- 折扣管理 -->
+		<action name="saveDiscount" class="discountAction" method="saveDiscount">
+			<result type="json">
+				<param name="includeProperties">success, discountId, tip</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		<action name="updateDiscount" class="discountAction" method="updateDiscount">
+			<result type="json">
+				<param name="includeProperties">success, discountId</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		<action name="findAllDiscountByUser" class="discountAction" method="findAllDiscountByUser">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		<action name="deleteDiscount" class="discountAction" method="deleteDiscount">
+			<result type="json">
+				<param name="includeProperties">success, discountId</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action>
 	</package>
 </struts>

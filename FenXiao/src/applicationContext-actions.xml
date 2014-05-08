@@ -32,4 +32,8 @@
 		<property name="userService" ref="userService" />
 		<property name="cartItemService" ref="cartItemService" />
 	</bean>
+
+	<bean name="discountAction" class="com.lhq.prj.bms.action.DiscountAction" scope="prototype">
+		<property name="discountService" ref="discountService" />
+	</bean>
 </beans>

@@ -968,3 +968,241 @@ var orderInfo = function(tabId, tabText){
 	
 	createTab(tabId, tabText, gridPanel);
 };
+
+var discountInfo = function(tabId, tabText){
+	var panel = Ext.create('Ext.panel.Panel', {
+		layout: 'column',
+		bodyPadding: 5,
+	    items: [{
+	        xtype: 'textfield',
+	        id: 'discountSearchText',
+            emptyText : '请输入用户编号'
+	    }, {
+	        xtype: 'button',
+	        text: '查询',
+	        iconCls: 'icon-search',
+	        handler: function(){
+	        	discountSearchText = Ext.getCmp('discountSearchText').getValue();
+	        	if (/\d+/.test(Ext.getCmp('discountSearchText').getValue()) == false){
+					Ext.Msg.alert('提示', '请输入用户编号!');
+	        		return;
+	        	}
+	        	var discountSearchStore = Ext.create('Ext.data.Store', {
+	        		autoLoad: true,
+	        		fields:['discountId', 'userId', 'channel', 'discount'],
+	        		proxy: {
+	        			type: 'ajax',
+	        			url: 'findAllDiscountByUser.action',
+	        			reader: {
+	        				type: 'json',
+	        				root: 'root',
+	        				totalProperty: 'totalProperty'
+	        			},
+	        			extraParams: {
+	        				searchType: 'userId',
+	        				userId: Ext.getCmp('discountSearchText').getValue().trim()
+	        			}
+	        		}, 
+        			listeners: {
+        				'load': function(store) {
+        					uId = Ext.getCmp('discountSearchText').getValue().trim();
+        					old = Ext.getCmp("discount-"+uId);
+        					if (old) {
+        						old.close();
+        					}
+        					var toolbarDiscount = Ext.create('Ext.toolbar.Toolbar', {
+        		        		items: [
+        		        			{
+        		        				text: '添加折扣',
+        		        				iconCls: 'icon-add',
+        		        				handler : function(){
+        		        					var window = Ext.create('Ext.window.Window', {
+        		        						title: '添加折扣',
+        		        						layout: 'fit',
+        		        						modal: true
+        		        					}).show();
+        		        								
+        		        					var formPanel = Ext.create('Ext.form.Panel', {
+        		        						bodyPadding: 5,
+        		        						width: 500,
+        		        						// The form will submit an AJAX request to this URL when submitted
+        		        						url: 'saveDiscount.action',
+        		        						// Fields will be arranged vertically, stretched to full width
+        		        						layout: 'anchor',
+        		        						defaults: {
+        		        							anchor: '100%'
+        		        						},
+        		        			
+        		        						// The fields
+        		        						defaultType: 'textfield',
+        		        						items: [
+        		        						{
+        		        							fieldLabel: "用户编号",
+        		        							name: 'discount.userId',
+        		        						},{
+        		        							xtype: "combo",
+        		        							fieldLabel: "渠道",
+        		                       				store: new Ext.data.SimpleStore({
+        		        								data: [
+        		        									['支付宝', '支付宝'],
+        		        									['中国银行', '中国银行'],
+        		        									['工商银行', '工商银行'],
+        		        									['建设银行', '建设银行'],
+        		        									['农业银行', '农业银行'],
+        		        								],
+        		        								fields: ['value', 'text']
+        		        							}),
+        		        							value: '支付宝',
+        		        							valueField: 'value',
+        		        							displayField: 'text',
+        		        							name: 'discount.channel',
+        		        							allowBlank: false
+        		        						},{
+        		        							fieldLabel: "折扣",
+        		        							value: 1,
+        		        							name: 'discount.discount',
+        		        							xtype: 'numberfield'
+        		        						}],
+        		        						// Reset and Submit buttons
+        		        						buttons: [{
+        		        							text: 'Reset',
+        		        							handler: function() {
+        		        								this.up('form').getForm().reset();
+        		        							}
+        		        						}, {
+        		        							text: 'Submit',
+        		        							formBind: true, //only enabled once the form is valid
+        		        							disabled: true,
+        		        							handler: function() {
+        		        								var form = this.up('form').getForm();
+        		        								if (form.isValid()) {
+        		        									form.submit({
+        		        										success: function(form, action) {
+        		        										   Ext.Msg.alert('提示', "添加折扣成功！");
+        		        										   window.close();
+        		        										   discountSearchStore.reload();
+        		        										},
+        		        										failure: function(form, action) {
+        		        											Ext.Msg.alert('提示', action.result.tip);
+        		        										}
+        		        									});
+        		        								}
+        		        							}
+        		        						}],
+        		        					});
+        		        					window.add(formPanel);
+        		        				}
+        		        			}, '-', {
+        		        				xtype: 'textfield',
+        		                        emptyText : '输入渠道查询',
+        		                        id: 'channel_search_text'
+        		                    }, {
+        		                        xtype: 'button',
+        		                        text: '查询',
+        		                        iconCls : 'icon-search',
+        		                        handler: function() {
+        		        					discountSearchStore.load({params : 
+        		        						{ conditions: Ext.getCmp('channel_search_text').getValue().trim() }
+        		        					});
+        		        				}
+        		                    }, '-', , {
+        		        				text : '删除折扣',
+        		        				iconCls : 'icon-del',
+        		        				handler : function() {
+        		        					var records = gridPanel.getSelectionModel().getSelection();
+        		        					if (records && records.length > 0) {
+        		        						Ext.Msg.confirm('确认删除', '你确定删除该条记录?', function(btn) {
+        		        							if (btn == 'yes') {
+        		        								var ids = "";
+        		        								for (var i = 0; i < records.length; i++){
+        		        									ids += records[i].get("discountId");
+        		        									if (i != records.length - 1){
+        		        										ids += ",";
+        		        									}
+        		        								}
+        		        								Ext.Ajax.request({
+        		        									url : 'deleteDiscount.action',
+        		        									params : {
+        		        										ids: ids
+        		        									},
+        		        									success : function() {
+        		        										Ext.Msg.alert('Success', "删除折扣成功！");
+        		        										discountSearchStore.reload();
+        		        									},
+        		        									failure : function() {
+        		        										Ext.Msg.show({
+        		        											title : '错误提示',
+        		        											msg : '删除时发生错误!',
+        		        											buttons : Ext.Msg.OK,
+        		        											icon : Ext.Msg.ERROR
+        		        										});
+        		        									}
+        		        								});
+        		        							}
+        		        						});
+        		        					} else {
+        		        						Ext.Msg.alert("提示", "请选择要删除的项!");
+        		        					}
+        		        				}
+        		        			}
+        		        		]
+        		        	});
+        					
+    		        		var gridPanel = Ext.create('Ext.grid.Panel', {
+    		        			id: "discountpanel" + uId,
+    		        			store: discountSearchStore,
+    		        			columns: [
+									{ text: '折扣编号', dataIndex: 'discountId', flex: 1 },
+									{ text: '用户ID', dataIndex: 'userId', flex: 1 },
+									{ text: '渠道', dataIndex: 'channel', flex: 1 },
+									{ text: '折扣', dataIndex: 'discount', editor: {
+						                xtype: 'numberfield',
+						                allowBlank: false
+						            }, flex: 1 }
+    		        			],
+    		        			selModel: Ext.create('Ext.selection.CheckboxModel',{mode: "SIMPLE"}),
+    		        			selType: 'cellmodel',
+    		        		    plugins: [
+    		        		          	Ext.create('Ext.grid.plugin.CellEditing', {
+    		        		              	clicksToEdit: 1
+    		        		          	})
+    		        		    ],
+    		        			dockedItems: [toolbarDiscount, {
+    						        xtype: 'pagingtoolbar',
+    						        store: discountSearchStore,   // same store GridPanel is using
+    						        dock: 'bottom',
+    						        displayInfo: true
+    						    }],
+    						    listeners: {
+    						    	'edit': function(editor, e){
+    						    		var field = "discount." + e.field;
+    						    		var p = {};
+    						    		p[field] = e.value;
+    						    		p["discount.discountId"] = e.record.get("discountId");
+    						    	    Ext.Ajax.request({
+    						    			url : 'updateDiscount.action',
+    						    			params : p,
+    						    			success : function() {
+    						    				//selfAddrStore.reload();
+    						    			},
+    						    			failure : function() {
+    						    				Ext.Msg.show({
+    						    					title : '错误提示',
+    						    					msg : '删除时发生错误!',
+    						    					buttons : Ext.Msg.OK,
+    						    					icon : Ext.Msg.ERROR
+    						    				});
+    						    			}
+    						    		});
+    						    	}
+    						    }
+    		        		});
+    		        		createTab("discount-" + uId, "用户折扣-" + uId, gridPanel);
+        				}
+        			},
+	        	});
+	        }
+	    }]
+	});
+	createTab(tabId, tabText, panel);
+};

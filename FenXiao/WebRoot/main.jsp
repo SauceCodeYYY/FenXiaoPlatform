@@ -244,6 +244,7 @@
 											case "manageProds": prodInfo(id, text); break;
 	           								case "manageRecharges": rechargeInfo(id, text); break;
 	           								case "manageOrders": orderInfo(id, text); break;
+	           								case "manageDiscount": discountInfo(id, text); break;
 	                              		}
 	                               }
                                }  

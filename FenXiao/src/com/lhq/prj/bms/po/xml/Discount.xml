@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Discount">
+	<typeAlias alias="discount" type="com.lhq.prj.bms.po.Discount" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+
+	<parameterMap class="discount" id="pm_discount_without_id">
+		<parameter property="userId" javaType="long" jdbcType="NUMBER" />
+		<parameter property="channel" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="discount" javaType="float" jdbcType="NUMBER" />
+	</parameterMap>
+	<sql id="byDiscountIdCondition">
+		<![CDATA[
+		   discountId = #discountId:LONG#
+	    ]]>
+	</sql>
+	
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   userId = #userId:LONG#
+	    ]]>
+	</sql>
+	
+	<sql id="byIdsCondition">
+		<![CDATA[
+			discountId IN 
+		]]>
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")"
+				conjunction=", ">
+				<![CDATA[
+					#conditions[]:VARCHAR#
+		   		]]> 	
+			</iterate>
+		</isNotEmpty>
+	</sql>
+
+	<insert id="save" parameterMap="pm_discount_without_id">
+		<![CDATA[
+			INSERT INTO t_discount 
+						(userId, channel, discount) 
+				 VALUES (?, ?, ?)
+		]]>
+		<selectKey resultClass="long">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="long">
+		<![CDATA[
+			delete t_discount
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byDiscountIdCondition" />
+		</dynamic>
+	</delete>
+	
+	<update id="update" parameterClass="discount">
+		<![CDATA[
+			UPDATE t_discount
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="discount" prepend=",">
+				<![CDATA[
+					discount = #discount:NUMBER#
+				]]>
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byDiscountIdCondition" />
+		</dynamic>
+	</update>
+
+	<sql id="byPageCondition">
+		<isNotEmpty property="conditions">
+				<![CDATA[
+					upper(channel) LIKE '%' + upper(#conditions[0]:VARCHAR#) + '%'    
+		    	]]>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- <sql id="findDiscountByUserIdCondition">
+		<isNotEmpty property="conditions">
+			<![CDATA[
+				userId = #conditions[0]:VARCHAR#
+	    	]]>
+		</isNotEmpty>
+	</sql> -->
+	
+	<select id="findByPage" parameterClass="page" resultClass="discount">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_discount 
+					WHERE (discountId >= (SELECT MAX(discountId) FROM (SELECT TOP $start$ discountId FROM t_discount 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="byPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY discountId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="byPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY discountId
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_discount 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</select>
+	
+	<delete id="deleteByIds" parameterClass="page">
+		<![CDATA[
+			delete FROM t_discount
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdsCondition" />
+		</dynamic>
+	</delete>
+	
+	<!-- <select id="findByExample" parameterClass="discount" resultClass="discount">
+		<![CDATA[
+			SELECT * FROM t_discount 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="di">
+				<![CDATA[
+					upper(channel) LIKE '%' + upper(#conditions[0]:VARCHAR#) + '%'    
+		    	]]>
+			</isNotEmpty>		
+		</dynamic>
+	</select> -->
+	
+	<select id="findByExample" parameterClass="discount" resultClass="discount">
+		<![CDATA[
+			SELECT * FROM t_discount 
+			WHERE userId = #userId:NUMBER# and upper(channel) = #channel:VARCHAR#
+		]]>
+	</select>
+</sqlMap>

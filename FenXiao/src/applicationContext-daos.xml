@@ -29,4 +29,8 @@
 	<bean id="orderDao" class="com.lhq.prj.bms.dao.impl.OrderDao">
 		<property name="sqlMapClient" ref="sqlMapClient" />
 	</bean>
+
+	<bean id="discountDao" class="com.lhq.prj.bms.dao.impl.DiscountDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
 </beans>

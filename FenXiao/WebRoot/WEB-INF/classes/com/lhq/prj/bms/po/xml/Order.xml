@@ -79,7 +79,7 @@
 	<sql id="byIdPageCondition">
 		<isNotEmpty property="conditions">
 			<![CDATA[
-				upper(orderId) LIKE '%' + upper(#conditions[0]:VARCHAR#) + '%'
+				orderId LIKE '%' + #conditions[0]:VARCHAR# + '%'
 	    	]]>
 		</isNotEmpty>
 	</sql>
