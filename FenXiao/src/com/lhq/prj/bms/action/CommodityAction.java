@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,30 +29,57 @@ public class CommodityAction extends BaseAction {
 
 	private Commodity commodity;
 
-	private Integer commodityId;
+	private Long commodityId;
 
 	private boolean success;
 
 	private Integer page;
-	
+
 	private Page pageBean;
 
 	private File excelFile; // 上传的文件
-	
+
 	private String excelFileFileName; // 保存原始文件名
+	
+	private String conditions;
 
 	public String saveCommodity() {
-		commodityId = (Integer) commodityService.saveCommodity(commodity);
+		commodityId = (Long) commodityService.saveCommodity(commodity);
 		if (commodityId != null) {
 			success = true;
 		}
 		return SUCCESS;
 	}
 
+	public String findExact() {
+		pageBean = new Page();
+		try {
+			commodity.setChannel(new String(commodity.getChannel().getBytes("iso-8859-1"), "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		Commodity commodity = commodityService.findExact(this.commodity);
+		List list = new ArrayList();
+		if (commodity != null) {
+			list.add(commodity);
+		}
+		pageBean.setRoot(list);
+		pageBean.setTotalProperty(list.size());
+		return SUCCESS;
+	}
+
+	public String findByIds(){
+		ArrayList conditions = new ArrayList();
+		MyUtils.addToCollection(conditions, MyUtils.split(this.conditions, " ,"));
+		pageBean = new Page();
+		pageBean.setConditions(conditions);
+		pageBean = commodityService.findByIds(pageBean);
+		return SUCCESS;
+	}
+	
 	public String findCommodity() {
-		String strCondition = getRequest().getParameter("conditions");
 		List conditions = new ArrayList();
-		MyUtils.addToCollection(conditions, MyUtils.split(strCondition, " ,"));
+		MyUtils.addToCollection(conditions, MyUtils.split(this.conditions, " ,"));
 		pageBean = new Page();
 		pageBean.setConditions(conditions);
 		int start = Integer.valueOf(getRequest().getParameter("start"));
@@ -59,6 +87,19 @@ public class CommodityAction extends BaseAction {
 		pageBean.setStart(++start);
 		pageBean.setLimit(limit = limit == 0 ? 20 : limit);
 		pageBean = commodityService.findByPage(pageBean);
+		return SUCCESS;
+	}
+
+	public String findCommodityByNovid() {
+		List conditions = new ArrayList();
+		MyUtils.addToCollection(conditions, MyUtils.split(this.conditions, " ,"));
+		pageBean = new Page();
+		pageBean.setConditions(conditions);
+		int start = Integer.valueOf(getRequest().getParameter("start"));
+		int limit = Integer.valueOf(getRequest().getParameter("limit"));
+		pageBean.setStart(++start);
+		pageBean.setLimit(limit = limit == 0 ? 20 : limit);
+		pageBean = commodityService.findByNovid(pageBean);
 		return SUCCESS;
 	}
 
@@ -135,7 +176,7 @@ public class CommodityAction extends BaseAction {
 				bean.setNumbers(ros.getCell(14).getStringCellValue());
 				bean.setDiscount(ros.getCell(15).getStringCellValue());
 
-				commodityId = (Integer) commodityService.saveCommodity(bean);
+				commodityId = (Long) commodityService.saveCommodity(bean);
 				if (commodityId != null) {
 					success = true;
 				}
@@ -170,11 +211,11 @@ public class CommodityAction extends BaseAction {
 		this.commodity = commodity;
 	}
 
-	public Integer getCommodityId() {
+	public Long getCommodityId() {
 		return commodityId;
 	}
 
-	public void setCommodityId(Integer commodityId) {
+	public void setCommodityId(Long commodityId) {
 		this.commodityId = commodityId;
 	}
 
@@ -216,6 +257,14 @@ public class CommodityAction extends BaseAction {
 
 	public void setPage(Integer page) {
 		this.page = page;
+	}
+
+	public String getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(String conditions) {
+		this.conditions = conditions;
 	}
 
 }

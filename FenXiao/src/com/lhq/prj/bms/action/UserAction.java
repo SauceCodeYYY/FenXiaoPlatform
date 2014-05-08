@@ -31,9 +31,9 @@ public class UserAction extends BaseAction {
 
 	private boolean success;
 
-	private Page page;
+	private Page pageBean;
 
-	private Integer pageS;
+	private Integer page;
 
 	private Integer userId;
 
@@ -45,6 +45,12 @@ public class UserAction extends BaseAction {
 
 	private String tip;
 
+	private Float total;
+	
+	private String oldPwd;
+	
+	private String oldPayPwd;
+	
 	public String logout() {
 		getSession().removeAttribute("user");
 		success = true;
@@ -70,6 +76,32 @@ public class UserAction extends BaseAction {
 		}
 	}
 
+	public String checkPayPwd(){
+		User currUser = (User)getSession().getAttribute("user");
+		if (null == currUser){
+			return ERROR;
+		}
+		if (user.getPayPwd().equals(currUser.getPayPwd())){
+			success = true;
+		} else {
+			success = false;
+		}
+		return SUCCESS;
+	}
+	
+	public String checkBalance(){
+		User currUser = (User)getSession().getAttribute("user");
+		if (null == currUser){
+			return ERROR;
+		}
+		if (currUser.getBalance() >= total){
+			success = true;
+		} else {
+			success = false;
+		}
+		return SUCCESS;
+	}
+	
 	/**
 	 * ÃÌº””√ªß
 	 * 
@@ -101,19 +133,19 @@ public class UserAction extends BaseAction {
 				e.printStackTrace();
 			}
 		}
-		page = new Page();
-		page.setConditions(utf8Condition);
+		pageBean = new Page();
+		pageBean.setConditions(utf8Condition);
 		int start = Integer.valueOf(getRequest().getParameter("start"));
 		int limit = Integer.valueOf(getRequest().getParameter("limit"));
-		page.setStart(++start);
-		page.setLimit(limit = limit == 0 ? 20 : limit);
-		page = userService.findByPage(page);
+		pageBean.setStart(++start);
+		pageBean.setLimit(limit = limit == 0 ? 20 : limit);
+		pageBean = userService.findByPage(pageBean);
 		return SUCCESS;
 	}
 
 	public String findByExample() {
-		page = new Page();
-		page.setRoot(userService.findByExample(user));
+		pageBean = new Page();
+		pageBean.setRoot(userService.findByExample(user));
 		return SUCCESS;
 	}
 
@@ -134,18 +166,38 @@ public class UserAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String updateUser() throws Exception {
-		if (user.getUserId() != null) {
-			success = userService.updateUser(user);
+		User currUser = (User) getSession().getAttribute("user");
+		if (currUser == null){
+			return ERROR;
+		}
+		if (user != null) {
+			if(user.getPassword() != null) {
+				if (oldPwd.equals(currUser.getPassword())){
+					success = userService.updateUser(user);
+				} else {
+					success = false;
+					setTip("µ«¬º√‹¬Î¥ÌŒÛ!");
+				}
+			} else if (user.getPayPwd() != null){
+				if (currUser.getPayPwd().equals(oldPayPwd)){
+					success = userService.updateUser(user);
+				} else {
+					success = false;
+					setTip("÷ß∏∂√‹¬Î¥ÌŒÛ!");
+				}
+			} else {
+				success = userService.updateUser(user);
+			}
 		}
 		return SUCCESS;
 	}
 
-	public Page getPage() {
-		return page;
+	public Page getPageBean() {
+		return pageBean;
 	}
 
-	public void setPage(Page page) {
-		this.page = page;
+	public void setPageBean(Page page) {
+		this.pageBean = page;
 	}
 
 	public boolean isSuccess() {
@@ -208,12 +260,36 @@ public class UserAction extends BaseAction {
 		this.tip = tip;
 	}
 
-	public Integer getPageS() {
-		return pageS;
+	public Integer getPage() {
+		return page;
 	}
 
 	public void setPage(Integer pageS) {
-		this.pageS = pageS;
+		this.page = pageS;
+	}
+
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
+	}
+
+	public String getOldPwd() {
+		return oldPwd;
+	}
+
+	public void setOldPwd(String oldPwd) {
+		this.oldPwd = oldPwd;
+	}
+
+	public String getOldPayPwd() {
+		return oldPayPwd;
+	}
+
+	public void setOldPayPwd(String oldPayPwd) {
+		this.oldPayPwd = oldPayPwd;
 	}
 
 }

@@ -28,6 +28,7 @@
 <script type="text/javascript" src="/bmsh/js/RowExpander.js"></script>
 <script type="text/javascript" src="/bmsh/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="js/selfCenter.js"></script>
+<script type="text/javascript" src="js/prodCenter.js"></script>
 <script type="text/javascript" src="js/manageCenter.js"></script>
 <script type="text/javascript">
 	// var currentUser = '当前用户:<s:property value="#session.user.userName"/>';
@@ -38,7 +39,7 @@
 	var userId = "${ user.userId }";
 	
 	var selfWithdraw = function(tabId, tabText){
-		Ext.create('Ext.data.Store', {
+		var withdrawStore = Ext.create('Ext.data.Store', {
 			storeId:'withdrawStore',
 			autoLoad: true,
 			fields:['编号', '银行', '户名', '汇款账户名', '汇款账户名', '提现金额', '提交日期', '状态', '备注'],
@@ -52,20 +53,6 @@
 			}
 		});
 	
-		var gridPanel = Ext.create('Ext.grid.Panel', {
-			store: Ext.data.StoreManager.lookup('withdrawStore'),
-			columns: [
-				{ text: '编号', dataIndex: '编号', flex: 1 },
-				{ text: '银行', dataIndex: '银行', flex: 3 },
-				{ text: '户名', dataIndex: '户名', flex: 3 },
-				{ text: '汇款账户名（支付宝订单号）', dataIndex: '汇款账户名', flex: 3 },
-				{ text: '提现金额', dataIndex: '提现金额', flex: 3 },
-				{ text: '提交日期', dataIndex: '提交日期', flex: 3 },
-				{ text: '状态', dataIndex: '状态', flex: 3 },
-				{ text: '备注', dataIndex: '备注', flex: 3}
-			]
-		});
-		
 		var toolbar = Ext.create('Ext.toolbar.Toolbar', {
 			items: [
 				{
@@ -150,17 +137,42 @@
 			]
 		});
 		
-		createTab(tabId, tabText, gridPanel, toolbar);
+		var gridPanel = Ext.create('Ext.grid.Panel', {
+			store: withdrawStore,
+			columns: [
+				{ text: '编号', dataIndex: '编号', flex: 1 },
+				{ text: '银行', dataIndex: '银行', flex: 3 },
+				{ text: '户名', dataIndex: '户名', flex: 3 },
+				{ text: '汇款账户名（支付宝订单号）', dataIndex: '汇款账户名', flex: 3 },
+				{ text: '提现金额', dataIndex: '提现金额', flex: 3 },
+				{ text: '提交日期', dataIndex: '提交日期', flex: 3 },
+				{ text: '状态', dataIndex: '状态', flex: 3 },
+				{ text: '备注', dataIndex: '备注', flex: 3}
+			],
+			dockedItems: [toolbar, {
+		        xtype: 'pagingtoolbar',
+		        store: withdrawStore,   // same store GridPanel is using
+		        dock: 'bottom',
+		        displayInfo: true
+	  		}]
+		});
+		
+		createTab(tabId, tabText, gridPanel);
 	};
 	
 	
 	
-	function createTab(tabId, tabText, cmp){
+	function createTab(tabId, tabText, cmp, layoutParam){
+		var layout = 'fit';
+		if (layoutParam) {
+			layout = layoutParam;
+		}
 		var tab = Ext.create('Ext.panel.Panel', {
 			id: tabId,
 			title: tabText,
 			closable: true,
-			layout: 'fit'
+			layout: layout,
+			autoScroll: true
 		});	
 		tab.add(cmp);
 		rightPanel.add(tab);
@@ -224,9 +236,13 @@
 	                              			case "selfRecharge": selfRecharge(id, text); break;
 	                              			case "selfWithdraw": selfWithdraw(id, text); break;
 	                              			case "selfAddr": selfAddr(id, text); break;
+	                              			case "selfPayPwd": selfPayPwd(id, text); break;
+	                              			case "prodSearch": prodSearch(id, text); break;
+	                              			case "shoppingCart": shoppingCart(id, text); break;
 	                              			case "manageUsers": userInfo(id, text); break;
 											case "manageProds": prodInfo(id, text); break;
 	           								case "manageRecharges": rechargeInfo(id, text); break;
+	           								case "manageOrders": orderInfo(id, text); break;
 	                              		}
 	                               }
                                }  

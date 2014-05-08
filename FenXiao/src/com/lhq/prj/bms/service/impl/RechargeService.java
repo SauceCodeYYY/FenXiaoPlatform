@@ -51,5 +51,6 @@ public class RechargeService implements IRechargeService {
 	public Page findByPageAndUser(Page page) {
 		page.setRoot(rechargeDao.findByPageAndUser(page));
 		page.setTotalProperty(rechargeDao.findByUserCount(page));
-		return page;	}
+		return page;	
+	}
 }

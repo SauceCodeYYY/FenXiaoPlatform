@@ -34,4 +34,20 @@ public class CommodityDao extends SqlMapClientDaoSupport implements ICommodityDa
 		return getSqlMapClientTemplate().queryForList("Commodity.findByPage", page);
 	}
 
+	public List findByNovid(Page page) {
+		return getSqlMapClientTemplate().queryForList("Commodity.findByNovid", page);
+	}
+
+	public Commodity findByExact(Commodity commodity) {
+		return (Commodity)getSqlMapClientTemplate().queryForObject("Commodity.findExact", commodity);
+	}
+
+	public List findByIds(Page page) {
+		return getSqlMapClientTemplate().queryForList("Commodity.findByIds", page);
+	}
+
+	public int findByIdsCount(Page page) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("Commodity.findByIdsCount", page);
+	}
+
 }

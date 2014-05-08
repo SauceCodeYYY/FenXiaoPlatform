@@ -21,4 +21,12 @@
 	<bean id="commodityService" class="com.lhq.prj.bms.service.impl.CommodityService">
 		<property name="commodityDao" ref="commodityDao" />
 	</bean>
+	
+	<bean id="cartItemService" class="com.lhq.prj.bms.service.impl.CartItemService">
+		<property name="cartItemDao" ref="cartItemDao" />
+	</bean>
+	
+	<bean id="orderService" class="com.lhq.prj.bms.service.impl.OrderService">
+		<property name="orderDao" ref="orderDao" />
+	</bean>
 </beans>

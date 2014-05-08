@@ -15,23 +15,24 @@
 		<parameter property="phone" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="role" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="password" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="payPwd" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="points" javaType="integer" jdbcType="NUMBER" />
 		<parameter property="wwId" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="balance" javaType="float" jdbcType="NUMBER" />
 	</parameterMap>
 	<sql id="byUserIdCondition">
 		<![CDATA[
-		   userId = #userId:INT#
+		   userId = #userId:LONG#
 	    ]]>
 	</sql>
 
 	<insert id="save" parameterMap="pm_user_without_id">
 		<![CDATA[
 			INSERT INTO t_user 
-						(userName, email, phone, role, password, points, wwId, balance) 
-				 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+						(userName, email, phone, role, password, payPwd, points, wwId, balance) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 		]]>
-		<selectKey resultClass="int">
+		<selectKey resultClass="long">
 			<![CDATA[
 				SELECT @@IDENTITY AS ID
 			]]>
@@ -62,6 +63,16 @@
 					phone = #phone:VARCHAR#
 				]]>
 			</isNotNull>
+			<isNotEmpty property="password" prepend=",">
+				<![CDATA[
+					password = #password:VARCHAR#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="payPwd" prepend=",">
+				<![CDATA[
+					payPwd = #payPwd:VARCHAR#
+				]]>
+			</isNotEmpty>
 		</dynamic>
 		<dynamic prepend="WHERE">
 			<include refid="byUserIdCondition" />

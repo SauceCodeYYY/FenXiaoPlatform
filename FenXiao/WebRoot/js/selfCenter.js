@@ -5,12 +5,13 @@ var selfInfo = function(tabId, tabText){
 		fields:['userId', 'userName', 'email', 'phone', 'role', 'points', 'wwId', 'balance'],
 		proxy: {
 			type: 'ajax',
-			url: 'findUserByExample.action?user.userId=' + userId,
+			url: 'findUserByExample.action',
 			reader: {
 				type: 'json',
 				root: 'root',
 				totalProperty: 'totalProperty'
-			}
+			},
+			extraParams: { 'user.userId': userId }
 		}
 	});
 	var currentUser = null;
@@ -35,43 +36,82 @@ var selfInfo = function(tabId, tabText){
 					// The fields
 					defaultType: 'textfield',
 					items: [{
-						fieldLabel: '用户ID',
 						name: 'user.userId',
 						allowBlank: false,
 						value: currentUser.data.userId,
-						readOnly: true
+						readOnly: true,
+						xtype: "hiddenfield"
 					},{
 						fieldLabel: '昵称',
 						name: 'user.userName',
 						allowBlank: false,
 						value: currentUser.data.userName,
-						readOnly: true
+						readOnly: true,
+						disabled: true
+					},{
+						fieldLabel: '旧登录密码',
+						name: 'oldPwd',
+						inputType: 'password',
+						emptyText: '如果不需要更改登录密码, 留空即可'
+					},{
+						fieldLabel: '新登录密码',
+						name: 'user.password',
+						inputType: 'password',
+						emptyText: '如果不需要更改登录密码, 留空即可'
+					},{
+						fieldLabel: '新登录密码确认',
+						name: 'user.passwordConfirm',
+						inputType: 'password',
+						validator: function() {
+			                   var frm = this.up('form').getForm();
+			                   // Save the fields we are going to insert values into
+			                   var pass1 = frm.findField("user.password").getValue();
+			                   var pass2 = frm.findField('user.passwordConfirm').getValue();
+			                    if (pass1 == pass2)
+			                        return true;
+			                    else 
+			                        return "密码输入不一致";
+			            },
+						emptyText: '如果不需要更改登录密码, 留空即可'
 					},{
 						fieldLabel: '邮箱',
 						name: 'user.email',
 						value: currentUser.data.email,
-						allowBlank: false
+						allowBlank: false,
+						vtype: 'email'
 					},{
 						fieldLabel: '联系方式',
 						name: 'user.phone',
 						value: currentUser.data.phone,
-						allowBlank: false
+						allowBlank: false,
+						validator: function() {
+			                   var frm = this.up('form').getForm();
+			                   // Save the fields we are going to insert values into
+			                   var phone = frm.findField("user.phone").getValue();
+			                    if (/\d{11}/.test(phone))
+			                        return true;
+			                    else 
+			                        return "电话号码格式错误, 请输入正确的电话号码, 如12312312312";
+			            }
 					},{
 						fieldLabel: '账户余额',
 						name: 'user.balance',
 						value: currentUser.data.balance,
-						readOnly: true
+						readOnly: true,
+						disabled: true
 					},{
 						fieldLabel: '积分',
 						name: 'user.points',
 						value: currentUser.data.points,
-						readOnly: true
+						readOnly: true,
+						disabled: true
 					},{
 						fieldLabel: '角色',
 						name: 'user.role',
 						allowBlank: false,
-						value: currentUser.data.role,
-						readOnly: true
+						value: currentUser.data.role == "admin"? "管理员": "普通用户",
+						readOnly: true,
+						disabled: true
 					}],
 					// Reset and Submit buttons
 					buttons: [{
@@ -88,17 +128,21 @@ var selfInfo = function(tabId, tabText){
 							if (form.isValid()) {
 								form.submit({
 									success: function(form, action) {
-									   Ext.Msg.alert('Success', action.result.msg);
+									   Ext.Msg.alert('提示', "个人信息更新成功！");
 									},
 									failure: function(form, action) {
-										Ext.Msg.alert('Failed', action.result.msg);
+										Ext.Msg.alert('提示', action.result.tip);
 									}
 								});
 							}
 						}
 					}],
 				});
-				createTab(tabId, tabText, formPanel);
+		    	var panel = new Ext.panel.Panel({
+		    		bodyPadding: 5,
+		    		items: [formPanel]
+		    	});
+				createTab(tabId, tabText, panel);
 		    }
 		}
 	});
@@ -107,17 +151,18 @@ var selfInfo = function(tabId, tabText){
 var selfRecharge = function(tabId, tabText){
 	var selfRechargeStore = Ext.create('Ext.data.Store', {
 		storeId:'selfRechargeStore',
+		autoLoad: true,
 		fields:['rechargeId', 'userId', 'method', 'accountName', 'amount', 'tbOrderId', 'submitTime', 'closeTime', 'state', 'note'],
 		proxy: {
 			type: 'ajax',
 			url: 'findAllRechargeByUser.action',
 			reader: {
 				type: 'json',
-				root: 'root'
+				root: 'root',
+				totalProperty: 'totalProperty'
 			}
 		}
 	});
-	
 
 	var toolbarSelfRecharge = Ext.create('Ext.toolbar.Toolbar', {
 		items: [
@@ -192,12 +237,12 @@ var selfRecharge = function(tabId, tabText){
 							name: 'recharge.note',
 							allowBlank: true,
 						},{
-							fieldLabel: '状态',
+							xtype: 'hiddenfield',
 							name: 'recharge.state',
 							value: '已提交',
 							readOnly: true
 						}],
-			
+						id: "rechargeForm",
 						// Reset and Submit buttons
 						buttons: [{
 							text: 'Reset',
@@ -211,16 +256,65 @@ var selfRecharge = function(tabId, tabText){
 							handler: function() {
 								var form = this.up('form').getForm();
 								if (form.isValid()) {
-									form.submit({
-										success: function(form, action) {
-										   Ext.Msg.alert('Success', action.result.msg);
-										   window.close();
-										   selfRechargeStore.reload();
-										},
-										failure: function(form, action) {
-											Ext.Msg.alert('Failed', action.result.msg);
-										}
-									});
+									var validate_pwd_window =  new Ext.Window({
+										width: 300,
+				             			resizable : false,
+			             				modal : true,
+			             				title : '请输入支付密码',
+			             				items: [ 
+			             				         new Ext.FormPanel({
+			             				        	url: 'checkPayPwd.action',
+			             				        	defaults: {
+			             				        		anchor: '100%',
+			             				        	},
+			             				        	layout: 'anchor',
+			             				        	defaultType: 'textfield',
+			             				        	items: [{
+			             				        		name: 'user.payPwd',
+			             				        		allowBlank: false
+			             				        	}],
+			             				        	buttons: [{
+			             								text: '确认',
+			             								handler: function(btn) {
+			             									var frm = this.up('form').getForm();
+			             									if (frm.isValid()) {
+			             										frm.submit({
+			             											waitTitle: '请稍候',
+			             											waitMsg: '正在提交表单数据,请稍候...',
+			             											success: function(form, action) {
+			             												var rechargeForm = Ext.getCmp("rechargeForm");
+		             													rechargeForm.submit({
+		             														success: function(form, action) {
+		             															Ext.Msg.alert('提示', "充值已提交！");
+		             															validate_pwd_window.close();
+		             															window.close();
+		             															selfRechargeStore.reload();
+		             														},
+		             														failure: function(form, action) {
+		             															Ext.Msg.alert('提示', "充值提交失败！");
+		             														}
+		             													});
+			             											},
+			             											failure: function() {
+			             												Ext.Msg.alert("提示", "支付密码错误！");
+			             											}
+			             										});
+			             									}
+			             								}
+			             							}, {
+			             								text: '重置',
+			             								handler: function() {
+			             									this.up('form').getForm().reset();
+			             								}
+			             							}, {
+			             								text: '取消',
+			             								handler: function() {
+			             									validate_pwd_window.close();
+			             								}
+			             							}]
+			             				        })
+			             				]
+			             			}).show();
 								}
 							}
 						}],
@@ -264,7 +358,7 @@ var selfRecharge = function(tabId, tabText){
 	});
 	
 	var gridPanel = Ext.create('Ext.grid.Panel', {
-		store: selfRechargeStore.load({ params: { } }),
+		store: selfRechargeStore,
 		columns: [
 			{ text: '编号', dataIndex: 'rechargeId', flex: 1 },				
 			{ text: '用户编号', dataIndex: 'userId', flex: 1 },
@@ -291,13 +385,15 @@ var selfRecharge = function(tabId, tabText){
 var selfAddr = function (tabId, tabText){
 	var selfAddrStore = Ext.create('Ext.data.Store', {
 		storeId:'selfAddrStore',
+		autoLoad: true,
 		fields:['addressId', 'userId', 'province', 'city', 'district', 'street', 'zipCode', 'contact', 'phone', 'shortName'],
 		proxy: {
 			type: 'ajax',
 			url: 'findAllAddress.action',
 			reader: {
 				type: 'json',
-				root: 'root'
+				root: 'root',
+				totalProperty: 'totalProperty'
 			}
 		}
 	});
@@ -455,7 +551,7 @@ var selfAddr = function (tabId, tabText){
 	});
 	
 	var gridPanel = Ext.create('Ext.grid.Panel', {
-		store: selfAddrStore.load({ params: { } }),
+		store: selfAddrStore,
 		columns: [
 			{ text: '编号', dataIndex: 'addressId', flex: 1 },	
 			{ text: '用户编号', dataIndex: 'userId', flex: 1 },
@@ -535,4 +631,78 @@ var selfAddr = function (tabId, tabText){
 		});
 	});
 	createTab(tabId, tabText, gridPanel);
-}
+};
+
+var selfPayPwd = function(tabId, tabText) {
+	var formPanel = Ext.create('Ext.form.Panel', {
+		bodyPadding: 5,
+		width: 500,
+		// The form will submit an AJAX request to this URL when submitted
+		url: 'updateUser.action',
+		// Fields will be arranged vertically, stretched to full width
+		layout: 'anchor',
+		defaults: {
+			anchor: '100%'
+		},
+		// The fields
+		defaultType: 'textfield',
+		items: [{
+			name: 'user.userId',
+			allowBlank: false,
+			value: userId,
+			readOnly: true,
+			xtype: "hiddenfield"
+		},{
+			fieldLabel: '旧支付密码',
+			name: 'oldPayPwd',
+			inputType: 'password'
+		},{
+			fieldLabel: '新支付密码',
+			name: 'user.payPwd',
+			inputType: 'password'
+		},{
+			fieldLabel: '新支付密码确认',
+			name: 'user.payPwdConfirm',
+			inputType: 'password',
+			validator: function() {
+                   var frm = this.up('form').getForm();
+                   // Save the fields we are going to insert values into
+                   var pass1 = frm.findField("user.payPwd").getValue();
+                   var pass2 = frm.findField('user.payPwdConfirm').getValue();
+                    if (pass1 == pass2)
+                        return true;
+                    else 
+                        return "密码输入不一致";
+            }
+		}],
+		// Reset and Submit buttons
+		buttons: [{
+			text: 'Reset',
+			handler: function() {
+				this.up('form').getForm().reset();
+			}
+		}, {
+			text: 'Submit',
+			formBind: true, //only enabled once the form is valid
+			disabled: true,
+			handler: function() {
+				var form = this.up('form').getForm();
+				if (form.isValid()) {
+					form.submit({
+						success: function(form, action) {
+						   Ext.Msg.alert('提示', "支付密码更新成功！");
+						},
+						failure: function(form, action) {
+							Ext.Msg.alert('提示', action.result.tip);
+						}
+					});
+				}
+			}
+		}],
+	});
+	var panel = Ext.create('Ext.panel.Panel', {
+		bodyPadding: 5,
+	    items: [formPanel]
+	});	
+	createTab(tabId, tabText, panel);
+};

@@ -22,4 +22,14 @@
 	<bean name="commodityAction" class="com.lhq.prj.bms.action.CommodityAction" scope="prototype">
 		<property name="commodityService" ref="commodityService" />
 	</bean>
+	
+	<bean name="cartItemAction" class="com.lhq.prj.bms.action.CartItemAction" scope="prototype">
+		<property name="cartItemService" ref="cartItemService" />
+	</bean>
+	
+	<bean name="orderAction" class="com.lhq.prj.bms.action.OrderAction" scope="prototype">
+		<property name="orderService" ref="orderService" />
+		<property name="userService" ref="userService" />
+		<property name="cartItemService" ref="cartItemService" />
+	</bean>
 </beans>

@@ -11,4 +11,6 @@
 	<sqlMap resource="com/lhq/prj/bms/po/xml/User.xml" />
 	<sqlMap resource="com/lhq/prj/bms/po/xml/Recharge.xml" />
 	<sqlMap resource="com/lhq/prj/bms/po/xml/Address.xml" />
+	<sqlMap resource="com/lhq/prj/bms/po/xml/CartItem.xml" />
+	<sqlMap resource="com/lhq/prj/bms/po/xml/Order.xml" />
 </sqlMapConfig>

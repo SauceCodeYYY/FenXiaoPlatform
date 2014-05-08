@@ -27,9 +27,7 @@ public class RechargeAction extends BaseAction {
 
 	private Page pageBean;
 
-	private Integer pageI;
-
-	private String pageS;
+	private Integer page;
 
 	private Integer rechargeId;
 
@@ -140,7 +138,7 @@ public class RechargeAction extends BaseAction {
 				User u = new User();
 				u.setUserId(r.getUserId());
 				u.setBalance(r.getAmount());
-				success = userService.updateBalance(u) != null;
+				success = userService.updateBalance(u);
 			}
 		}
 		return SUCCESS;
@@ -178,14 +176,6 @@ public class RechargeAction extends BaseAction {
 		this.pageBean = page;
 	}
 
-	public String getPageS() {
-		return pageS;
-	}
-
-	public void setPage(String pageS) {
-		this.pageS = pageS;
-	}
-
 	public Integer getRechargeId() {
 		return rechargeId;
 	}
@@ -195,11 +185,11 @@ public class RechargeAction extends BaseAction {
 	}
 
 	public void setPage(Integer pageI) {
-		this.pageI = pageI;
+		this.page = pageI;
 	}
 
-	public Integer getPageI() {
-		return pageI;
+	public Integer getPage() {
+		return page;
 	}
 
 	public IUserService getUserService() {

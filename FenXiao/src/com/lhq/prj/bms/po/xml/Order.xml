@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Order">
+	<typeAlias alias="order" type="com.lhq.prj.bms.po.Order" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+
+	<parameterMap class="order" id="pm_order_without_id">
+		<parameter property="userId" javaType="long" jdbcType="int" />
+		<parameter property="submitTime" javaType="java.util.Date"
+			jdbcType="DATETIME" />
+		<parameter property="closeTime" javaType="java.util.Date"
+			jdbcType="DATETIME" />
+		<parameter property="state" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="delivery" javaType="long" jdbcType="int" />
+		<parameter property="orderItem" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="note" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="total" javaType="float" jdbcType="NUMBER" />
+	</parameterMap>
+
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   userId = #userId:LONG#
+	    ]]>
+	</sql>
+
+	<sql id="byIdCondition">
+		<![CDATA[
+		   orderId = #orderId:LONG#
+	    ]]>
+	</sql>
+
+	<insert id="save" parameterMap="pm_order_without_id">
+		<![CDATA[
+			INSERT INTO t_order
+						(userId, submitTime, closeTime, state, delivery, orderItem, note, total) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+		]]>
+		<selectKey resultClass="long">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="long">
+		<![CDATA[
+			delete t_order
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdCondition" />
+		</dynamic>
+	</delete>
+
+	<update id="update" parameterClass="order">
+		<![CDATA[
+			UPDATE t_order
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="state" prepend=",">
+				<![CDATA[
+					state = #state:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="closeTime" prepend=",">
+				<![CDATA[
+					closeTime = #closeTime:DATETIME#
+				]]>
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byIdCondition" />
+		</dynamic>
+	</update>
+
+	<sql id="byIdPageCondition">
+		<isNotEmpty property="conditions">
+			<![CDATA[
+				upper(orderId) LIKE '%' + upper(#conditions[0]:VARCHAR#) + '%'
+	    	]]>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="bySubmitTimeCondition">
+		<isNotEmpty property="conditions">
+			<![CDATA[
+				CONVERT(DATETIME, CONVERT(varchar, submittime, 112)) between convert(datetime, #conditions[0]:VARCHAR#) and convert(datetime, #conditions[1]:VARCHAR#)
+	    	]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="findByUser" parameterClass="page"
+		resultClass="order">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_order 
+					WHERE (orderId <= (SELECT MIN(orderId) FROM (SELECT TOP $start$ orderId FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc
+		]]>
+	</select>
+
+	<select id="findByUserCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</select>
+	
+	<select id="findByUserAndTime" parameterClass="page"
+		resultClass="order">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_order 
+					WHERE (orderId <= (SELECT MIN(orderId) FROM (SELECT TOP $start$ orderId FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="bySubmitTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="bySubmitTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc
+		]]>
+	</select>
+
+	<select id="findByUserAndTimeCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="bySubmitTimeCondition" />
+		</dynamic>
+	</select>
+
+	<select id="findByPage" parameterClass="page" resultClass="order">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_order 
+					WHERE (orderId <= (SELECT MIN(orderId) FROM (SELECT TOP $start$ orderId FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="byIdPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc 
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_order 
+		]]>
+	</select>
+	
+	<select id="findByTime" parameterClass="page"
+		resultClass="order">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_order 
+					WHERE (orderId <= (SELECT MIN(orderId) FROM (SELECT TOP $start$ orderId FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="bySubmitTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="bySubmitTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY orderId desc
+		]]>
+	</select>
+
+	<select id="findByTimeCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="bySubmitTimeCondition" />
+		</dynamic>
+	</select>
+</sqlMap>

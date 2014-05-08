@@ -3,13 +3,13 @@ package com.lhq.prj.bms.po;
 import java.io.Serializable;
 
 /**
- * User.java Create on 2008-9-18 ÏÂÎç09:32:48
+ * User.java Create on 2008-9-18 ä¸‹åˆ09:32:48
  * 
- * ÓÃ»§Àà
+ * ç”¨æˆ·ç±»
  * 
  * Copyright (c) 2008 by MTA. Download by http://www.codefans.net
  * 
- * @author ÁÎå«Çä
+ * @author å»–ç€šå¿
  * @version 1.0
  */
 @SuppressWarnings("serial")
@@ -18,31 +18,34 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	/** ÓÃ»§id */
+	/** ç”¨æˆ·id */
 	private Long userId;
 
-	/** ÓÃ»§Ãû */
+	/** ç”¨æˆ·å */
 	private String userName;
 
-	/** ÓÊÏä */
+	/** é‚®ç®± */
 	private String email;
 
-	/** ÒÆ¶¯µç»° */
+	/** ç§»åŠ¨ç”µè¯ */
 	private String phone;
 
-	/** ½ÇÉ« */
+	/** è§’è‰² */
 	private String role;
 
-	/** ÃÜÂë */
+	/** å¯†ç  */
 	private String password;
 
-	/** »ı·Ö */
+	// æ”¯ä»˜å¯†ç 
+	private String payPwd;
+	
+	/** ç§¯åˆ† */
 	private Integer points;
 
-	/** ÍúÍúID */
+	/** æ—ºæ—ºID */
 	private String wwId;
 
-	/** Óà¶î */
+	/** ä½™é¢ */
 	private Float balance;
 
 	public Long getUserId() {
@@ -115,6 +118,14 @@ public class User implements Serializable {
 
 	public void setBalance(Float balance) {
 		this.balance = balance;
+	}
+
+	public String getPayPwd() {
+		return payPwd;
+	}
+
+	public void setPayPwd(String payPwd) {
+		this.payPwd = payPwd;
 	}
 
 }

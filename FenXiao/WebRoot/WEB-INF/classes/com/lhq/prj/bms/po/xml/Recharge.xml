@@ -96,11 +96,9 @@
 	
 	<sql id="findRechargeByTimeCondition">
 		<isNotEmpty property="conditions">
-			<iterate property="conditions" open="(" close=")" conjunction="OR">
-				<![CDATA[
-					submitTime between convert(datetime, #conditions[0]:VARCHAR#) and convert(datetime, #conditions[1]:VARCHAR#)
-		    	]]>
-			</iterate>
+			<![CDATA[
+				CONVERT(DATETIME, CONVERT(varchar, submittime, 112 )) between convert(datetime, #conditions[0]:VARCHAR#) and convert(datetime, #conditions[1]:VARCHAR#)
+	    	]]>
 		</isNotEmpty>
 	</sql>
 	
@@ -189,11 +187,21 @@
 	
 	<select id="findByTime" parameterClass="page" resultClass="recharge">
 		<![CDATA[
-			SELECT * FROM t_recharge 
+			SELECT TOP $limit$ * FROM t_recharge 
+					WHERE (rechargeId >= (SELECT MAX(rechargeId) FROM (SELECT TOP $start$ rechargeId FROM t_recharge 
 		]]>
 		<dynamic prepend="WHERE">
 			<include refid="findRechargeByTimeCondition" />
 		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId
+		]]>
 	</select>
 	
 	<select id="findByTimeCount" parameterClass="page" resultClass="int">
@@ -207,7 +215,8 @@
 	
 	<select id="findByTimeAndUser" parameterClass="page" resultClass="recharge">
 		<![CDATA[
-			SELECT * FROM t_recharge
+			SELECT TOP $limit$ * FROM t_recharge 
+					WHERE (rechargeId >= (SELECT MAX(rechargeId) FROM (SELECT TOP $start$ rechargeId FROM t_recharge 
 		]]>
 		<dynamic prepend="WHERE">
 			<isNotNull property="userId" prepend="AND">
@@ -217,6 +226,20 @@
 		<dynamic prepend="AND">
 			<include refid="findRechargeByTimeCondition" />
 		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findRechargeByTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY rechargeId
+		]]>
 	</select>
 	
 	<select id="findByTimeAndUserCount" parameterClass="page" resultClass="int">

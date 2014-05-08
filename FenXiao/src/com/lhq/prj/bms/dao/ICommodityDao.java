@@ -67,4 +67,27 @@ public interface ICommodityDao {
 	 * @return
 	 */
 	public int findByCount(Page page);
+
+	/**
+	 * 通过货号查找
+	 * @param page
+	 * @return
+	 */
+	public List findByNovid(Page page);
+
+	/**
+	 * 通过货号+渠道+尺寸查找单个商品
+	 * @param commodity
+	 * @return
+	 */
+	public Commodity findByExact(Commodity commodity);
+	
+	/**
+	 * 通过商品编号列表查找
+	 * @param page
+	 * @return
+	 */
+	public List findByIds(Page page);
+	
+	public int findByIdsCount(Page page);
 }

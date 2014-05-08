@@ -8,13 +8,13 @@ import com.lhq.prj.bms.po.User;
 import com.lhq.prj.bms.service.IUserService;
 
 /**
- * UserService.java Create on 2008-9-19 ÉÏÎç01:41:43
+ * UserService.java Create on 2008-9-19 ï¿½ï¿½ï¿½ï¿½01:41:43
  * 
- * ÓÃ»§¹ÜÀíÒµÎñ²ãÊµÏÖÀà
+ * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
  * 
  * Copyright (c) 2008 by MTA.
  * 
- * @author ÁÎå«Çä
+ * @author ï¿½ï¿½ï¿½ï¿½ï¿½
  * @version 1.0
  */
 public class UserService implements IUserService {
@@ -59,7 +59,7 @@ public class UserService implements IUserService {
 		return userDao.findByExample(user);
 	}
 
-	public Integer updateBalance(User user) {
-		return userDao.updateBalance(user);
+	public boolean updateBalance(User user) {
+		return userDao.updateBalance(user) != null;
 	}
 }

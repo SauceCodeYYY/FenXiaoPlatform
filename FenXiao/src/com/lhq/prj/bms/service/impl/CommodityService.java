@@ -1,23 +1,7 @@
 package com.lhq.prj.bms.service.impl;
 
-import java.io.FileOutputStream;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.lhq.prj.bms.core.ImportFileStream;
 import com.lhq.prj.bms.core.Page;
 import com.lhq.prj.bms.dao.ICommodityDao;
 import com.lhq.prj.bms.po.Commodity;
@@ -43,10 +27,6 @@ public class CommodityService implements ICommodityService {
 		} else {
 			return false;
 		}
-		/*
-		 * Integer flag = commodityDao.deleteById(Integer.valueOf( idsStrings));
-		 * if (null != flag) { return true; } return false;
-		 */
 	}
 
 	public List findAll(Commodity commodity) {
@@ -68,6 +48,22 @@ public class CommodityService implements ICommodityService {
 	public Page findByPage(Page page) {
 		page.setRoot(commodityDao.findByPage(page));
 		page.setTotalProperty(commodityDao.findByCount(page));
+		return page;
+	}
+
+	public Page findByNovid(Page page) {
+		page.setRoot(commodityDao.findByNovid(page));
+		// page.setTotalProperty(commodityDao.findByCount(page));
+		return page;
+	}
+
+	public Commodity findExact(Commodity commodity) {
+		return commodityDao.findByExact(commodity);
+	}
+
+	public Page findByIds(Page page) {
+		page.setRoot(commodityDao.findByIds(page));
+		page.setTotalProperty(commodityDao.findByIdsCount(page));
 		return page;
 	}
 
@@ -95,10 +91,10 @@ public class CommodityService implements ICommodityService {
 	 * importRemark = item.getString(); // importRemark =
 	 * UnicodeUtil.decodeUnicode(importRemark); } if
 	 * (item.getFieldName().equals("importType")) { type =
-	 * Integer.parseInt(item.getString()); } // 锟斤拷锟斤拷潜?锟斤拷 锟斤拷锟斤拷锟角凤拷锟侥硷拷锟较达拷元锟斤拷 if
-	 * (!item.isFormField()) { String fileName = item.getName(); fileType =
-	 * fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(); in =
-	 * item.getInputStream(); this.import2Exl(in); } }
+	 * Integer.parseInt(item.getString()); } // 锟斤拷锟斤拷潜?锟斤拷
+	 * 锟斤拷锟斤拷锟角凤拷锟侥硷拷锟较达拷元锟斤拷 if (!item.isFormField()) { String fileName =
+	 * item.getName(); fileType = fileName.substring(fileName.lastIndexOf(".") +
+	 * 1).toLowerCase(); in = item.getInputStream(); this.import2Exl(in); } }
 	 * 
 	 * 
 	 * } catch (BiffException e) { e.printStackTrace();
@@ -123,7 +119,8 @@ public class CommodityService implements ICommodityService {
 	 * 
 	 * sheet = book.getSheet(0); for(int i=2;i<sheet.getRows();i++) {
 	 * 
-	 * // 锟斤拷取每一锟叫的碉拷元锟斤拷 sheet.getRows(); cell1 = sheet.getCell(0, i);// 锟斤拷锟叫ｏ拷锟叫ｏ拷
+	 * // 锟斤拷取每一锟叫的碉拷元锟斤拷 sheet.getRows(); cell1 = sheet.getCell(0, i);//
+	 * 锟斤拷锟叫ｏ拷锟叫ｏ拷
 	 * 
 	 * cell2 = sheet.getCell(1, i);
 	 * 

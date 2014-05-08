@@ -26,10 +26,10 @@ public interface ICommodityService {
 	/**
 	 * 添加商品
 	 * 
-	 * @param subject
+	 * @param commodity
 	 * @return
 	 */
-	Object saveCommodity(Commodity subject);
+	Object saveCommodity(Commodity commodity);
 	
 	
 	/**
@@ -44,34 +44,42 @@ public interface ICommodityService {
 	 * 
 	 * @return
 	 */
-	List findAll(Commodity subject);
+	List findAll(Commodity commodity);
 
 	/**
 	 * 修改商品信息
 	 * 
-	 * @param subject
+	 * @param commodity
 	 * @return
 	 * @throws Exception
 	 */
-	boolean updateCommodity(Commodity subject) throws Exception;
+	boolean updateCommodity(Commodity commodity) throws Exception;
 
 	/**
 	 * 删除商品
 	 * 
-	 * @param subjectId
+	 * @param commodityId
 	 * @return
 	 */
-	boolean deleteCommodity(String subjectId);
+	boolean deleteCommodity(String commodityId);
 	
 	/**
-	 * 上传
-	 * 
+	 * 分页+货号查找
+	 * @param page 分页对象
+	 * @return
 	 */
-/*
-	public String importExl(HttpServletRequest request,Commodity bean) throws IOException, FileUploadException;
-	 
-	public void import2Exl(InputStream in) throws BiffException, IOException;
-	 */
-	 
+	Page findByNovid(Page page);
 
+	/**
+	 * 通过货号+渠道+尺码查找单个商品
+	 * @return
+	 */
+	Commodity findExact(Commodity commodity);
+	
+	/**
+	 * 通过商品编号列表查找
+	 * @param page
+	 * @return
+	 */
+	Page findByIds(Page page);
 }

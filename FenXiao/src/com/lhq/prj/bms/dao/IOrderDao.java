@@ -3,17 +3,17 @@ package com.lhq.prj.bms.dao;
 import java.util.List;
 
 import com.lhq.prj.bms.core.Page;
-import com.lhq.prj.bms.po.Recharge;
+import com.lhq.prj.bms.po.Order;
 
-public interface IRechargeDao {
+public interface IOrderDao {
 
 	/**
 	 * 保存一个新的充值记录
 	 * 
-	 * @param recharge
+	 * @param order
 	 * @return
 	 */
-	public Object saveRecharge(Recharge recharge);
+	public Object saveOrder(Order order);
 
 	/**
 	 * 查找所有充值记录
@@ -42,27 +42,27 @@ public interface IRechargeDao {
 	/**
 	 * 根据示例查找充值信息
 	 * 
-	 * @param recharge
+	 * @param order
 	 * @return
 	 */
-	public List findByExample(Recharge recharge);
+//	public List findByExample(Order order);
 
 	/**
 	 * 修改充值信息
 	 * 
-	 * @param recharge
+	 * @param order
 	 * @return
 	 * @throws Exception
 	 */
-	public Integer update(Recharge recharge) throws Exception;
+	public Integer update(Order order) throws Exception;
 
 	/**
 	 * 根据id删除充值记录
 	 * 
-	 * @param rechargeId
+	 * @param orderId
 	 * @return
 	 */
-	public Integer deleteById(Integer rechargeId);
+//	public Integer deleteById(Integer orderId);
 
 	/**
 	 * 根据提交时间查找充值记录
@@ -84,7 +84,7 @@ public interface IRechargeDao {
 
 	public Integer findByTimeAndUserCount(Page page);
 
-	public List findByPageAndUser(Page page);
+	public List findByUser(Page page);
 
 	public Integer findByUserCount(Page page);
 }

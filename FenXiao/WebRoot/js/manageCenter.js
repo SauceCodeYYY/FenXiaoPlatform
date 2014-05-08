@@ -29,9 +29,11 @@ var userInfo = function(tabId, tabText){
 					var formPanel = Ext.create('Ext.form.Panel', {
 						bodyPadding: 5,
 						width: 500,
-						// The form will submit an AJAX request to this URL when submitted
+						// The form will submit an AJAX request to this URL when
+						// submitted
 						url: 'saveUser.action',
-						// Fields will be arranged vertically, stretched to full width
+						// Fields will be arranged vertically, stretched to full
+						// width
 						layout: 'anchor',
 						defaults: {
 							anchor: '100%'
@@ -91,7 +93,8 @@ var userInfo = function(tabId, tabText){
 							}
 						}, {
 							text: 'Submit',
-							formBind: true, //only enabled once the form is valid
+							formBind: true, // only enabled once the form is
+											// valid
 							disabled: true,
 							handler: function() {
 								var form = this.up('form').getForm();
@@ -128,9 +131,11 @@ var userInfo = function(tabId, tabText){
 								var formPanel = Ext.create('Ext.form.Panel', {
 									bodyPadding: 5,
 									width: 500,
-									// The form will submit an AJAX request to this URL when submitted
+									// The form will submit an AJAX request to
+									// this URL when submitted
 									url: 'updateUser.action',
-									// Fields will be arranged vertically, stretched to full width
+									// Fields will be arranged vertically,
+									// stretched to full width
 									layout: 'anchor',
 									defaults: {
 										anchor: '100%'
@@ -183,7 +188,8 @@ var userInfo = function(tabId, tabText){
 										}
 									}, {
 										text: 'Submit',
-										formBind: true, //only enabled once the form is valid
+										formBind: true, // only enabled once the
+														// form is valid
 										disabled: true,
 										handler: function() {
 											var form = this.up('form').getForm();
@@ -270,19 +276,21 @@ var userInfo = function(tabId, tabText){
 	    }]
 	});
 	
-	createTab(tabId, tabText, gridPanel, toolbarUserInfo);
+	createTab(tabId, tabText, gridPanel);
 };
 
 var rechargeInfo = function(tabId, tabText){
 	var rechargeStore = Ext.create('Ext.data.Store', {
 		storeId:'rechargeStore',
+		autoLoad: true,
 		fields:['rechargeId', 'userId', 'method', 'accountName', 'amount', 'tbOrderId', 'submitTime', 'closeTime', 'state', 'note'],
 		proxy: {
 			type: 'ajax',
 			url: 'findAllRecharge.action',
 			reader: {
 				type: 'json',
-				root: 'root'
+				root: 'root',
+				totalProperty: 'totalProperty'
 			}
 		}
 	});
@@ -321,6 +329,7 @@ var rechargeInfo = function(tabId, tabText){
             }, {
              	xtype: 'button',
                 text: '通过',
+                id: 'btn-approve',
                 iconCls: 'icon-add',
                 handler: function() {
 					var record = gridPanel.getSelectionModel().getSelection()[0];
@@ -351,6 +360,7 @@ var rechargeInfo = function(tabId, tabText){
             }, {
              	xtype: 'button',
                 text: '拒绝',
+                id: 'btn-reject',
                 iconCls: 'icon-del',
                 handler: function() {
 					var record = gridPanel.getSelectionModel().getSelection()[0];
@@ -383,18 +393,18 @@ var rechargeInfo = function(tabId, tabText){
 	});
 	
 	var gridPanel = Ext.create('Ext.grid.Panel', {
-		store: rechargeStore.load({ params: {} }),
+		store: rechargeStore,
 		columns: [
-			{ text: '编号', dataIndex: 'rechargeId'},				
-			{ text: '用户编号', dataIndex: 'userId'},
-			{ text: '充值方式', dataIndex: 'method'},
-			{ text: '账户名称', dataIndex: 'accountName'},
-			{ text: '充值金额', dataIndex: 'amount'},
-			{ text: '淘宝订单编号', dataIndex: 'tbOrderId' },
-			{ text: '提交日期', dataIndex: 'submitTime' },
-			{ text: '结算日期', dataIndex: 'closeTime' },
-			{ text: '充值状态', dataIndex: 'state' },
-			{ text: '备注', dataIndex: 'note' }
+			{ text: '编号', dataIndex: 'rechargeId', flex: 1 },				
+			{ text: '用户编号', dataIndex: 'userId', flex: 1 },
+			{ text: '充值方式', dataIndex: 'method', flex: 1 },
+			{ text: '账户名称', dataIndex: 'accountName', flex: 1 },
+			{ text: '充值金额', dataIndex: 'amount', flex: 1 },
+			{ text: '淘宝订单编号', dataIndex: 'tbOrderId', flex: 2 },
+			{ text: '提交日期', dataIndex: 'submitTime', flex: 2 },
+			{ text: '结算日期', dataIndex: 'closeTime', flex: 2 },
+			{ text: '充值状态', dataIndex: 'state', flex: 1 },
+			{ text: '备注', dataIndex: 'note', flex: 2 }
 		],
 		dockedItems: [toolbarRechargeInfo, {
 	        xtype: 'pagingtoolbar',
@@ -402,6 +412,17 @@ var rechargeInfo = function(tabId, tabText){
 	        dock: 'bottom',
 	        displayInfo: true
 	    }],
+	    listeners: {
+	    	itemclick: function ( view, record, item, index, e, eOpts ){
+	    		if (record.get('state') != '已提交'){
+	    			Ext.getCmp('btn-approve').disable();
+	    			Ext.getCmp('btn-reject').disable();
+	    		} else {
+	    			Ext.getCmp('btn-approve').enable();
+	    			Ext.getCmp('btn-reject').enable();
+	    		}
+	    	}
+	    }
 	});
 	
 	createTab(tabId, tabText, gridPanel);
@@ -512,7 +533,7 @@ var prodInfo = function(tabId, tabText){
 				iconCls: 'icon-del',
 				handler: function() {
 					var records = gridPanel.getSelectionModel().getSelection();
-					if (records.length > 0) {
+					if (record && records.length > 0) {
 						var ids = '';
 						for(var i = 0; i < records.length; i++){
 							ids += records[i].getData().subjectId;
@@ -675,7 +696,7 @@ var prodInfo = function(tabId, tabText){
 			url : 'updateCommodity.action',
 			params : p,
 			success : function() {
-				//selfAddrStore.reload();
+				// selfAddrStore.reload();
 			},
 			failure : function() {
 				Ext.Msg.show({
@@ -688,6 +709,262 @@ var prodInfo = function(tabId, tabText){
 		});
 	});
 	
+	createTab(tabId, tabText, gridPanel);
+};
+
+var orderInfo = function(tabId, tabText){
+	var orderStore = Ext.create('Ext.data.Store', {
+		storeId:'orderStore',
+		autoLoad: true,
+		fields:['orderId', 'userId', 'delivery', 'orderItem', 'submitTime', 'closeTime', 'state', 'note', 'total'],
+		proxy: {
+			type: 'ajax',
+			url: 'findAllOrder.action',
+			reader: {
+				type: 'json',
+				root: 'root',
+				totalProperty: 'totalProperty'
+			}
+		}
+	});
+	
+	var toolbarOrderInfo = Ext.create('Ext.toolbar.Toolbar', {
+		items: [{
+				xtype: 'datefield',
+                id: 'manage_order_search_time_from',
+                value: new Date(),
+                format:'Y-m-d',
+                submitFormat:'Y-m-d'
+            }, '', {
+				xtype: 'datefield',
+                id: 'manage_order_search_time_to',
+                value: new Date(),
+                format:'Y-m-d',
+                submitFormat:'Y-m-d'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function() {
+					orderStore.load({params: { from: Ext.getCmp('manage_order_search_time_from').getRawValue(), to: Ext.getCmp('manage_order_search_time_to').getRawValue(), userId: userId } });
+				}
+            }, {
+				xtype: 'textfield',
+                emptyText: '输入订单号搜索',
+                id: 'manage_order_search_text'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function() {
+					orderStore.load({ params: { conditions: Ext.getCmp('manage_order_search_text').getValue() } });
+				}
+            }, {
+             	xtype: 'button',
+                text: '发货',
+                id: 'btn-deliver',
+                iconCls: 'icon-add',
+                handler: function() {
+					var records = gridPanel.getSelectionModel().getSelection();
+					if (records && records.length > 0) {
+						var record = records[0];
+						Ext.Ajax.request({
+							url: 'updateOrder.action',
+							params: {
+						        "order.orderId": record.getData().orderId,
+						        "order.state": '已发货',
+						        "order.closeTime": new Date()
+						    },
+							success: function(response) {
+								Ext.Msg.alert('Success', "订单状态更新成功！");
+								orderStore.reload();
+							},
+							failure: function(request) {
+								Ext.Msg.alert('提示', "连接服务器失败");
+							},
+							method: 'post'
+						});
+					} else {
+						Ext.Msg.alert("提示", "请选择订单！");
+					}
+				}
+            }, {
+             	xtype: 'button',
+                text: '关闭订单',
+                id: 'btn-close',
+                iconCls: 'icon-del',
+                handler: function() {
+                	var records = gridPanel.getSelectionModel().getSelection();
+					if (records && records.length > 0) {
+						var record = records[0];
+						Ext.Ajax.request({
+							url: 'updateOrder.action',
+							params: {
+								"order.orderId": record.get('orderId'),
+						        "order.state": '已关闭',
+						        "order.closeTime": new Date(),
+						        "order.total": record.get('total'),
+						        "order.userId": record.get('userId')
+						    },
+							success: function(response) {
+								Ext.Msg.alert('提示', "订单关闭成功！");
+								orderStore.reload();
+							},
+							failure: function(request) {
+								Ext.MessageBox.show({
+									title: '操作提示',
+									msg: "连接服务器失败",
+									buttons: Ext.MessageBox.OK,
+									icon: Ext.MessageBox.ERROR
+								});
+							},
+							method: 'post'
+						});
+					} else {
+						Ext.Msg.alert("提示", "请选择订单！");
+					}
+				}
+            }
+		]
+	});
+	
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: orderStore,
+		columns: [
+			{ text: '编号', dataIndex: 'orderId', flex: 1 },				
+			{ text: '用户编号', dataIndex: 'userId', flex: 1 },
+			{ text: '合计', dataIndex: 'total', flex: 1 },
+			{ text: '提交日期', dataIndex: 'submitTime', flex: 2 },
+			{ text: '结算日期', dataIndex: 'closeTime', flex: 2 },
+			{ text: '充值状态', dataIndex: 'state', flex: 1 },
+			{ text: '备注', dataIndex: 'note', flex: 2 }
+		],
+		dockedItems: [toolbarOrderInfo, {
+	        xtype: 'pagingtoolbar',
+	        store: orderStore,   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true
+	    }],
+	    listeners: {
+	    	itemclick: function ( view, record, item, index, e, eOpts ){
+	    		if (record.get('state') != '已提交'){
+	    			Ext.getCmp('btn-deliver').disable();
+	    			Ext.getCmp('btn-close').disable();
+	    		} else {
+	    			Ext.getCmp('btn-deliver').enable();
+	    			Ext.getCmp('btn-close').enable();
+	    		}
+	    	},
+	    	itemdblclick: function (view, record, item, index, e, eOpts){
+	    		var amountObj = {}, itemIdStr = "";
+	    		var orderItemStr = record.get('orderItem');
+	    		if (!orderItemStr || orderItemStr == ''){
+	    			Ext.Msg.alert("提示", "没有订单信息！");
+	    			return;
+	    		}
+	    		var items = orderItemStr.split(",");
+	    		for (var i = 0; i < items.length; i++){
+	    			var item = items[i].split("_");
+	    			amountObj[item[0]] = item[1];
+	    			itemIdStr += item[0];
+	    			if (i != items.length - 1){
+	    				itemIdStr += ",";
+	    			}
+	    		}
+	    		Ext.define('FenXiao.model.OrderItem', {
+	                extend: 'Ext.data.Model',
+	                fields: [
+	                         { name: 'subjectId', type: 'number' }, 
+	                         { name: 'novid', type: 'string' },
+	                         { name: 'channel', type: 'string' }, 
+	                         { name: 'sizeone', type: 'string' },
+	                         { name: 'sizetwo', type: 'string' },
+	                         { name: 'tagprice',  type: 'number' }, 
+	                         { name: 'discount', type: 'number' },
+	                         { name: 'brand', type: 'string' },
+	                         { name: 'largeclass', type: 'string' },
+	                         { name: 'styles', type: 'string' },
+	                         { name: 'categoryId', type: 'string' },
+	                         { name: 'color', type: 'string' },
+	                         { name: 'object', type: 'string' },
+	                         { name: 'subjectName', type: 'string' },
+	                         { name: 'seasons', type: 'string' },
+	                         { name: 'series', type: 'string' },
+	                         { name: 'sex', type: 'string' },
+	                         { name: 'year', type: 'string' },
+	                         { name: 'remarks', type: 'string' },
+	                         { name: 'province', type: 'string' },
+	                         { name: 'newNovid', type: 'string' },
+	                         { name: 'monthl', type: 'string' },
+	                         { name: 'numbers', type: 'string' },
+	                         { name: 'total', type: 'string' },
+	                         { name: 'amount', type: 'number', convert: function(v, record){
+					        	return amountObj[record.get('subjectId')]; }}, 
+					         { name: 'total', type: 'number', convert: function (v, record) {
+				             	return Math.round(record.get('tagprice') * record.get('discount') * record.get('amount') * 100) / 100;}}
+	                ]
+	            });
+	    		var orderItemsStore = Ext.create("Ext.data.Store", {
+	    			autoLoad: true,
+	    			/*fields:['subjectId', 'novid', 'brand', 'sizeone', 'sizetwo', 'largeclass', 'styles', 'categoryId', 'color', 'object', 
+	        		        'subjectName', 'tagprice', 'discount', 'seasons', 'series', 'sex', 'year', 'remarks', 'province', 'channel', 'newNovid', 'monthl', 'numbers', 'total'],*/
+	    			model: 'FenXiao.model.OrderItem',
+	    			proxy: {
+	    				type: 'ajax',
+	    				url: 'findCommodityByIds.action',
+	    				reader: {
+	    					type: 'json',
+	    					root: 'root',
+	    					totalProperty: 'totalProperty'
+	    				},
+	    				extraParams: {
+	    					conditions: itemIdStr
+	    				}
+	    			},
+	    			listeners: {
+	    				load: function(){
+	    					var old = Ext.getCmp('order-' + record.get('orderId'));
+	    		    		if (old) {
+	    		    			old.show();
+	    		    		} else {
+		    					var orderItemsPanel = Ext.create("Ext.grid.Panel", {
+		    					    store: orderItemsStore,
+		    						columns: [
+	    						          {text: '数量', dataIndex: 'amount'},                                     
+								          {text: '渠道名称', dataIndex: 'channel'},                                     
+								          {text: '货号', dataIndex: 'novid'},
+								          {text: '新货号', dataIndex: 'newNovid'},
+								          {text: '货号名称', dataIndex: 'subjectName'}, 
+								          {text: '品牌', dataIndex: 'brand'}, 
+								          {text: '尺码1', dataIndex: 'sizeone'}, 
+								          {text: '尺码2', dataIndex: 'sizetwo'}, 
+								          {text: '大类', dataIndex: 'largeclass'}, 
+								          {text: '款型', dataIndex: 'styles'}, 
+								          {text: '颜色', dataIndex: 'color'},
+								          {text: '项目', dataIndex: 'object'},
+								          {text: '吊牌价', dataIndex: 'tagprice'},
+								          {text: '季节', dataIndex: 'season'},
+								          {text: '性别', dataIndex: 'sex'},
+								          {text: '年份', dataIndex: 'year'},
+								          {text: '折扣', dataIndex: 'discount'},
+								          {text: '月份', dataIndex: 'monthl'},
+								          {text: '备注', dataIndex: 'remarks'}
+		    						],
+		    						dockedItems: [{
+		    					        xtype: 'pagingtoolbar',
+		    					        store: orderItemsStore,   // same store GridPanel is using
+		    					        dock: 'bottom',
+		    					        displayInfo: true,
+		    					    }]
+		    		    		});
+		    		    		createTab("order-" + record.get('orderId'), "订单-" + record.get('orderId'), orderItemsPanel);
+	    		    		}
+	    				}
+	    			}
+	    		});
+	    	}
+	    }
+	});
 	
 	createTab(tabId, tabText, gridPanel);
-}
+};

@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.lhq.prj.bms.core.Page;
 import com.lhq.prj.bms.po.Recharge;
-import com.lhq.prj.bms.po.Commodity;
-import com.lhq.prj.bms.po.User;
 
 public interface IRechargeService {
 	/**

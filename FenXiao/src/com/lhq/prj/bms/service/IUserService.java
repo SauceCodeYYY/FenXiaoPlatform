@@ -6,18 +6,18 @@ import com.lhq.prj.bms.core.Page;
 import com.lhq.prj.bms.po.User;
 
 /**    
- * IUserService.java Create on 2008-9-19 ÉÏÎç01:39:40   
+ * IUserService.java Create on 2008-9-19 ï¿½ï¿½ï¿½ï¿½01:39:40   
  *
- * ÓÃ»§¹ÜÀíÒµÎñ²ã½Ó¿Ú
+ * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Ó¿ï¿½
  *
  * Copyright (c) 2008 by MTA.
  *
- * @author ÁÎå«Çä
+ * @author ï¿½ï¿½ï¿½ï¿½ï¿½
  * @version 1.0  
  */
 public interface IUserService {
 	/**
-	 * Ìí¼ÓÓÃ»§
+	 * ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
 	 * @param user
 	 * @return
 	 */
@@ -25,14 +25,14 @@ public interface IUserService {
 
 
 	/**
-	 * ·ÖÒ³²éÕÒ
-	 * @param page ·ÖÒ³¶ÔÏó
+	 * ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
+	 * @param page ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
 	 * @return
 	 */
 	Page findByPage(Page page);
 
 	/**
-	 * ÐÞ¸ÄÓÃ»§ÐÅÏ¢
+	 * ï¿½Þ¸ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
 	 * @param user
 	 * @return
 	 * @throws Exception 
@@ -40,7 +40,7 @@ public interface IUserService {
 	boolean updateUser(User user) throws Exception;
 
 	/**
-	 * É¾³ýÓÃ»§
+	 * É¾ï¿½ï¿½ï¿½Ã»ï¿½
 	 * 
 	 * @param deptId
 	 * @return
@@ -49,7 +49,7 @@ public interface IUserService {
 
 
 	/**
-	 * µÇÂ½ÏµÍ³
+	 * ï¿½ï¿½Â½ÏµÍ³
 	 * 
 	 * @param user
 	 * @return user
@@ -58,13 +58,13 @@ public interface IUserService {
 
 
 	/**
-	 * ¸ù¾ÝÓÃ»§ÊµÀý²éÕÒÓÃ»§
+	 * ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
 	 *
 	 * @param user
 	 * @return
 	 */
 	List findByExample(User user);
 	
-	Integer updateBalance(User user);
+	boolean updateBalance(User user);
 }
  

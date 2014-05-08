@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CartItem">
+
+	<typeAlias alias="cartitem" type="com.lhq.prj.bms.po.CartItem" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+	<typeAlias alias="user" type="com.lhq.prj.bms.po.User" />
+
+	<parameterMap class="cartitem" id="pm_cartitem_without_id">
+		<parameter property="userId" javaType="long" jdbcType="NUMBER" />
+		<parameter property="novid" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="channel" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="size" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="amount" javaType="integer" jdbcType="NUMBER" />
+		<parameter property="subjectId" javaType="integer" jdbcType="NUMBER" />
+		<parameter property="time" javaType="java.util.Date" jdbcType="DATETIME" />
+		<parameter property="tagprice" javaType="float" jdbcType="NUMBER" />
+		<parameter property="discount" javaType="float" jdbcType="NUMBER" />
+	</parameterMap>
+
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   userId=#userId:NUMBER#
+	    ]]>
+	</sql>
+
+	<sql id="byIdCondition">
+		<![CDATA[
+		   cartItemId=#cartItemId:NUMBER#
+	    ]]>
+	</sql>
+
+	<insert id="save" parameterMap="pm_cartitem_without_id">
+		<![CDATA[
+			INSERT INTO t_cartitem
+						(userId,novid,channel,size,amount,subjectId,time,tagprice,discount) 
+				 VALUES (?,?,?,?,?,?,?,?,?)
+		]]>
+		<selectKey resultClass="long">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteByUserId" parameterClass="integer">
+		<![CDATA[
+			delete t_cartitem
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</delete>
+
+	<delete id="deleteById" parameterClass="integer">
+		<![CDATA[
+			delete t_cartitem 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdCondition" />
+		</dynamic>
+	</delete>
+
+	<update id="update" parameterClass="cartitem">
+		<![CDATA[
+			UPDATE t_cartitem
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="time" prepend=",">
+				<![CDATA[
+					time = #time:DATETIME#
+				]]>
+			</isNotNull>
+			<isNotNull property="amount" prepend=",">
+				<![CDATA[
+					amount = #amount:NUMBER#
+				]]>
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byIdCondition" />
+		</dynamic>
+	</update>
+	
+	<!-- <sql id="findLoanLogByPageCondition">
+		<isNotNull property="objCondition">
+			<![CDATA[
+				subjectId = #objCondition.subjectId:NUMBER#
+		    ]]>
+		</isNotNull>
+	</sql> -->
+
+	<select id="findByPage" parameterClass="page" resultClass="cartitem">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_cartitem 
+					WHERE (cartItemId >= (SELECT MAX(cartItemId) FROM (SELECT TOP $start$ cartItemId FROM t_cartitem 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY cartItemId) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY cartItemId
+		]]>
+	</select>
+	
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_cartitem 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</select>
+
+	<!-- <select id="findAll" parameterClass="user" resultClass="cartitem">
+		<![CDATA[
+			SELECT * FROM t_cartitem where	 
+			 convert(varchar(10),liveTime,120)=convert(varchar(10),getdate(),120) and userer=#emplName:VARCHAR#
+			 
+		]]>
+		<dynamic prepend="WHERE"> <isNotNull property="liveTime" prepend="AND"> 
+			convert(varchar(10),liveTime,120)=convert(varchar(10),getdate(),120) </isNotNull> 
+			<isNotNull property="userer" prepend="AND"> userer= #cartitem.userer:VARCHAR# 
+			</isNotNull> </dynamic>
+	</select>
+ -->
+
+</sqlMap>

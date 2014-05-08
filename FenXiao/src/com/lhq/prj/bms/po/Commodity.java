@@ -6,7 +6,7 @@ public class Commodity implements Serializable {
 	private static final long serialVersionUID = -1793380622582674164L;
 
 	// 商品编号
-	private Integer subjectId;
+	private Long subjectId;
 	// 货号
 	private String novid;
 	// 品牌
@@ -52,11 +52,11 @@ public class Commodity implements Serializable {
 
 	private String province;
 
-	public Integer getSubjectId() {
+	public Long getSubjectId() {
 		return subjectId;
 	}
 
-	public void setSubjectId(Integer subjectId) {
+	public void setSubjectId(Long subjectId) {
 		this.subjectId = subjectId;
 	}
 

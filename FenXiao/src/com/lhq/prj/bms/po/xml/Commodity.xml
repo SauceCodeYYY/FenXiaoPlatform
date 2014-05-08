@@ -8,6 +8,62 @@
 	<typeAlias alias="commodity" type="com.lhq.prj.bms.po.Commodity" />
 	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
 
+	<sql id="byIdsCondition">
+		<![CDATA[
+			subjectId IN 
+		]]>
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")"
+				conjunction=", ">
+				<![CDATA[
+					#conditions[]:VARCHAR#
+		   		]]> 	
+			</iterate>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="byNovidCondition">
+		<isNotEmpty property="conditions">
+			<![CDATA[
+				 upper(novid) LIKE '%' + upper(#conditions[0]:VARCHAR#) + '%'    
+	    	]]>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="findUserByPageCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")"
+				conjunction="OR">
+				<![CDATA[
+					upper(subjectName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					 OR upper(novid) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(brand) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(sizeone) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(sizetwo) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(largeclass) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(styles) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(color) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(object) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				     OR upper(subjectName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				      OR upper(tagprice) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				       OR upper(discount) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				        OR upper(sex) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				         OR upper(year) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(season) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(series) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(province) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(total) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				           OR upper(channel) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				            OR upper(newNovid) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(monthl) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				           OR upper(numbers) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+
 	<insert id="save" parameterClass="commodity">
 		<![CDATA[
 			INSERT INTO t_commodity ( 
@@ -53,14 +109,14 @@
 			    #newNovid:VARCHAR#, #monthl:VARCHAR#, #numbers:VARCHAR#
  )
 		]]>
-		<selectKey resultClass="int">
+		<selectKey resultClass="long">
 			<![CDATA[
 				 SELECT @@IDENTITY AS ID  
 			]]>
 		</selectKey>
 	</insert>
 
-	<delete id="deleteById" parameterClass="integer">
+	<delete id="deleteById" parameterClass="long">
 		<![CDATA[
 			delete t_commodity  WHERE subjectId = #subjectId:NUMBER#
 		]]>
@@ -72,7 +128,8 @@
 		]]>
 		<dynamic prepend="SET">
 			<isNotNull property="subjectName" prepend=",">
-				subjectName = #subjectName:VARCHAR#
+				subjectName =
+				#subjectName:VARCHAR#
 			</isNotNull>
 			<isNotNull property="novid" prepend=",">
 				<![CDATA[
@@ -177,40 +234,33 @@
 		]]>
 	</update>
 
-	<sql id="findUserByPageCondition">
-		<isNotEmpty property="conditions">
-			<iterate property="conditions" open="(" close=")"
-				conjunction="OR">
-				<![CDATA[
-					upper(subjectName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-					 OR upper(novid) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(brand) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(sizeone) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(sizetwo) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(largeclass) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(styles) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(color) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
-				    OR upper(object) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
-				     OR upper(subjectName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				      OR upper(tagprice) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				       OR upper(discount) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				        OR upper(sex) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				         OR upper(year) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(season) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(series) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(province) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(total) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
-				           OR upper(channel) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				            OR upper(newNovid) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(monthl) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
-				           OR upper(numbers) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-		    	]]>
-			</iterate>
-		</isNotEmpty>
-	</sql>
+	<select id="findByIds" parameterClass="page" resultClass="commodity">
+		<![CDATA[
+			SELECT * FROM t_commodity 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdsCondition" />
+		</dynamic>
+	</select>
 	
+	<select id="findByIdsCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT count(*) FROM t_commodity 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byIdsCondition" />
+		</dynamic>
+	</select>
+
+	<select id="findByNovid" parameterClass="page" resultClass="commodity">
+		<![CDATA[
+			SELECT * FROM t_commodity 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byNovidCondition" />
+		</dynamic>
+	</select>
+
 	<select id="findByPage" parameterClass="page" resultClass="commodity">
 		<![CDATA[
 			SELECT TOP $limit$ * FROM t_commodity 
@@ -239,6 +289,23 @@
 		</dynamic>
 	</select>
 
+	<select id="findExact" parameterClass="commodity" resultClass="commodity">
+		<![CDATA[
+			SELECT * FROM t_commodity 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="novid" prepend="AND">
+				novid=#novid:VARCHAR#
+			</isNotNull>
+			<isNotNull property="channel" prepend="AND">
+				channel=#channel:VARCHAR#
+			</isNotNull>
+			<isNotNull property="sizeone" prepend="AND">
+				sizeone=#sizeone:VARCHAR#
+			</isNotNull>
+		</dynamic>
+	</select>
+
 	<select id="findAll" parameterClass="commodity" resultClass="commodity">
 		<![CDATA[
 			SELECT * FROM t_commodity 
@@ -252,13 +319,17 @@
 				novid LIKE '%' +
 				#novid:VARCHAR# + '%'
 			</isNotNull>
-			<isNotNull property="brand" prepend="AND">
-				brand LIKE '%' +
-				#brand:VARCHAR# + '%'
+			<isNotNull property="channel" prepend="AND">
+				channel LIKE '%' +
+				#channel:VARCHAR# + '%'
 			</isNotNull>
 			<isNotNull property="sizeone" prepend="AND">
 				sizeone LIKE '%' +
 				#sizeone:VARCHAR# + '%'
+			</isNotNull>
+			<isNotNull property="brand" prepend="AND">
+				brand LIKE '%' +
+				#brand:VARCHAR# + '%'
 			</isNotNull>
 			<isNotNull property="sizetwo" prepend="AND">
 				sizetwo LIKE '%' +
@@ -319,10 +390,6 @@
 			<isNotNull property="total" prepend="AND">
 				total LIKE '%' +
 				#total:VARCHAR# + '%'
-			</isNotNull>
-			<isNotNull property="channel" prepend="AND">
-				channel LIKE '%' +
-				#channel:VARCHAR# + '%'
 			</isNotNull>
 			<isNotNull property="newNovid" prepend="AND">
 				newNovid LIKE '%' +

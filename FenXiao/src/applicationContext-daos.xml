@@ -21,4 +21,12 @@
 	<bean id="commodityDao" class="com.lhq.prj.bms.dao.impl.CommodityDao">
 		<property name="sqlMapClient" ref="sqlMapClient" />
 	</bean>
+	
+	<bean id="cartItemDao" class="com.lhq.prj.bms.dao.impl.CartItemDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="orderDao" class="com.lhq.prj.bms.dao.impl.OrderDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
 </beans>
