@@ -29,7 +29,7 @@
 	    	]]>
 		</isNotEmpty>
 	</sql>
-
+	
 	<sql id="findUserByPageCondition">
 		<isNotEmpty property="conditions">
 			<iterate property="conditions" open="(" close=")"
@@ -52,7 +52,7 @@
 				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
 				          OR upper(season) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
 				          OR upper(series) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
-				          OR upper(province) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+				          OR upper(state) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
 				          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
 				          OR upper(total) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
 				           OR upper(channel) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
@@ -84,7 +84,7 @@
 	        sex,       
 	        year,
 	       remarks,
-           province,
+           state,
             total,
             newNovid,
             monthl,
@@ -105,7 +105,7 @@
 			   #season:VARCHAR#,
 			     #series:VARCHAR#, 
 			      #channel:VARCHAR#,
-			   #sex:VARCHAR#, #year:VARCHAR#, #remarks:VARCHAR#, #province:VARCHAR#, #total:VARCHAR#,
+			   #sex:VARCHAR#, #year:VARCHAR#, #remarks:VARCHAR#, #state:VARCHAR#, #total:VARCHAR#,
 			    #newNovid:VARCHAR#, #monthl:VARCHAR#, #numbers:VARCHAR#
  )
 		]]>
@@ -234,6 +234,12 @@
 		]]>
 	</update>
 
+	<update id="updateState" parameterClass="commodity">
+		<![CDATA[
+			UPDATE t_commodity set state = 'offline' WHERE channel = #channel:VARCHAR# and state != 'offline'
+		]]>
+	</update>
+
 	<select id="findByIds" parameterClass="page" resultClass="commodity">
 		<![CDATA[
 			SELECT * FROM t_commodity 
@@ -254,9 +260,9 @@
 
 	<select id="findByNovid" parameterClass="page" resultClass="commodity">
 		<![CDATA[
-			SELECT * FROM t_commodity 
+			SELECT * FROM t_commodity where state='online'
 		]]>
-		<dynamic prepend="WHERE">
+		<dynamic prepend="AND">
 			<include refid="byNovidCondition" />
 		</dynamic>
 	</select>
@@ -264,7 +270,7 @@
 	<select id="findByPage" parameterClass="page" resultClass="commodity">
 		<![CDATA[
 			SELECT TOP $limit$ * FROM t_commodity 
-					WHERE (subjectId>= (SELECT MAX(subjectId) FROM (SELECT TOP $start$ subjectId FROM t_commodity  
+					WHERE state='online' and (subjectId>= (SELECT MAX(subjectId) FROM (SELECT TOP $start$ subjectId FROM t_commodity  
 		]]>
 		<dynamic prepend="WHERE">
 			<include refid="findUserByPageCondition" />
@@ -282,7 +288,7 @@
 
 	<select id="findByCount" parameterClass="page" resultClass="int">
 		<![CDATA[
-			SELECT COUNT(*) FROM t_commodity  
+			SELECT COUNT(*) FROM t_commodity where state='online' 
 		]]>
 		<dynamic prepend="WHERE">
 			<include refid="findUserByPageCondition" />
@@ -302,6 +308,9 @@
 			</isNotNull>
 			<isNotNull property="sizeone" prepend="AND">
 				sizeone=#sizeone:VARCHAR#
+			</isNotNull>
+			<isNotNull property="state" prepend="AND">
+				state=#state:VARCHAR#
 			</isNotNull>
 		</dynamic>
 	</select>
@@ -383,9 +392,9 @@
 				remarks LIKE '%' +
 				#remarks:VARCHAR# + '%'
 			</isNotNull>
-			<isNotNull property="province" prepend="AND">
-				province LIKE '%' +
-				#province:VARCHAR# + '%'
+			<isNotNull property="state" prepend="AND">
+				state LIKE '%' +
+				#state:VARCHAR# + '%'
 			</isNotNull>
 			<isNotNull property="total" prepend="AND">
 				total LIKE '%' +

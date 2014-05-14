@@ -50,7 +50,7 @@ public class Commodity implements Serializable {
 	// 库存
 	private String numbers;
 
-	private String province;
+	private String state;
 
 	public Long getSubjectId() {
 		return subjectId;
@@ -228,12 +228,12 @@ public class Commodity implements Serializable {
 		this.numbers = numbers;
 	}
 
-	public String getProvince() {
-		return province;
+	public String getState() {
+		return state;
 	}
 
-	public void setProvince(String province) {
-		this.province = province;
+	public void setState(String state) {
+		this.state = state;
 	}
 
 }

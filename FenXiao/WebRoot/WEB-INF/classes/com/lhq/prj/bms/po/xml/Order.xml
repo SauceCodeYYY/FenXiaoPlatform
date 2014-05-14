@@ -15,10 +15,14 @@
 		<parameter property="closeTime" javaType="java.util.Date"
 			jdbcType="DATETIME" />
 		<parameter property="state" javaType="string" jdbcType="VARCHAR" />
-		<parameter property="delivery" javaType="long" jdbcType="int" />
+		<parameter property="deliveryMethod" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="orderItem" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="note" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="total" javaType="float" jdbcType="NUMBER" />
+		<parameter property="province" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="receiver" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="cell" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="address" javaType="string" jdbcType="VARCHAR" />
 	</parameterMap>
 
 	<sql id="byUserIdCondition">
@@ -36,8 +40,8 @@
 	<insert id="save" parameterMap="pm_order_without_id">
 		<![CDATA[
 			INSERT INTO t_order
-						(userId, submitTime, closeTime, state, delivery, orderItem, note, total) 
-				 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+						(userId, submitTime, closeTime, state, deliveryMethod, orderItem, note, total, province, receiver, cell, address) 
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		]]>
 		<selectKey resultClass="long">
 			<![CDATA[

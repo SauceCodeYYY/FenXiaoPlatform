@@ -527,6 +527,7 @@ var shoppingCart = function(tabId, tabText){
 							iconCls : 'icon-plugin',
 							handler : function() {
 								var deliver = Ext.getCmp('order-deliver').getValue();
+								var cell = Ext.getCmp('order-cell').getValue();
 								var receiver = Ext.getCmp('order-receiver').getValue();
 								var province = Ext.getCmp('order-province').getValue();
 								var address = Ext.getCmp('order-address').getValue();
@@ -536,6 +537,10 @@ var shoppingCart = function(tabId, tabText){
 								}
 								if (!receiver || receiver.trim() == ""){
 									Ext.Msg.alert("提示", "请输入收货人姓名!");
+									return;
+								}
+								if (!cell || cell.trim() == ""){
+									Ext.Msg.alert("提示", "请输入收货人手机!");
 									return;
 								}
 								if (!province || province.trim() == ""){
@@ -596,7 +601,11 @@ var shoppingCart = function(tabId, tabText){
 					             												        "order.state": '已提交',
 					             												        "order.submitTime": new Date(),
 					             												    	"order.orderItem": orderItems,
-					             												    	"order.delivery": address,
+					             												    	"order.address": address,
+					             												    	"order.receiver": receiver, 
+					             												    	"order.cell": cell,
+					             												    	"order.province": province,
+					             												    	"order.deliveryMethod": deliver,
 					             												    	"order.note": Ext.getCmp('order-note').getValue(),
 					             												    	"order.total": checkoutPanel.getStore().sum('total'),
 					             												    	"cartItemIds": cartItems

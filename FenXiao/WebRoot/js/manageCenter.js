@@ -1005,11 +1005,13 @@ var discountInfo = function(tabId, tabText){
 	        		}, 
         			listeners: {
         				'load': function(store) {
+//        					alert(3)
         					uId = Ext.getCmp('discountSearchText').getValue().trim();
         					old = Ext.getCmp("discount-"+uId);
         					if (old) {
         						old.close();
         					}
+//        					alert(4)
         					var toolbarDiscount = Ext.create('Ext.toolbar.Toolbar', {
         		        		items: [
         		        			{
@@ -1095,14 +1097,14 @@ var discountInfo = function(tabId, tabText){
         		        			}, '-', {
         		        				xtype: 'textfield',
         		                        emptyText : '输入渠道查询',
-        		                        id: 'channel_search_text'
+        		                        id: 'channel_search_text' + uId
         		                    }, {
         		                        xtype: 'button',
         		                        text: '查询',
         		                        iconCls : 'icon-search',
         		                        handler: function() {
         		        					discountSearchStore.load({params : 
-        		        						{ conditions: Ext.getCmp('channel_search_text').getValue().trim() }
+        		        						{ conditions: Ext.getCmp('channel_search_text'+uId).getValue().trim() }
         		        					});
         		        				}
         		                    }, '-', , {
@@ -1126,12 +1128,12 @@ var discountInfo = function(tabId, tabText){
         		        										ids: ids
         		        									},
         		        									success : function() {
-        		        										Ext.Msg.alert('Success', "删除折扣成功！");
+        		        										Ext.Msg.alert('提示', "删除折扣成功！");
         		        										discountSearchStore.reload();
         		        									},
         		        									failure : function() {
         		        										Ext.Msg.show({
-        		        											title : '错误提示',
+        		        											title : '提示',
         		        											msg : '删除时发生错误!',
         		        											buttons : Ext.Msg.OK,
         		        											icon : Ext.Msg.ERROR
@@ -1147,7 +1149,7 @@ var discountInfo = function(tabId, tabText){
         		        			}
         		        		]
         		        	});
-        					
+//        					alert(2)
     		        		var gridPanel = Ext.create('Ext.grid.Panel', {
     		        			id: "discountpanel" + uId,
     		        			store: discountSearchStore,
@@ -1197,6 +1199,7 @@ var discountInfo = function(tabId, tabText){
     						    	}
     						    }
     		        		});
+//    		        		alert(1)
     		        		createTab("discount-" + uId, "用户折扣-" + uId, gridPanel);
         				}
         			},

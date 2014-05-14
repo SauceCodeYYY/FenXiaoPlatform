@@ -41,7 +41,15 @@ public interface ICommodityDao {
 	 * @throws Exception
 	 */
 	public Integer update(Commodity commodity) throws Exception;
-
+	
+	/**
+	 * 同一渠道商品批量下线
+	 * @param commodity
+	 * @return
+	 * @throws Exception
+	 */
+	public Integer updateState(Commodity commodity) throws Exception;
+	
 	/**
 	 * 根据id删除商品
 	 * 

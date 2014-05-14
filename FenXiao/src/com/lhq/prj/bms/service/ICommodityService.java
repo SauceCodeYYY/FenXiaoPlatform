@@ -82,4 +82,12 @@ public interface ICommodityService {
 	 * @return
 	 */
 	Page findByIds(Page page);
+	
+	/**
+	 * 商品批量下线
+	 * @param commodity
+	 * @return
+	 * @throws Exception
+	 */
+	boolean updateState(Commodity commodity) throws Exception;
 }

@@ -55,6 +55,7 @@ public class CommodityAction extends BaseAction {
 		pageBean = new Page();
 		try {
 			commodity.setChannel(new String(commodity.getChannel().getBytes("iso-8859-1"), "utf-8"));
+			commodity.setState("online");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -138,6 +139,16 @@ public class CommodityAction extends BaseAction {
 		try {
 			Workbook book = createWorkBook(new FileInputStream(excelFile));
 			Sheet sheet = book.getSheetAt(0);
+			// set old commodity to offline
+			String channel = sheet.getRow(1).getCell(12).getStringCellValue();
+			Commodity comm = new Commodity();
+			comm.setChannel(channel);
+			try {
+				commodityService.updateState(comm);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
 				Row ros = sheet.getRow(i);
 				ros.getCell(0).setCellType(HSSFCell.CELL_TYPE_STRING);
@@ -175,6 +186,7 @@ public class CommodityAction extends BaseAction {
 				bean.setSizeone(ros.getCell(13).getStringCellValue());
 				bean.setNumbers(ros.getCell(14).getStringCellValue());
 				bean.setDiscount(ros.getCell(15).getStringCellValue());
+				bean.setState("online");
 
 				commodityId = (Long) commodityService.saveCommodity(bean);
 				if (commodityId != null) {

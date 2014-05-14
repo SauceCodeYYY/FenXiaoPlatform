@@ -67,6 +67,14 @@ public class CommodityService implements ICommodityService {
 		return page;
 	}
 
+	public boolean updateState(Commodity commodity) throws Exception {
+		Integer flag = commodityDao.updateState(commodity);
+		if (null != flag) {
+			return true;
+		}
+		return false;
+	}
+
 	/*
 	 * public String importExl(HttpServletRequest request,Commodity bean) throws
 	 * IOException, FileUploadException{ InputStream in = null; String

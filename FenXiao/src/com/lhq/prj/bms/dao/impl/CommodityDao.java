@@ -26,6 +26,10 @@ public class CommodityDao extends SqlMapClientDaoSupport implements ICommodityDa
 		return getSqlMapClientTemplate().update("Commodity.update", commodity);
 	}
 	
+	public Integer updateState(Commodity commodity) throws Exception {
+		return getSqlMapClientTemplate().update("Commodity.updateState", commodity);
+	}
+	
 	public int findByCount(Page page) {
 		return (Integer) getSqlMapClientTemplate().queryForObject("Commodity.findByCount", page);
 	}
