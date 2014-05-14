@@ -87,4 +87,6 @@ public interface IOrderDao {
 	public List findByUser(Page page);
 
 	public Integer findByUserCount(Page page);
+	
+	public List findByExactSubmitTime(Page page);
 }

@@ -14,4 +14,5 @@
 	<sqlMap resource="com/lhq/prj/bms/po/xml/CartItem.xml" />
 	<sqlMap resource="com/lhq/prj/bms/po/xml/Order.xml" />
 	<sqlMap resource="com/lhq/prj/bms/po/xml/Discount.xml" />
+	<sqlMap resource="com/lhq/prj/bms/po/xml/Freight.xml" />
 </sqlMapConfig>

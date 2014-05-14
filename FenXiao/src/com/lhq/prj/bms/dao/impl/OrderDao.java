@@ -56,4 +56,8 @@ public class OrderDao extends SqlMapClientDaoSupport implements IOrderDao {
 				"Order.findByUserCount", page);
 	}
 
+	public List findByExactSubmitTime(Page page) {
+		return getSqlMapClientTemplate().queryForList("Order.findByExactTime", page);
+	}
+
 }

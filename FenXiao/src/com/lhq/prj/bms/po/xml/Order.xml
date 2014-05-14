@@ -96,6 +96,27 @@
 		</isNotEmpty>
 	</sql>
 
+	<sql id="byExactSubmitTimeCondition">
+		<isNotEmpty property="conditions">
+			<![CDATA[
+				CONVERT(DATETIME, CONVERT(varchar, submittime, 112)) = convert(datetime, #conditions[0]:VARCHAR#)
+	    	]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="findByExactTime" parameterClass="page" resultClass="order">
+		<![CDATA[
+			SELECT * FROM t_order 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byExactSubmitTimeCondition" />
+		</dynamic>
+		<![CDATA[
+			and state = '已提交'
+		]]>
+	</select>
+	
+	
 	<select id="findByUser" parameterClass="page"
 		resultClass="order">
 		<![CDATA[

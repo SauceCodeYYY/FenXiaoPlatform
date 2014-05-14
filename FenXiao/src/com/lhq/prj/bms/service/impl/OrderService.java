@@ -49,4 +49,8 @@ public class OrderService implements IOrderService {
 		this.orderDao = orderDao;
 	}
 
+	public Page findByExactTime(Page page) {
+		page.setRoot(orderDao.findByExactSubmitTime(page));
+		return page;
+	}
 }

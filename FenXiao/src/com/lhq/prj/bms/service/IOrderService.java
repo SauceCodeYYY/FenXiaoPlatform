@@ -19,4 +19,6 @@ public interface IOrderService {
 	Page findByTimeAndUser(Page page);
 
 	Page findByUser(Page page);
+	
+	Page findByExactTime(Page page);
 }

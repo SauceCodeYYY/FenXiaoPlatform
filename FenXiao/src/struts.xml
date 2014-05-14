@@ -238,6 +238,25 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
+		<!-- <action name="orderExport" class="orderAction" method="orderExport">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action> -->
+		<action name="orderExport" class="orderAction">
+			<result name="success" type="stream">
+		 		<!-- 指定输出的为Excel文件 -->  
+				<param name="contentType">application/vnd.ms-excel</param>
+				<!-- 类型是附件和指定下载时文件的默认名字 -->
+				<param name="contentDisposition">attachment;filename=${ excelFile }</param>
+				<!-- 这里的inputName的属性要和action里相应的get方法的名字对应。例如action的对应的方法名是getDownloadFile
+				所以这里用downloadFile -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">1024</param>
+			</result>		
+		</action>
 		<!-- <action name="findOrderByExample" class="orderAction" method="findByExample"> 
 			<result type="json"> <param name="root">pageBean</param> <param name="excludeProperties">conditions,limit,start,success,objCondition</param> 
 			</result> </action> -->
@@ -268,5 +287,63 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
+		
+		<!-- 运费管理 -->
+		<action name="saveFreight" class="freightAction" method="saveFreight">
+			<result type="json">
+				<param name="includeProperties">success,userId</param>
+			</result>
+		</action>
+		<action name="deleteFreight" class="freightAction" method="deleteFreight">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="updateFreight" class="freightAction" method="updateFreight">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="findAllFreight" class="freightAction" method="findAllFreight">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findFreightByExample" class="freightAction" method="findByExample">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		
+		<!-- 上传 -->
+		<!--<action name="upload2" class="freightAction" method="upload">
+	
+			<result type="json">
+			<param name="includeProperties">success</param>
+			</result>
+		</action>
+		
+		-->
+		<action name="upload2" class="freightAction" method="upload">
+			<interceptor-ref name="defaultStack"></interceptor-ref> 
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		
+		<action name="exportExcel" class="freightAction">
+		 <result name="success" type="stream">
+		 		<!-- 指定输出的为Excel文件 -->  
+				<param name="contentType">application/vnd.ms-excel</param>
+				<!-- 类型是附件和指定下载时文件的默认名字 -->
+				<param name="contentDisposition">attachment;filename="yunfei.xls"</param>
+				<!-- 这里的inputName的属性要和action里相应的get方法的名字对应。例如action的对应的方法名是getDownloadFile
+				所以这里用downloadFile -->
+				<param name="inputName">downloadFile</param>
+			</result>		
+		</action>
+		
 	</package>
 </struts>

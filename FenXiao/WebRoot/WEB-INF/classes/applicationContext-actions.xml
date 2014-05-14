@@ -31,9 +31,14 @@
 		<property name="orderService" ref="orderService" />
 		<property name="userService" ref="userService" />
 		<property name="cartItemService" ref="cartItemService" />
+		<property name="commodityService" ref="commodityService" />
 	</bean>
 
 	<bean name="discountAction" class="com.lhq.prj.bms.action.DiscountAction" scope="prototype">
 		<property name="discountService" ref="discountService" />
+	</bean>
+	
+	<bean name="freightAction" class="com.lhq.prj.bms.action.FreightAction" scope="prototype">
+		<property name="freightService" ref="freightService" />
 	</bean>
 </beans>

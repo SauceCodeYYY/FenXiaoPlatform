@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Freight">
+
+	<typeAlias alias="Freight" type="com.lhq.prj.bms.po.Freight" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+
+	<parameterMap class="Freight" id="pm_user_without_id">	
+		<parameter property="priovice" javaType="string" jdbcType="VARCHAR" />
+		<!--
+		<parameter property="freightid" javaType="integer" jdbcType="NUMBER" />
+		-->
+		<parameter property="firstfreight" javaType="integer" jdbcType="NUMBER" />
+		<parameter property="lastfreight" javaType="integer" jdbcType="NUMBER" />
+		<parameter property="freightcompany" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="channel" javaType="string" jdbcType="VARCHAR" />
+	</parameterMap>
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   freightid = #freightid:NUMBER#
+	    ]]>
+	</sql>
+
+	<insert id="save" parameterMap="pm_user_without_id">
+		<![CDATA[
+			INSERT INTO t_freight
+						(priovice, firstfreight, lastfreight, freightcompany, channel) 
+				 VALUES (?, ?, ?, ?, ?)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="integer">
+		<![CDATA[
+			delete t_freight
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</delete>
+	
+	<delete id="deletefreight" parameterClass="Freight">
+		<![CDATA[
+			delete t_freight
+		]]>
+		<dynamic prepend="WHERE">
+			<![CDATA[
+					freightcompany = #freightcompany:VARCHAR#
+				]]>
+		</dynamic>
+	</delete>
+	
+	<update id="update" parameterClass="Freight">
+		<![CDATA[
+			UPDATE t_freight
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="priovice" prepend=",">
+				<![CDATA[
+					priovice = #priovice:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="channel" prepend=",">
+				<![CDATA[
+					channel = #channel:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="freightcompany" prepend=",">
+				<![CDATA[
+					freightcompany = #freightcompany:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="firstfreight" prepend=",">
+				<![CDATA[
+					firstfreight = #firstfreight:NUMBER#
+				]]>
+			</isNotNull>
+			<isNotNull property="lastfreight" prepend=",">
+				<![CDATA[
+					lastfreight = #lastfreight:NUMBER#
+				]]>
+			</isNotNull>
+			
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</update>
+
+	<!--<update id="updateBalance" parameterClass="user">
+		<![CDATA[
+			update t_user set balance = balance + #balance:NUMBER#
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</update>
+
+	-->
+	<sql id="findUserByPageCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")" conjunction="OR">
+				<![CDATA[
+					upper(priovice) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					 OR upper(freightcompany) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(channel) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'        
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByPage" parameterClass="page" resultClass="Freight">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_freight 
+					WHERE (freightid >= (SELECT MAX(freightid) FROM (SELECT TOP $start$ freightid FROM t_freight 
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY freightid ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY freightid
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_freight  
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+	</select>
+	<!--
+
+	<select id="login" parameterClass="Freight" resultClass="Freight">
+		<![CDATA[
+			SELECT * FROM t_freight  
+					WHERE userName = #userName:VARCHAR# and password = #password:VARCHAR#
+		]]>
+	</select>
+	
+	-->
+	<select id="findByExample" parameterClass="Freight" resultClass="Freight">
+		<![CDATA[
+			SELECT * FROM t_freight  
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="freightid" prepend="AND">
+				freightid = #freightid:INT#
+			</isNotNull>
+		</dynamic>
+	</select>
+</sqlMap>

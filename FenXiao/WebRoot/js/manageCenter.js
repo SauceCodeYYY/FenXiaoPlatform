@@ -824,6 +824,54 @@ var orderInfo = function(tabId, tabText){
 						Ext.Msg.alert("提示", "请选择订单！");
 					}
 				}
+            }, {
+             	xtype: 'button',
+                text: '导出',
+                iconCls: 'icon-plugin',
+                handler: function() {
+                	var order_export_window =  new Ext.Window({
+             			resizable : false,
+             				modal : true,
+             				title : '请选择导出日期',
+             				width: 300,
+             				items: [ 
+             				         new Ext.FormPanel({
+             				        	url: 'orderExport.action',
+             				        	defaults: {
+             				        		anchor: '100%',
+             				        	},
+             				        	standardSubmit: true,
+             				        	method: 'POST',
+             				        	layout: 'anchor',
+             				        	defaultType: 'textfield',
+             				        	items: [{
+             				        		xtype: 'datefield',
+             				        		name: 'export_date',
+             				        		allowBlank: false
+             				        	}],
+             				        	buttons: [{
+             								text: '导出',
+             								handler: function(btn) {
+             									var frm = this.up('form').getForm();
+             									if (frm.isValid()) {
+             										frm.submit();
+             									}
+             								}
+             							}, {
+             								text: '重置',
+             								handler: function() {
+             									this.up('form').getForm().reset();
+             								}
+             							}, {
+             								text: '取消',
+             								handler: function() {
+             									order_export_window.close();
+             								}
+             							}]
+             				        })
+             				]
+             			}).show();
+                }
             }
 		]
 	});
@@ -1208,4 +1256,345 @@ var discountInfo = function(tabId, tabText){
 	    }]
 	});
 	createTab(tabId, tabText, panel);
+};
+
+var yunfeiOrders = function(tabId, tabText){
+	var yunfeiOrdersStore = Ext.create('Ext.data.Store', {
+		storeId:'yunfeiStore',
+		autoLoad: true,
+		fields:['freightid', 'priovice', 'firstfreight', 'lastfreight','freightcompany','channel'],
+		proxy: {
+			type: 'ajax',
+			url: 'findAllFreight.action',
+			reader: {
+				type: 'json',
+				root: 'root',
+				totalProperty: 'totalProperty'
+			}
+		}
+	});
+	
+	var toolbarYunfeiInfo = Ext.create('Ext.toolbar.Toolbar', {
+		items: [
+			{
+				text: '添加运费信息',
+				iconCls : 'icon-add',
+				handler : function(){
+					var window = Ext.create('Ext.window.Window', {
+						title: '运费信息',
+						layout: 'fit',
+						modal: true
+					}).show();
+								
+					var formPanel = Ext.create('Ext.form.Panel', {
+						bodyPadding: 5,
+						width: 500,
+						// The form will submit an AJAX request to this URL when submitted
+						url: 'saveFreight.action',
+						// Fields will be arranged vertically, stretched to full width
+						layout: 'anchor',
+						defaults: {
+							anchor: '100%'
+						},
+			
+						// The fields
+						defaultType: 'textfield',
+						items: [{
+							fieldLabel: '省份',
+							name: 'freight.priovice',
+							allowBlank: false
+						},{
+							xtype: 'numberfield',
+							fieldLabel: '首重',
+							name: 'freight.firstfreight',
+							allowBlank: false
+						},{
+							xtype: 'numberfield',
+							fieldLabel: '续重',
+							name: 'freight.lastfreight',
+							allowBlank: false
+						},{
+							fieldLabel: '快递公司',
+							name: 'freight.freightcompany',
+							allowBlank: false
+						},{
+							fieldLabel: '渠道名称',
+							name: 'freight.channel',
+							allowBlank: false
+						}],
+			
+						// Reset and Submit buttons
+						buttons: [{
+							text: 'Reset',
+							handler: function() {
+								this.up('form').getForm().reset();
+							}
+						}, {
+							text: 'Submit',
+							formBind: true, //only enabled once the form is valid
+							disabled: true,
+							handler: function() {
+								var form = this.up('form').getForm();
+								if (form.isValid()) {
+									form.submit({
+										success: function(form, action) {
+									//	var json = Ext.util.JSON.decode(resp.responseText);
+										   Ext.Msg.alert('Success', action.result.msg);
+										   window.close();
+										   Ext.data.StoreManager.lookup('yunfeiStore').reload();
+										},
+										failure: function(form, action) {
+											Ext.Msg.alert('Failed', action.result.msg);
+										}
+									});
+								}
+							}
+						}],
+					});
+					window.add(formPanel);
+				}
+			},
+			{
+				text : '编辑运费管理',
+				iconCls : 'icon-edit',
+				handler : function(){
+							var record = gridPanel.getSelectionModel().getSelection()[0];
+							if(record){
+								var window = Ext.create('Ext.window.Window', {
+									title: '编辑用户',
+									layout: 'fit',
+									modal: true
+								}).show();
+											
+								var formPanel = Ext.create('Ext.form.Panel', {
+									bodyPadding: 5,
+									width: 500,
+									// The form will submit an AJAX request to this URL when submitted
+									url: 'updateFreight.action',
+									// Fields will be arranged vertically, stretched to full width
+									layout: 'anchor',
+									defaults: {
+										anchor: '100%'
+									},
+						
+									// The fields
+									defaultType: 'textfield',
+									items: [{
+										xtype: "hiddenfield",
+										value: record.getData().freightid,
+										name: 'freight.freightid',
+										allowBlank: false
+									},{
+										fieldLabel: '省份',
+										value: record.getData().priovice,
+										name: 'freight.priovice',
+										allowBlank: false
+										
+									},{
+										fieldLabel: '首重',
+										value: record.getData().firstfreight,
+										name: 'freight.firstfreight',
+										allowBlank: false
+										
+									},{
+										fieldLabel: '续重',
+										name: 'freight.lastfreight',
+										value: record.getData().lastfreight,
+										allowBlank: false
+									},{
+										fieldLabel: '快递公司',
+										name: 'freight.freightcompany',
+										value: record.getData().freightcompany,
+										allowBlank: false
+									},{
+										fieldLabel: '渠道名称',
+										name: 'freight.channel',
+										value: record.getData().channel,
+										allowBlank: false
+									}],
+						
+									// Reset and Submit buttons
+									buttons: [{
+										text: 'Reset',
+										handler: function() {
+											this.up('form').getForm().reset();
+										}
+									}, {
+										text: 'Submit',
+										formBind: true, //only enabled once the form is valid
+										disabled: true,
+										handler: function() {
+											var form = this.up('form').getForm();
+											if (form.isValid()) {
+												form.submit({
+													success: function(form, action) {
+													   Ext.Msg.alert('Success', action.result.msg);
+													   window.close();
+													   yunfeiOrdersStore.reload();
+													},
+													failure: function(form, action) {
+														Ext.Msg.alert('Failed', action.result.msg);
+													}
+												});
+											}
+										}
+									}],
+								});
+								window.add(formPanel);
+							}
+						}
+			},
+			{
+				text : '删除运费',
+				iconCls : 'icon-del',
+				handler : function() {
+					var record = gridPanel.getSelectionModel().getSelection();
+			//		alert(record[0].getData().freightid);
+					if (record) {
+						Ext.Msg.confirm('确认删除', '你确定删除该条记录?', function(btn) {
+							if (btn == 'yes') {
+								Ext.Ajax.request({
+									url : 'deleteFreight.action',
+									params : {
+										freightid : record[0].getData().freightid
+									},
+									success : function() {
+										Ext.Msg.show({
+											title : '成功提示',
+											msg : '删除成功!'
+										});
+										yunfeiOrdersStore.reload();
+									},
+									failure : function() {
+										Ext.Msg.show({
+											title : '错误提示',
+											msg : '删除时发生错误!',
+											buttons : Ext.Msg.OK,
+											icon : Ext.Msg.ERROR
+										});
+									}
+								});
+							}
+						});
+					}
+				}
+			}, {
+				xtype: 'textfield',
+                emptyText : '多条件可用逗号或者空格隔开!',
+                id: 'yunfei_search_text'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls : 'icon-search',
+                handler: function() {
+					// Ext.data.StoreManager.lookup('yunfeiStore').baseParams.conditions = user_search_book.getValue();
+					//alert(yunfei_search_text.getValue());
+					
+					Ext.data.StoreManager.lookup('yunfeiStore').load({params : { conditions: Ext.getCmp('yunfei_search_text').getValue() } });
+				}
+            },'-',
+            {
+                xtype: 'button',
+                text: '运费模板导出',
+                iconCls : 'icon-plugin',
+                handler: function() {
+	            	new Ext.Window({
+						closeAction : 'close',
+						resizable : false,
+						bodyStyle : 'padding: 7',
+						modal : true,
+						title : '请导出',
+						html : 
+							 	'<a href="exportExcel.action">导出到Excel模版</a>'
+								,
+						width : 300,
+						height : 100
+					}).show();
+				}
+            }
+            
+            ,
+            {
+           	 xtype: 'button',
+                text: '导入',
+                iconCls: 'icon-plugin',
+                handler: function() {
+               	 var import_window =  new Ext.Window({
+            			resizable : false,
+            				modal : true,
+            				title : '请选择导入文件',
+            				items: [ 
+            				         new Ext.FormPanel({
+            				        	url: 'upload2.action',
+            				        	defaults: {
+            				        		anchor: '100%',
+            				        	},
+            				        	layout: 'anchor',
+            				        	defaultType: 'textfield',
+            				        	items: [{
+            				        		xtype: 'fileuploadfield',
+            				        		name: 'excelFile',
+            				        		allowBlank: false
+            				        	}],
+            				        	buttons: [{
+            								text: '导入',
+            								handler: function(btn) {
+            									var frm = this.up('form').getForm();
+            									if (frm.isValid()) {
+            										frm.submit({
+            											waitTitle: '请稍候',
+            											waitMsg: '正在提交表单数据,请稍候...',
+            											success: function(form, action) {
+            												Ext.Msg.alert( '提示', "导入成功");
+            												import_window.close();
+            												yunfeiOrdersStore.reload();
+            											},
+            											failure: function() {
+            												Ext.Msg.show({
+            													title: '错误提示',
+            													msg: '该商品可能已经存在!',
+            													buttons: Ext.Msg.OK,
+            													icon: Ext.Msg.ERROR
+            												});
+            											}
+            										});
+            									}
+            								}
+            							}, {
+            								text: '重置',
+            								handler: function() {
+            									this.up('form').getForm().reset();
+            								}
+            							}, {
+            								text: '取消',
+            								handler: function() {
+            									import_window.close();
+            								}
+            							}]
+            				        })
+            				]
+            			}).show();
+                }
+           }
+		]
+	});
+	
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: yunfeiOrdersStore,
+		columns: [
+			{ text: '省份', dataIndex: 'priovice', flex: 3},
+			{ text: '首重', dataIndex: 'firstfreight', flex: 3 },
+			{ text: '续重', dataIndex: 'lastfreight', flex: 3 },
+			{ text: '快递公司', dataIndex: 'freightcompany', flex: 3 },
+			{ text: '渠道名称', dataIndex: 'channel', flex: 3 }
+		
+		],
+		dockedItems: [toolbarYunfeiInfo,{
+	        xtype: 'pagingtoolbar',
+	        store: Ext.data.StoreManager.lookup('yunfeiStore'),   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true,
+	    }]
+	});
+	createTab(tabId, tabText, gridPanel);
 };
