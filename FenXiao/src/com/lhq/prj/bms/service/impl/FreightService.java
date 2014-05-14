@@ -64,4 +64,5 @@ public class FreightService implements IFreightService {
 	}
 
 	
+	
 }

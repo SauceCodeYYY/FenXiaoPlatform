@@ -14,7 +14,7 @@ public class FreightDao extends SqlMapClientDaoSupport implements IFreightDao{
 		// TODO Auto-generated method stub
 		return getSqlMapClientTemplate().delete("Freight.deleteById", freightid);
 	}
-
+	
 	public int findByCount(Page page) {
 		return (Integer) getSqlMapClientTemplate().queryForObject("Freight.findByCount", page);
 	}
