@@ -10,7 +10,7 @@ import com.lhq.prj.bms.po.Commodity;
 
 public class CommodityDao extends SqlMapClientDaoSupport implements ICommodityDao {
 
-	public Integer deleteById(Integer commodityId) {
+	public Integer deleteById(Long commodityId) {
 		return getSqlMapClientTemplate().delete("Commodity.deleteById", commodityId);
 	}
 
@@ -54,4 +54,11 @@ public class CommodityDao extends SqlMapClientDaoSupport implements ICommodityDa
 		return (Integer) getSqlMapClientTemplate().queryForObject("Commodity.findByIdsCount", page);
 	}
 
+	public Integer updateAmount(Commodity commodity) {
+		return getSqlMapClientTemplate().update("Commodity.updateAmount", commodity);
+	}
+
+	public Object findById(Commodity commodity) {
+		return getSqlMapClientTemplate().queryForObject("Commodity.findById", commodity);
+	}
 }

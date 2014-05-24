@@ -211,7 +211,7 @@
 		<!-- 订单管理 -->
 		<action name="saveOrder" class="orderAction" method="saveOrder">
 			<result type="json">
-				<param name="includeProperties">success, orderId</param>
+				<param name="includeProperties">success, orderId, tip</param>
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>

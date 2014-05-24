@@ -184,7 +184,7 @@ public class CommodityAction extends BaseAction {
 				bean.setMonthl(ros.getCell(11).getStringCellValue());
 				bean.setChannel(ros.getCell(12).getStringCellValue());
 				bean.setSizeone(ros.getCell(13).getStringCellValue());
-				bean.setNumbers(ros.getCell(14).getStringCellValue());
+				bean.setNumbers(Integer.parseInt(ros.getCell(14).getStringCellValue()));
 				bean.setDiscount(ros.getCell(15).getStringCellValue());
 				bean.setState("online");
 

@@ -533,7 +533,7 @@ var prodInfo = function(tabId, tabText){
 				iconCls: 'icon-del',
 				handler: function() {
 					var records = gridPanel.getSelectionModel().getSelection();
-					if (record && records.length > 0) {
+					if (records && records.length > 0) {
 						var ids = '';
 						for(var i = 0; i < records.length; i++){
 							ids += records[i].getData().subjectId;
@@ -1353,8 +1353,7 @@ var yunfeiOrders = function(tabId, tabText){
 					});
 					window.add(formPanel);
 				}
-			},
-			{
+			}, {
 				text : '编辑运费管理',
 				iconCls : 'icon-edit',
 				handler : function(){
@@ -1443,8 +1442,7 @@ var yunfeiOrders = function(tabId, tabText){
 								window.add(formPanel);
 							}
 						}
-			},
-			{
+			}, {
 				text : '删除运费',
 				iconCls : 'icon-del',
 				handler : function() {

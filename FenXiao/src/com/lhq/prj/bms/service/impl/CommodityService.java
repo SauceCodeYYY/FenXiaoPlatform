@@ -19,7 +19,7 @@ public class CommodityService implements ICommodityService {
 		String[] idsStrings = commodityId.split(",");
 		int size = 0;
 		for (int i = 0; i < idsStrings.length; i++) {
-			size += commodityDao.deleteById(Integer.valueOf(idsStrings[i]));
+			size += commodityDao.deleteById(Long.valueOf(idsStrings[i]));
 		}
 
 		if (size == idsStrings.length) {
@@ -73,6 +73,17 @@ public class CommodityService implements ICommodityService {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean updateAmount(Commodity commodity) {
+		Integer flag = commodityDao.updateAmount(commodity);
+		if (null != flag) {
+			return true;
+		}
+		return false;	}
+
+	public Object findById(Commodity commodity) {
+		return commodityDao.findById(commodity);
 	}
 
 	/*

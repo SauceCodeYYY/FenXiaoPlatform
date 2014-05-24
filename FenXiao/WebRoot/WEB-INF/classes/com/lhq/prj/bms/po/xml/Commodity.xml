@@ -240,6 +240,18 @@
 		]]>
 	</update>
 
+	<update id="updateAmount" parameterClass="commodity">
+		<![CDATA[
+			UPDATE t_commodity set numbers = numbers + #numbers:NUMBER# WHERE subjectId = #subjectId:INT#
+		]]>
+	</update>
+
+	<select id="findById" parameterClass="commodity" resultClass="commodity">
+		<![CDATA[
+			SELECT * FROM t_commodity where subjectId = #subjectId:INT#
+		]]>
+	</select>
+
 	<select id="findByIds" parameterClass="page" resultClass="commodity">
 		<![CDATA[
 			SELECT * FROM t_commodity 

@@ -693,12 +693,17 @@ var shoppingCart = function(tabId, tabText){
 						             												    	"order.deliveryFee": checkoutPanel.getStore().sum('deliveryFee'),
 						             												    	"cartItemIds": cartItems
 						             													},
-						             													success: function(response) {
-						             														Ext.Msg.alert('提示', "订单提交成功！");
-						             														validate_pwd_window.close();
-						             														Ext.getCmp("checkout").close();
-						             														if (shoppingCartStore) {
-						             															shoppingCartStore.reload();
+						             													success: function(data) {
+						             														var response = Ext.decode(data['responseText']);
+						             														if (response['success'] == true) {
+							             														Ext.Msg.alert('提示', "订单提交成功！");
+							             														validate_pwd_window.close();
+							             														Ext.getCmp("checkout").close();
+							             														if (shoppingCartStore) {
+							             															shoppingCartStore.reload();
+							             														}
+						             														} else {
+						             															Ext.Msg.alert("提示", response['tip']);
 						             														}
 						             													},
 						             													failure: function(request) {
@@ -863,7 +868,7 @@ var shoppingCart = function(tabId, tabText){
 	    			},
 	    			failure : function() {
 	    				Ext.Msg.show({
-	    					title : '错误提示',
+	    					title : '提示',
 	    					msg : '更新时发生错误!',
 	    					buttons : Ext.Msg.OK,
 	    					icon : Ext.Msg.ERROR

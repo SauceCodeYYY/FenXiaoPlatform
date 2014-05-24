@@ -48,7 +48,7 @@ public class Commodity implements Serializable {
 	// 月份
 	private String monthl;
 	// 库存
-	private String numbers;
+	private Integer numbers;
 
 	private String state;
 
@@ -220,11 +220,11 @@ public class Commodity implements Serializable {
 		this.monthl = monthl;
 	}
 
-	public String getNumbers() {
+	public Integer getNumbers() {
 		return numbers;
 	}
 
-	public void setNumbers(String numbers) {
+	public void setNumbers(Integer numbers) {
 		this.numbers = numbers;
 	}
 

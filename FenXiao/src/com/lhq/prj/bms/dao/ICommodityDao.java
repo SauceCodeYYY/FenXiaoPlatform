@@ -56,7 +56,7 @@ public interface ICommodityDao {
 	 * @param commodityId
 	 * @return
 	 */
-	public Integer deleteById(Integer commodityId);
+	public Integer deleteById(Long commodityId);
 	
 	/**
 	 * 分页查找
@@ -98,4 +98,8 @@ public interface ICommodityDao {
 	public List findByIds(Page page);
 	
 	public int findByIdsCount(Page page);
+	
+	public Integer updateAmount(Commodity commodity);
+	
+	public Object findById(Commodity commodity);
 }

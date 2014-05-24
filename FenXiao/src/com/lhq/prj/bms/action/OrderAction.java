@@ -59,18 +59,46 @@ public class OrderAction extends BaseAction {
 	
 	private String excelFile;
 
+	private String tip;
+	
 	public String saveOrder() {
 		User currUser = (User) getSession().getAttribute("user");
 		if (null == currUser) {
 			return ERROR;
 		}
 		order.setUserId(currUser.getUserId());
+		
+		for (String item: order.getOrderItem().split(",")){
+			String[] per = item.split("_");
+			String subjectId = per[0];
+			Integer amount = Integer.parseInt(per[1]);
+			Commodity commodity = new Commodity();
+			commodity.setSubjectId(Long.parseLong(subjectId));
+			commodity = (Commodity) commodityService.findById(commodity);
+			if (amount > commodity.getNumbers()){
+				success= false;
+				setTip("货号" + commodity.getNovid() + "， 尺码" + commodity.getSizeone() + "库存不够，请修改购买数量！");
+				return SUCCESS;
+			}
+		}
+		
 		orderId = (Long) orderService.saveOrder(order);
 		if (orderId != null) {
 			success = true;
 			currUser.setBalance(-order.getTotal());
 			userService.updateBalance(currUser);
 			cartItemService.deleteCartItem(cartItemIds);
+			String orderItems = order.getOrderItem();
+			String[] items = orderItems.split(",");
+			for (String item: items){
+				String[] per = item.split("_");
+				String subjectId = per[0];
+				Integer amount = Integer.parseInt(per[1]);
+				Commodity commodity = new Commodity();
+				commodity.setSubjectId(Long.parseLong(subjectId));
+				commodity.setNumbers(-amount);
+				commodityService.updateAmount(commodity);
+			}
 		}
 		return SUCCESS;
 	}
@@ -157,6 +185,18 @@ public class OrderAction extends BaseAction {
 					u.setUserId(order.getUserId());
 					u.setBalance(order.getTotal());
 					success = userService.updateBalance(u);
+					
+					String orderItems = order.getOrderItem();
+					String[] items = orderItems.split(",");
+					for (String item: items){
+						String[] per = item.split("_");
+						String subjectId = per[0];
+						Integer amount = Integer.parseInt(per[1]);
+						Commodity commodity = new Commodity();
+						commodity.setSubjectId(Long.parseLong(subjectId));
+						commodity.setNumbers(amount);
+						commodityService.updateAmount(commodity);
+					}
 				}
 			}
 		}
@@ -429,5 +469,13 @@ public class OrderAction extends BaseAction {
 
 	public void setExcelFile(String excelFile) {
 		this.excelFile = excelFile;
+	}
+
+	public String getTip() {
+		return tip;
+	}
+
+	public void setTip(String tip) {
+		this.tip = tip;
 	}
 }

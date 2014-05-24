@@ -90,4 +90,8 @@ public interface ICommodityService {
 	 * @throws Exception
 	 */
 	boolean updateState(Commodity commodity) throws Exception;
+	
+	boolean updateAmount(Commodity commodity);
+	
+	Object findById(Commodity commodity);
 }
