@@ -16,6 +16,7 @@ public class Order {
 	private String orderItem;
 	private String note;
 	private Float total;
+	private Float deliveryFee;
 
 	public Long getOrderId() {
 		return orderId;
@@ -119,5 +120,13 @@ public class Order {
 
 	public void setDeliveryMethod(String deliveryMethod) {
 		this.deliveryMethod = deliveryMethod;
+	}
+
+	public Float getDeliveryFee() {
+		return deliveryFee;
+	}
+
+	public void setDeliveryFee(Float deliveryFee) {
+		this.deliveryFee = deliveryFee;
 	}
 }

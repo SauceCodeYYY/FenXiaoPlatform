@@ -32,7 +32,7 @@ var prodSearch = function(id, text) {
 	        			}
 	        		}, 
         			listeners: {
-        				'load': function(store) {
+        				load: function(store) {
         					processResult();
         				}
         			}
@@ -326,7 +326,7 @@ var shoppingCart = function(tabId, tabText){
 									"ids" : ids
 								},
 								success : function() {
-									Ext.Msg.alert('Success', "删除地址成功！");
+									Ext.Msg.alert('提示', "删除地址成功！");
 									shoppingCartStore.reload();
 								},
 								failure : function() {
@@ -357,352 +357,464 @@ var shoppingCart = function(tabId, tabText){
 							ids += ',';
 						}
 					}
-					Ext.define('FenXiao.model.Checkout', {
-		                extend: 'Ext.data.Model',
-		                fields: [
-							 { name: 'cartItemId', type: 'string' }, 
-							 { name: 'userId', type: 'number' },
-							 { name: 'subjectId', type: 'number' }, 
-							 { name: 'novid', type: 'string' },
-							 { name: 'channel', type: 'string' }, 
-							 { name: 'size', type: 'string' },
-							 { name: 'tagprice',  type: 'number' }, 
-							 { name: 'discount', type: 'number' },
-							 { name: 'amount', type: 'number' }, 
-							 { name: 'time', type: 'date' },
-							 { name: 'deliveryFee', type: 'number' },
-							 { name: 'total', type: 'number', convert: function (v, record) {
-						 		return Math.round(record.get('tagprice') * record.get('discount') * record.get('amount') * 100) / 100;
-							 }}
-		                ]
-		            });
-					var dataConverted = [];
-					for (var i = 0; i < records.length; i++){
-						dataConverted.push(Ext.create('FenXiao.model.Checkout', records[i].getData()));
-					}
-					var checkoutStore = Ext.create('Ext.data.Store', {
-						storeId:'checkoutStore',
-						fields: [
-						         { name: 'cartItemId', type: 'string' }, 
-						         { name: 'userId', type: 'number' },
-						         { name: 'subjectId', type: 'number' }, 
-						         { name: 'novid', type: 'string' },
-						         { name: 'channel', type: 'string' }, 
-						         { name: 'size', type: 'string' },
-						         { name: 'tagprice',  type: 'number' }, 
-						         { name: 'discount', type: 'number' },
-						         { name: 'amount', type: 'number' }, 
-						         { name: 'time', type: 'date' },
-						         { name: 'total', type: 'number' },
-						         { name: 'deliveryFee', type: 'number' },
-					        ],
-					    data: dataConverted,
-					    autoLoad: true
-					});
-					var toolbarCheckout = Ext.create('Ext.toolbar.Toolbar', {
-						items: [/*{
-							xtype: "combo",
-               				store: Ext.create('Ext.data.Store', {
-               					fields:['addressId', 'userId', 'province', 'city', 'district', 'street', 'zipCode', 'contact', 'phone', 'shortName'],
-               					proxy: {
-               						type: 'ajax',
-               						url: 'findAllAddress.action',
-               						reader: {
-               							type: 'json',
-               							root: 'root'
-               						}
-               					}
-               				}),
-							valueField: 'addressId',
-							displayField: 'shortName',
-							emptyText: "请选择收货地址",
-							id: 'sel_address',
-							allowBlank: false,
-							listeners: {
-								beforeselect: function( combo, record, index, eOpts ){
-									alert(record.get('province'));
-								}
+					var yunfeiOrdersStore = Ext.create('Ext.data.Store', {
+						autoLoad: true,
+						fields:['freightid', 'priovice', 'firstfreight', 'lastfreight','freightcompany','channel'],
+						proxy: {
+							type: 'ajax',
+							url: 'findAllFreight.action',
+							reader: {
+								type: 'json',
+								root: 'root',
+								totalProperty: 'totalProperty'
 							}
-						},*/
-				        {
-							xtype: 'combo',
-							store: new Ext.data.SimpleStore({
-								data: [
-									['中通快递', '中通', '6', '10'],
-									['顺丰速运', '顺丰', '10', '6']
-								],
-								fields: ['text', 'value', 'first', 'addon']
-							}),
-							valueField: 'value',
-							displayField: 'text',
-							emptyText: '请选择快递公司',
-							id: 'order-deliver',
-							allowBlank: false,
-							listeners: {
-								beforeselect: function ( combo, record, index, eOpts ) {
-									checkoutStore.each(function(rec){
-										var amount = rec.get("amount");
-										var fee = 0;
-										if (amount > 1){
-											fee = record.get("first") * 1 + (amount - 1) * record.get("addon");
-										} else {
-											fee = record.get("first") * amount;
+						}
+					});
+					var discountsStore = Ext.create('Ext.data.Store', {
+						autoLoad: true,
+						fields:['channel', 'discount', 'discountId', 'userId'],
+						proxy: {
+							type: 'ajax',
+							url: 'findDiscountByExample.action',
+							reader: {
+								type: 'json',
+								root: 'root',
+								totalProperty: 'totalProperty'
+							},
+							extraParams: {
+								"discount.userId": userId
+							}
+						},
+						listeners: {
+							load : function(store){
+								process();
+							}
+						}
+					});
+					
+					var process = function(){
+						Ext.define('FenXiao.model.Checkout', {
+			                extend: 'Ext.data.Model',
+			                fields: [
+								 { name: 'cartItemId', type: 'string' }, 
+								 { name: 'userId', type: 'number' },
+								 { name: 'subjectId', type: 'number' }, 
+								 { name: 'novid', type: 'string' },
+								 { name: 'channel', type: 'string' }, 
+								 { name: 'size', type: 'string' },
+								 { name: 'tagprice',  type: 'number' }, 
+								 { name: 'discount', type: 'number' },
+								 { name: 'personalDiscount', type: 'number', convert: function (v, record){
+									 // alert(discountsStore.getCount());
+									 var dis = record.get("discount");
+									 discountsStore.each(function(rec){
+										if (rec.get("channel") == record.get("channel")){
+											dis = rec.get("discount");
 										}
-										rec.set("deliveryFee", fee);
 									});
-									Ext.Msg.alert("提示", record.get("text") + "<br>首重：" + record.get("first") + "元<br>续重：" + record.get("addon") + "元")
+									 return dis;
+								 }},
+								 { name: 'amount', type: 'number' }, 
+								 { name: 'time', type: 'date' },
+								 { name: 'deliveryFee', type: 'number' },
+								 { name: 'total', type: 'number', convert: function (v, record) {
+									 var dis = record.get("discount");
+									 discountsStore.each(function(rec){
+										if (rec.get("channel") == record.get("channel")){
+											dis = rec.get("discount");
+										}
+									});
+							 		return Math.round(record.get('tagprice') * dis * record.get('amount') * 100) / 100;
+								 }}
+			                ]
+			            });
+						var dataConverted = [];
+						for (var i = 0; i < records.length; i++){
+							dataConverted.push(Ext.create('FenXiao.model.Checkout', records[i].getData()));
+						}
+						var checkoutStore = Ext.create('Ext.data.Store', {
+							storeId:'checkoutStore',
+							fields: [
+							         { name: 'cartItemId', type: 'string' }, 
+							         { name: 'userId', type: 'number' },
+							         { name: 'subjectId', type: 'number' }, 
+							         { name: 'novid', type: 'string' },
+							         { name: 'channel', type: 'string' }, 
+							         { name: 'size', type: 'string' },
+							         { name: 'tagprice',  type: 'number' }, 
+							         { name: 'discount', type: 'number' },
+							         { name: 'personalDiscount', type: 'number' },
+							         { name: 'amount', type: 'number' }, 
+							         { name: 'time', type: 'date' },
+							         { name: 'total', type: 'number' },
+							         { name: 'deliveryFee', type: 'number' },
+						        ],
+						    data: dataConverted,
+						    autoLoad: true
+						});
+						
+						var toolbarCheckout = Ext.create('Ext.toolbar.Toolbar', {
+							items: [/*{
+								xtype: "combo",
+	               				store: Ext.create('Ext.data.Store', {
+	               					fields:['addressId', 'userId', 'province', 'city', 'district', 'street', 'zipCode', 'contact', 'phone', 'shortName'],
+	               					proxy: {
+	               						type: 'ajax',
+	               						url: 'findAllAddress.action',
+	               						reader: {
+	               							type: 'json',
+	               							root: 'root'
+	               						}
+	               					}
+	               				}),
+								valueField: 'addressId',
+								displayField: 'shortName',
+								emptyText: "请选择收货地址",
+								id: 'sel_address',
+								allowBlank: false,
+								listeners: {
+									beforeselect: function( combo, record, index, eOpts ){
+										alert(record.get('province'));
+									}
 								}
-							}
-						}, '-', {
-							xtype: 'textfield',
-							emptyText: '请输入收货人姓名',
-							width: 100,
-							id: 'order-receiver',
-							maxLength: 10,
-							allowBlank: false
-						}, '-', {
-							xtype: 'textfield',
-							emptyText: '请输入收货人手机',
-							width: 100,
-							id: 'order-cell',
-							maxLength: 11,
-							allowBlank: false
-						}, '-', {
-							xtype: "combo",
-               				store: new Ext.data.SimpleStore({
-								data: [
-									['河北省', '河北省'],
-									['山西省', '山西省'],
-									['辽宁省', '辽宁省'],
-									['吉林省', '吉林省'],
-									['黑龙江省', '黑龙江省'],
-									['江苏省', '江苏省'],
-									['浙江省', '浙江省'],
-									['安徽省', '安徽省'],
-									['福建省', '福建省'],
-									['江西省', '江西省'],
-									['山东省', '山东省'],
-									['河南省', '河南省'],
-									['湖北省', '湖北省'],
-									['湖南省', '湖南省'],
-									['广东省', '广东省'],
-									['海南省', '海南省'],
-									['四川省', '四川省'],
-									['贵州省', '贵州省'],
-									['云南省', '云南省'],
-									['陕西省', '陕西省'],
-									['甘肃省', '甘肃省'],
-									['青海省', '青海省'],
-									['台湾省', '台湾省'],
-									['内蒙古自治区', '内蒙古自治区'],
-									['广西壮族自治区', '广西壮族自治区'],
-									['西藏自治区', '西藏自治区'],
-									['宁夏回族自治区', '宁夏回族自治区'],
-									['新疆维吾尔自治区', '新疆维吾尔自治区'],
-									['香港特别行政区', '香港特别行政区'],
-									['澳门特别行政区', '澳门特别行政区']
-								],
-								fields: ['value', 'text']
-							}),
-							emptyText: '请选择省份',
-							valueField: 'value',
-							displayField: 'text',
-							id: 'order-province',
-							allowBlank: false
-						}, {
-							xtype: 'textfield',
-							emptyText: '请输入省级以下收货地址',
-							width: 200,
-							id: 'order-address',
-							maxLength: 200,
-							allowBlank: false
-						}, '-', {
-							xtype: 'textfield',
-							emptyText: '请输入备注(可选)',
-							width: 300,
-							id: 'order-note',
-							maxLength: 200
-						}, '-', {
-							text : '提交订单',
-							iconCls : 'icon-plugin',
-							handler : function() {
-								var deliver = Ext.getCmp('order-deliver').getValue();
-								var cell = Ext.getCmp('order-cell').getValue();
-								var receiver = Ext.getCmp('order-receiver').getValue();
-								var province = Ext.getCmp('order-province').getValue();
-								var address = Ext.getCmp('order-address').getValue();
-								if (!deliver || deliver.trim() == ""){
-									Ext.Msg.alert("提示", "请选择快递公司!");
-									return;
+							},*/ {
+								xtype: "combo",
+	               				store: new Ext.data.SimpleStore({
+									data: [
+										['河北省', '河北省'],
+										['山西省', '山西省'],
+										['辽宁省', '辽宁省'],
+										['吉林省', '吉林省'],
+										['黑龙江省', '黑龙江省'],
+										['江苏省', '江苏省'],
+										['浙江省', '浙江省'],
+										['安徽省', '安徽省'],
+										['福建省', '福建省'],
+										['江西省', '江西省'],
+										['山东省', '山东省'],
+										['河南省', '河南省'],
+										['湖北省', '湖北省'],
+										['湖南省', '湖南省'],
+										['广东省', '广东省'],
+										['海南省', '海南省'],
+										['四川省', '四川省'],
+										['贵州省', '贵州省'],
+										['云南省', '云南省'],
+										['陕西省', '陕西省'],
+										['甘肃省', '甘肃省'],
+										['青海省', '青海省'],
+										['台湾省', '台湾省'],
+										['内蒙古自治区', '内蒙古自治区'],
+										['广西壮族自治区', '广西壮族自治区'],
+										['西藏自治区', '西藏自治区'],
+										['宁夏回族自治区', '宁夏回族自治区'],
+										['新疆维吾尔自治区', '新疆维吾尔自治区'],
+										['香港特别行政区', '香港特别行政区'],
+										['澳门特别行政区', '澳门特别行政区']
+									],
+									fields: ['value', 'text']
+								}),
+								emptyText: '请选择省份',
+								valueField: 'value',
+								displayField: 'text',
+								id: 'order-province',
+								allowBlank: false
+							}, {
+								xtype: 'combo',
+								store: new Ext.data.SimpleStore({
+									  fields: [ "value", "text" ],
+									  data: [
+									    [ "普通快递", "普通快递" ],
+									    [ "顺丰速运", "顺丰速运" ],
+									  ]
+									}),
+								valueField: 'value',
+								displayField: 'text',
+								emptyText: '请选择快递公司',
+								id: 'order-deliver',
+								allowBlank: false,
+								listeners: {
+									select: function ( combo, records, eOpts ) {
+										//fields:['freightid', 'priovice', 'firstfreight', 'lastfreight','freightcompany','channel'],
+										var msg = "";
+										var province = Ext.getCmp("order-province").getValue();
+										if (null == province) {
+											combo.clearValue();
+											combo.applyEmptyText();
+											combo.getPicker().getSelectionModel().doMultiSelect([], false);
+											Ext.Msg.alert("提示", "请选择省!");
+											return;
+										}
+										checkoutStore.each(function(rec){
+											// alert(1)
+											var queried = yunfeiOrdersStore.queryBy(function (rcd, id){
+												//alert(rcd.get("priovice") + " " + Ext.getCmp("order-province").getValue() + " " + rcd.get("channel") + " " + rec.get("channel"));
+												return rcd.get("priovice") == province && rec.get("channel") == rcd.get("channel"); 
+											});
+											// alert(records[0]);
+											var delivery = queried.get(0);
+											var amount = rec.get("amount");
+											var fee = 0;
+											if (records[0].get("value") == "顺丰速运"){
+												msg = "运费到付";
+												fee = 0;
+											} else {
+												//alert(delivery)
+												msg += delivery.get("channel") + "到" + delivery.get("priovice") + "：首重" + delivery.get("firstfreight") + "元，续重：" + delivery.get("lastfreight") + "元<br>";
+												// alert(msg);
+												if (amount > 1){
+													fee = delivery.get("firstfreight") * 1 + (amount - 1) * delivery.get("lastfreight");
+												} else {
+													fee = delivery.get("firstfreight") * amount;
+												}
+											}
+											rec.set("deliveryFee", fee);
+										});
+										Ext.Msg.show({
+											title: '提示',
+											msg: msg,
+											buttons: Ext.MessageBox.OK
+										});
+									}
 								}
-								if (!receiver || receiver.trim() == ""){
-									Ext.Msg.alert("提示", "请输入收货人姓名!");
-									return;
+							}, '-', {
+								xtype: 'textfield',
+								emptyText: '请输入收货人姓名',
+								width: 100,
+								id: 'order-receiver',
+								maxLength: 10,
+								allowBlank: false
+							}, '-', {
+								xtype: 'textfield',
+								emptyText: '请输入收货人手机',
+								width: 100,
+								id: 'order-cell',
+								maxLength: 11,
+								allowBlank: false
+							}, '-', {
+								xtype: 'textfield',
+								emptyText: '请输入省级以下收货地址',
+								width: 200,
+								id: 'order-address',
+								maxLength: 200,
+								allowBlank: false
+							}, '-', {
+								xtype: 'textfield',
+								emptyText: '请输入备注(可选)',
+								width: 300,
+								id: 'order-note',
+								maxLength: 200
+							}, '-', {
+								text : '提交订单',
+								iconCls : 'icon-plugin',
+								handler : function() {
+									var deliver = Ext.getCmp('order-deliver').getValue();
+									var cell = Ext.getCmp('order-cell').getValue();
+									var receiver = Ext.getCmp('order-receiver').getValue();
+									var province = Ext.getCmp('order-province').getValue();
+									var address = Ext.getCmp('order-address').getValue();
+									if (!deliver || deliver.trim() == ""){
+										Ext.Msg.alert("提示", "请选择快递公司!");
+										return;
+									}
+									if (!receiver || receiver.trim() == ""){
+										Ext.Msg.alert("提示", "请输入收货人姓名!");
+										return;
+									}
+									if (!cell || cell.trim() == ""){
+										Ext.Msg.alert("提示", "请输入收货人手机!");
+										return;
+									}
+									if (!province || province.trim() == ""){
+										Ext.Msg.alert("提示", "请选择省份!");
+										return;
+									}
+									if (!address || address.trim() == ""){
+										Ext.Msg.alert("提示", "请输入收货地址!");
+										return;
+									}
+									var validate_pwd_window =  new Ext.Window({
+										width: 300,
+				             			resizable : false,
+			             				modal : true,
+			             				title : '请输入支付密码',
+			             				items: [ 
+			             				         new Ext.FormPanel({
+			             				        	url: 'checkPayPwd.action',
+			             				        	defaults: {
+			             				        		anchor: '100%',
+			             				        	},
+			             				        	layout: 'anchor',
+			             				        	defaultType: 'textfield',
+			             				        	items: [{
+			             				        		name: 'user.payPwd',
+			             				        		allowBlank: false
+			             				        	}],
+			             				        	buttons: [{
+			             								text: '确认',
+			             								handler: function(btn) {
+			             									var frm = this.up('form').getForm();
+			             									if (frm.isValid()) {
+			             										frm.submit({
+			             											waitTitle: '请稍候',
+			             											waitMsg: '正在提交表单数据,请稍候...',
+			             											success: function(form, action) {
+			             												Ext.Ajax.request({
+			             													url: 'checkBalance.action',
+			             													params: {
+			             														total: checkoutPanel.getStore().sum('total') + checkoutPanel.getStore().sum('deliveryFee') 
+			             													},
+			             													success: function(data) {
+			             														var response = Ext.decode(data['responseText']);
+			             														if (response['success'] == true) {
+				             														var orderItems = "", cartItems = "";
+						             												for (var i = 0; i < checkoutStore.getCount(); i++){
+						             													var item = checkoutStore.getAt(i);
+						             													orderItems += item.get('subjectId') + "_" + item.get('amount');
+						             													cartItems += item.get('cartItemId');
+						             													if (i != checkoutStore.getCount() - 1) {
+						             														orderItems += ",";
+						             														cartItems += ",";
+						             													}
+						             												}
+						             												Ext.Ajax.request({
+						             													url: 'saveOrder.action',
+						             													params: {
+						             												        "order.state": '已提交',
+						             												        "order.submitTime": new Date(),
+						             												    	"order.orderItem": orderItems,
+						             												    	"order.address": address,
+						             												    	"order.receiver": receiver, 
+						             												    	"order.cell": cell,
+						             												    	"order.province": province,
+						             												    	"order.deliveryMethod": deliver,
+						             												    	"order.note": Ext.getCmp('order-note').getValue(),
+						             												    	"order.total": checkoutPanel.getStore().sum('total'),
+						             												    	"order.deliveryFee": checkoutPanel.getStore().sum('deliveryFee'),
+						             												    	"cartItemIds": cartItems
+						             													},
+						             													success: function(response) {
+						             														Ext.Msg.alert('提示', "订单提交成功！");
+						             														validate_pwd_window.close();
+						             														Ext.getCmp("checkout").close();
+						             														if (shoppingCartStore) {
+						             															shoppingCartStore.reload();
+						             														}
+						             													},
+						             													failure: function(request) {
+						             														Ext.Msg.show({
+						             															title: '操作提示',
+						             															msg: "连接服务器失败",
+						             															buttons: Ext.MessageBox.OK,
+						             															icon: Ext.MessageBox.ERROR
+						             														});
+						             													},
+						             													method: 'post'
+						             												});
+			             														} else {
+				             														Ext.Msg.alert('提示', "余额不足请充值！");
+			             														}
+			             													},
+			             													failure: function() {
+			             														Ext.Msg.alert('提示', "服务器连接失败，请刷新重试！");
+			             													}
+			             												});
+			             											},
+			             											failure: function() {
+			             												Ext.Msg.show({
+			             							    					title : '错误提示',
+			             							    					msg : '更新时发生错误!',
+			             							    					buttons : Ext.Msg.OK,
+			             							    					icon : Ext.Msg.ERROR
+			             							    				});
+			             											}
+			             										});
+			             									}
+			             								}
+			             							}, {
+			             								text: '重置',
+			             								handler: function() {
+			             									this.up('form').getForm().reset();
+			             								}
+			             							}, {
+			             								text: '取消',
+			             								handler: function() {
+			             									validate_pwd_window.close();
+			             								}
+			             							}]
+			             				        })
+			             				]
+			             			}).show();
 								}
-								if (!cell || cell.trim() == ""){
-									Ext.Msg.alert("提示", "请输入收货人手机!");
-									return;
-								}
-								if (!province || province.trim() == ""){
-									Ext.Msg.alert("提示", "请选择省份!");
-									return;
-								}
-								if (!address || address.trim() == ""){
-									Ext.Msg.alert("提示", "请输入收货地址!");
-									return;
-								}
-								var validate_pwd_window =  new Ext.Window({
-									width: 300,
-			             			resizable : false,
-		             				modal : true,
-		             				title : '请输入支付密码',
-		             				items: [ 
-		             				         new Ext.FormPanel({
-		             				        	url: 'checkPayPwd.action',
-		             				        	defaults: {
-		             				        		anchor: '100%',
-		             				        	},
-		             				        	layout: 'anchor',
-		             				        	defaultType: 'textfield',
-		             				        	items: [{
-		             				        		name: 'user.payPwd',
-		             				        		allowBlank: false
-		             				        	}],
-		             				        	buttons: [{
-		             								text: '确认',
-		             								handler: function(btn) {
-		             									var frm = this.up('form').getForm();
-		             									if (frm.isValid()) {
-		             										frm.submit({
-		             											waitTitle: '请稍候',
-		             											waitMsg: '正在提交表单数据,请稍候...',
-		             											success: function(form, action) {
-		             												Ext.Ajax.request({
-		             													url: 'checkBalance.action',
-		             													params: {
-		             														total: checkoutPanel.getStore().sum('total') 
-		             													},
-		             													success: function(data) {
-		             														var response = Ext.decode(data['responseText']);
-		             														if (response['success'] == true) {
-			             														var orderItems = "", cartItems = "";
-					             												for (var i = 0; i < checkoutStore.getCount(); i++){
-					             													var item = checkoutStore.getAt(i);
-					             													orderItems += item.get('subjectId') + "_" + item.get('amount');
-					             													cartItems += item.get('cartItemId');
-					             													if (i != checkoutStore.getCount() - 1) {
-					             														orderItems += ",";
-					             														cartItems += ",";
-					             													}
-					             												}
-					             												Ext.Ajax.request({
-					             													url: 'saveOrder.action',
-					             													params: {
-					             												        "order.state": '已提交',
-					             												        "order.submitTime": new Date(),
-					             												    	"order.orderItem": orderItems,
-					             												    	"order.address": address,
-					             												    	"order.receiver": receiver, 
-					             												    	"order.cell": cell,
-					             												    	"order.province": province,
-					             												    	"order.deliveryMethod": deliver,
-					             												    	"order.note": Ext.getCmp('order-note').getValue(),
-					             												    	"order.total": checkoutPanel.getStore().sum('total'),
-					             												    	"cartItemIds": cartItems
-					             													},
-					             													success: function(response) {
-					             														Ext.Msg.alert('提示', "订单提交成功！");
-					             														validate_pwd_window.close();
-					             														Ext.getCmp("checkout").close();
-					             														if (shoppingCartStore) {
-					             															shoppingCartStore.reload();
-					             														}
-					             													},
-					             													failure: function(request) {
-					             														Ext.Msg.show({
-					             															title: '操作提示',
-					             															msg: "连接服务器失败",
-					             															buttons: Ext.MessageBox.OK,
-					             															icon: Ext.MessageBox.ERROR
-					             														});
-					             													},
-					             													method: 'post'
-					             												});
-		             														} else {
-			             														Ext.Msg.alert('提示', "余额不足请充值！");
-		             														}
-		             													},
-		             													failure: function() {
-		             														Ext.Msg.alert('提示', "服务器连接失败，请刷新重试！");
-		             													}
-		             												});
-		             											},
-		             											failure: function() {
-		             												Ext.Msg.show({
-		             							    					title : '错误提示',
-		             							    					msg : '更新时发生错误!',
-		             							    					buttons : Ext.Msg.OK,
-		             							    					icon : Ext.Msg.ERROR
-		             							    				});
-		             											}
-		             										});
-		             									}
-		             								}
-		             							}, {
-		             								text: '重置',
-		             								handler: function() {
-		             									this.up('form').getForm().reset();
-		             								}
-		             							}, {
-		             								text: '取消',
-		             								handler: function() {
-		             									validate_pwd_window.close();
-		             								}
-		             							}]
-		             				        })
-		             				]
-		             			}).show();
-							}
-						}]
-					});
-					var checkoutPanel = Ext.create('Ext.grid.Panel', {
-						store: checkoutStore,
-						columns: [
-							{ text: '货号', dataIndex: 'novid', flex: 2 },
-							{ text: '渠道名称', dataIndex: 'channel', flex: 2 },
-							{ text: '尺码', dataIndex: 'size', flex: 1 },
-							{ text: '吊牌价', dataIndex: 'tagprice', xtype: 'numbercolumn', flex: 1 },
-							{ text: '折扣', dataIndex: 'discount', xtype: 'numbercolumn', flex: 1 },
-							{ text: '数量', dataIndex: 'amount', editor: {
-				                xtype: 'numberfield',
-				                allowBlank: false
-				            }, flex: 1 },
-				            { text: '合计', dataIndex: 'total', xtype: 'numbercolumn', flext: 1, format: '0.00', summaryType: 'sum' },
-				            { text: '运费', dataIndex: 'deliveryFee', xtype: 'numbercolumn', flext: 1, format: '0.00', summaryType: 'sum' }
-				        ],
-				        features: [{
-				            ftype: 'summary'
-				        }],
-						selType: 'cellmodel',
-					    plugins: [
-				          	Ext.create('Ext.grid.plugin.CellEditing', {
-				              	clicksToEdit: 1
-				          	})
-					    ],
-						dockedItems: [toolbarCheckout, {
-					        xtype: 'pagingtoolbar',
-					        store:  checkoutStore,   // same store GridPanel is using
-					        dock: 'bottom',
-					        displayInfo: true
-					    }],
-					    listeners: {
-					    	'edit': function(editor, e) {
-					    		e.record.set('amount', e.value);
-					    		e.record.set('total', e.record.get('tagprice') * e.record.get('amount') * e.record.get('discount'));
-					    	}
-					    }
-					});
-					createTab("checkout", "购物结算", checkoutPanel);
+							}]
+						});
+						var checkoutPanel = Ext.create('Ext.grid.Panel', {
+							store: checkoutStore,
+							columns: [
+								{ text: '货号', dataIndex: 'novid', flex: 2 },
+								{ text: '渠道名称', dataIndex: 'channel', flex: 2 },
+								{ text: '尺码', dataIndex: 'size', flex: 1 },
+								{ text: '吊牌价', dataIndex: 'tagprice', xtype: 'numbercolumn', flex: 1 },
+								{ text: '折扣', dataIndex: 'discount', xtype: 'numbercolumn', flex: 1 },
+								{ text: '个人折扣', dataIndex: 'personalDiscount', xtype: 'numbercolumn', flex: 1 },
+								{ text: '数量', dataIndex: 'amount', editor: {
+					                xtype: 'numberfield',
+					                allowBlank: false
+					            }, flex: 1 },
+					            { text: '合计', dataIndex: 'total', xtype: 'numbercolumn', flext: 1, format: '0.00', summaryType: 'sum' },
+					            { text: '运费', dataIndex: 'deliveryFee', xtype: 'numbercolumn', flext: 1, format: '0.00', summaryType: 'sum' }
+					        ],
+					        features: [{
+					            ftype: 'summary'
+					        }],
+							selType: 'cellmodel',
+						    plugins: [
+					          	Ext.create('Ext.grid.plugin.CellEditing', {
+					              	clicksToEdit: 1
+					          	})
+						    ],
+							dockedItems: [toolbarCheckout, {
+						        xtype: 'pagingtoolbar',
+						        store:  checkoutStore,   // same store GridPanel is using
+						        dock: 'bottom',
+						        displayInfo: true
+						    }],
+						    listeners: {
+						    	'edit': function(editor, e) {
+						    		// update amount
+						    		e.record.set('amount', e.value);
+						    		
+						    		// update total price
+						    		e.record.set('total', e.record.get('tagprice') * e.record.get('amount') * e.record.get('personalDiscount'));
+						    		
+						    		// update delivery fee
+						    		var province = Ext.getCmp("order-province");
+									var order_delivery = Ext.getCmp("order-deliver");
+									if (!province || !province.getValue() || !order_delivery || !order_delivery.getValue()) {
+										e.record.set("deliveryFee", 0);
+									}
+									var queried = yunfeiOrdersStore.queryBy(function (rcd, id){
+										return rcd.get("priovice") == province.getValue() && e.record.get("channel") == rcd.get("channel"); 
+									});
+									var delivery = queried.get(0);
+									var amount = e.record.get("amount");
+									var fee = 0;
+									if (order_delivery.getValue() == "顺丰速运"){
+										fee = 0;
+									} else {
+										if (amount > 1){
+											fee = delivery.get("firstfreight") * 1 + (amount - 1) * delivery.get("lastfreight");
+										} else {
+											fee = delivery.get("firstfreight") * amount;
+										}
+									}
+									e.record.set("deliveryFee", fee);
+						    	}
+						    }
+						});
+						createTab("checkout", "购物结算", checkoutPanel);
+					}
+					
 				} else {
 					Ext.Msg.alert('提示', "请选择需要结算的商品！");
 				}

@@ -17,4 +17,6 @@ public interface IDiscountDao {
 	public Integer deleteById(Page pageBean);
 
 	public Object findByExample(Discount discount);
+	
+	public List findPageByExample(Discount discount);
 }

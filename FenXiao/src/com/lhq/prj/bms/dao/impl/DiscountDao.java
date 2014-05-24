@@ -37,4 +37,9 @@ public class DiscountDao extends SqlMapClientDaoSupport implements IDiscountDao 
 		return getSqlMapClientTemplate().queryForObject("Discount.findByExample",
 				discount);
 	}
+	
+	public List findPageByExample(Discount discount) {
+		return getSqlMapClientTemplate().queryForList("Discount.findPageByExample",
+				discount);
+	}
 }

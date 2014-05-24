@@ -151,8 +151,13 @@
 	
 	<select id="findByExample" parameterClass="discount" resultClass="discount">
 		<![CDATA[
-			SELECT * FROM t_discount 
-			WHERE userId = #userId:NUMBER# and upper(channel) = #channel:VARCHAR#
+			SELECT * FROM t_discount WHERE userId = #userId:NUMBER# and channel = #channel:VARCHAR#
+		]]>
+	</select>
+	
+	<select id="findPageByExample" parameterClass="discount" resultClass="discount">
+		<![CDATA[
+			SELECT * FROM t_discount WHERE userId = #userId:NUMBER#
 		]]>
 	</select>
 </sqlMap>

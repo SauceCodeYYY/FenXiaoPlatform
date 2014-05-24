@@ -287,6 +287,13 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
+		<action name="findDiscountByExample" class="discountAction" method="findDiscountByExample">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action>
 		
 		<!-- 运费管理 -->
 		<action name="saveFreight" class="freightAction" method="saveFreight">

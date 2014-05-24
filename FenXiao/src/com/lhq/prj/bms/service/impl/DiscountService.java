@@ -1,5 +1,7 @@
 package com.lhq.prj.bms.service.impl;
 
+import java.util.List;
+
 import com.lhq.prj.bms.core.Page;
 import com.lhq.prj.bms.dao.IDiscountDao;
 import com.lhq.prj.bms.po.Discount;
@@ -37,5 +39,11 @@ public class DiscountService implements IDiscountService {
 
 	public Object findByExample(Discount discount) {
 		return discountDao.findByExample(discount);
+	}
+	
+	public Page findPageByExample(Discount discount) {
+		Page pageBean = new Page();
+		pageBean.setRoot(discountDao.findPageByExample(discount));
+		return pageBean;
 	}
 }

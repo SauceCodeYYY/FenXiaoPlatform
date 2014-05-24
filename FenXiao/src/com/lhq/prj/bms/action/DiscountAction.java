@@ -20,6 +20,7 @@ public class DiscountAction extends BaseAction {
 	private Integer page;
 	private Long discountId;
 	private String tip;
+	private List list;
 	
 	public String saveDiscount() {
 		Discount temp = (Discount)discountService.findByExample(discount);
@@ -87,6 +88,15 @@ public class DiscountAction extends BaseAction {
 	public String updateDiscount() throws Exception {
 		if (discount.getDiscountId() != null) {
 			success = discountService.updateDiscount(discount);
+		}
+		return SUCCESS;
+	}
+	
+	public String findDiscountByExample() throws Exception {
+		if (discount != null) {
+			pageBean = discountService.findPageByExample(discount);
+			System.out.println(pageBean.getRoot().size());
+			success = true;
 		}
 		return SUCCESS;
 	}

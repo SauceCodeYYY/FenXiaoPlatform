@@ -1492,8 +1492,7 @@ var yunfeiOrders = function(tabId, tabText){
 					
 					Ext.data.StoreManager.lookup('yunfeiStore').load({params : { conditions: Ext.getCmp('yunfei_search_text').getValue() } });
 				}
-            },'-',
-            {
+            }, '-', {
                 xtype: 'button',
                 text: '运费模板导出',
                 iconCls : 'icon-plugin',
@@ -1511,10 +1510,7 @@ var yunfeiOrders = function(tabId, tabText){
 						height : 100
 					}).show();
 				}
-            }
-            
-            ,
-            {
+            }, {
            	 xtype: 'button',
                 text: '导入',
                 iconCls: 'icon-plugin',

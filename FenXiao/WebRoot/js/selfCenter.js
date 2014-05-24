@@ -775,7 +775,117 @@ var selfOrders = function(tabId, tabText){
 	        store: selfOrderStore,   // same store GridPanel is using
 	        dock: 'bottom',
 	        displayInfo: true
-	    }]
+	    }],
+	    listeners: {
+	    	itemdblclick: function (view, record, item, index, e, eOpts){
+	    		var amountObj = {}, itemIdStr = "";
+	    		var orderItemStr = record.get('orderItem');
+	    		if (!orderItemStr || orderItemStr == ''){
+	    			Ext.Msg.alert("提示", "没有订单信息！");
+	    			return;
+	    		}
+	    		var items = orderItemStr.split(",");
+	    		for (var i = 0; i < items.length; i++){
+	    			var item = items[i].split("_");
+	    			amountObj[item[0]] = item[1];
+	    			itemIdStr += item[0];
+	    			if (i != items.length - 1){
+	    				itemIdStr += ",";
+	    			}
+	    		}
+	    		Ext.define('FenXiao.model.OrderItem', {
+	                extend: 'Ext.data.Model',
+	                fields: [
+	                         { name: 'subjectId', type: 'number' }, 
+	                         { name: 'novid', type: 'string' },
+	                         { name: 'channel', type: 'string' }, 
+	                         { name: 'sizeone', type: 'string' },
+	                         { name: 'sizetwo', type: 'string' },
+	                         { name: 'tagprice',  type: 'number' }, 
+	                         { name: 'discount', type: 'number' },
+	                         { name: 'brand', type: 'string' },
+	                         { name: 'largeclass', type: 'string' },
+	                         { name: 'styles', type: 'string' },
+	                         { name: 'categoryId', type: 'string' },
+	                         { name: 'color', type: 'string' },
+	                         { name: 'object', type: 'string' },
+	                         { name: 'subjectName', type: 'string' },
+	                         { name: 'seasons', type: 'string' },
+	                         { name: 'series', type: 'string' },
+	                         { name: 'sex', type: 'string' },
+	                         { name: 'year', type: 'string' },
+	                         { name: 'remarks', type: 'string' },
+	                         { name: 'province', type: 'string' },
+	                         { name: 'newNovid', type: 'string' },
+	                         { name: 'monthl', type: 'string' },
+	                         { name: 'numbers', type: 'string' },
+	                         { name: 'total', type: 'string' },
+	                         { name: 'amount', type: 'number', convert: function(v, record){
+					        	return amountObj[record.get('subjectId')]; }}, 
+					         { name: 'total', type: 'number', convert: function (v, record) {
+				             	return Math.round(record.get('tagprice') * record.get('discount') * record.get('amount') * 100) / 100;}}
+	                ]
+	            });
+	    		var orderItemsStore = Ext.create("Ext.data.Store", {
+	    			autoLoad: true,
+	    			/*fields:['subjectId', 'novid', 'brand', 'sizeone', 'sizetwo', 'largeclass', 'styles', 'categoryId', 'color', 'object', 
+	        		        'subjectName', 'tagprice', 'discount', 'seasons', 'series', 'sex', 'year', 'remarks', 'province', 'channel', 'newNovid', 'monthl', 'numbers', 'total'],*/
+	    			model: 'FenXiao.model.OrderItem',
+	    			proxy: {
+	    				type: 'ajax',
+	    				url: 'findCommodityByIds.action',
+	    				reader: {
+	    					type: 'json',
+	    					root: 'root',
+	    					totalProperty: 'totalProperty'
+	    				},
+	    				extraParams: {
+	    					conditions: itemIdStr
+	    				}
+	    			},
+	    			listeners: {
+	    				load: function(){
+	    					var old = Ext.getCmp('order-' + record.get('orderId'));
+	    		    		if (old) {
+	    		    			old.show();
+	    		    		} else {
+		    					var orderItemsPanel = Ext.create("Ext.grid.Panel", {
+		    					    store: orderItemsStore,
+		    						columns: [
+	    						          {text: '数量', dataIndex: 'amount'},                                     
+								          {text: '渠道名称', dataIndex: 'channel'},                                     
+								          {text: '货号', dataIndex: 'novid'},
+								          {text: '新货号', dataIndex: 'newNovid'},
+								          {text: '货号名称', dataIndex: 'subjectName'}, 
+								          {text: '品牌', dataIndex: 'brand'}, 
+								          {text: '尺码1', dataIndex: 'sizeone'}, 
+								          {text: '尺码2', dataIndex: 'sizetwo'}, 
+								          {text: '大类', dataIndex: 'largeclass'}, 
+								          {text: '款型', dataIndex: 'styles'}, 
+								          {text: '颜色', dataIndex: 'color'},
+								          {text: '项目', dataIndex: 'object'},
+								          {text: '吊牌价', dataIndex: 'tagprice'},
+								          {text: '季节', dataIndex: 'season'},
+								          {text: '性别', dataIndex: 'sex'},
+								          {text: '年份', dataIndex: 'year'},
+								          {text: '折扣', dataIndex: 'discount'},
+								          {text: '月份', dataIndex: 'monthl'},
+								          {text: '备注', dataIndex: 'remarks'}
+		    						],
+		    						dockedItems: [{
+		    					        xtype: 'pagingtoolbar',
+		    					        store: orderItemsStore,   // same store GridPanel is using
+		    					        dock: 'bottom',
+		    					        displayInfo: true,
+		    					    }]
+		    		    		});
+		    		    		createTab("order-" + record.get('orderId'), "订单-" + record.get('orderId'), orderItemsPanel);
+	    		    		}
+	    				}
+	    			}
+	    		});
+	    	}
+	    }
 	});
 	
 	createTab(tabId, tabText, gridPanel);

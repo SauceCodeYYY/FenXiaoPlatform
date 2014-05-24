@@ -117,7 +117,7 @@
 		</isNotEmpty>
 	</sql>
 	
-	<select id="findByPage" parameterClass="page" resultClass="Freight">
+	<!-- <select id="findByPage" parameterClass="page" resultClass="Freight">
 		<![CDATA[
 			SELECT TOP $limit$ * FROM t_freight 
 					WHERE (freightid >= (SELECT MAX(freightid) FROM (SELECT TOP $start$ freightid FROM t_freight 
@@ -129,6 +129,18 @@
 			ORDER BY freightid ) AS T)) 
 		]]>
 		<dynamic prepend="AND">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY freightid
+		]]>
+	</select> -->
+
+	<select id="findByPage" parameterClass="page" resultClass="Freight">
+		<![CDATA[
+			SELECT * FROM t_freight 
+		]]>
+		<dynamic prepend="WHERE">
 			<include refid="findUserByPageCondition" />
 		</dynamic>
 		<![CDATA[
