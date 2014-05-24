@@ -728,7 +728,7 @@ var shoppingCart = function(tabId, tabText){
 			             											failure: function() {
 			             												Ext.Msg.show({
 			             							    					title : '错误提示',
-			             							    					msg : '更新时发生错误!',
+			             							    					msg : '更新时发生错误',
 			             							    					buttons : Ext.Msg.OK,
 			             							    					icon : Ext.Msg.ERROR
 			             							    				});

@@ -183,7 +183,8 @@
 		// 上，logo 区域
 		this.topPanel = Ext.create('Ext.panel.Panel', {
 			region : 'north',
-			height : 55
+			height : 55,
+			html: "<a href='logout.action'>登出</a>"
 		});
 
 		// 上，信息栏

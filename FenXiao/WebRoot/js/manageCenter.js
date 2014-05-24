@@ -1089,29 +1089,17 @@ var discountInfo = function(tabId, tabText){
         		        						{
         		        							fieldLabel: "用户编号",
         		        							name: 'discount.userId',
+        		        							allowBlank: false
         		        						},{
-        		        							xtype: "combo",
         		        							fieldLabel: "渠道",
-        		                       				store: new Ext.data.SimpleStore({
-        		        								data: [
-        		        									['支付宝', '支付宝'],
-        		        									['中国银行', '中国银行'],
-        		        									['工商银行', '工商银行'],
-        		        									['建设银行', '建设银行'],
-        		        									['农业银行', '农业银行'],
-        		        								],
-        		        								fields: ['value', 'text']
-        		        							}),
-        		        							value: '支付宝',
-        		        							valueField: 'value',
-        		        							displayField: 'text',
         		        							name: 'discount.channel',
         		        							allowBlank: false
         		        						},{
         		        							fieldLabel: "折扣",
         		        							value: 1,
         		        							name: 'discount.discount',
-        		        							xtype: 'numberfield'
+        		        							xtype: 'numberfield',
+        		        							allowBlank: false
         		        						}],
         		        						// Reset and Submit buttons
         		        						buttons: [{
@@ -1155,7 +1143,10 @@ var discountInfo = function(tabId, tabText){
         		        						{ conditions: Ext.getCmp('channel_search_text'+uId).getValue().trim() }
         		        					});
         		        				}
-        		                    }, '-', , {
+        		                    }, '-', {
+        		                    	text : "<span style='color: red'>点击单元格编辑折扣</span>",
+        		                    	iconCls: 'icon-edit'
+        		                    }, '-' , {
         		        				text : '删除折扣',
         		        				iconCls : 'icon-del',
         		        				handler : function() {
@@ -1204,7 +1195,10 @@ var discountInfo = function(tabId, tabText){
     		        			columns: [
 									{ text: '折扣编号', dataIndex: 'discountId', flex: 1 },
 									{ text: '用户ID', dataIndex: 'userId', flex: 1 },
-									{ text: '渠道', dataIndex: 'channel', flex: 1 },
+									{ text: '渠道', dataIndex: 'channel',  editor: {
+						                xtype: 'textfield',
+						                allowBlank: false
+						            }, flex: 1 },
 									{ text: '折扣', dataIndex: 'discount', editor: {
 						                xtype: 'numberfield',
 						                allowBlank: false

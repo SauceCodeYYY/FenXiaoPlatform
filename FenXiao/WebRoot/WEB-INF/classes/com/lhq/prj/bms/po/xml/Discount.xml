@@ -71,6 +71,11 @@
 					discount = #discount:NUMBER#
 				]]>
 			</isNotNull>
+			<isNotNull property="channel" prepend=",">
+				<![CDATA[
+					channel = #channel:VARCHAR#
+				]]>
+			</isNotNull>
 		</dynamic>
 		<dynamic prepend="WHERE">
 			<include refid="byDiscountIdCondition" />

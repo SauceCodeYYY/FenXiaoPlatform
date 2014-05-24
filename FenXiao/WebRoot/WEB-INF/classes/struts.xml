@@ -6,14 +6,39 @@
 <struts>
 	<include file="struts-default.xml" />
 
-	<package name="json" extends="json-default">
+	<package name="my-default" extends="json-default">
+		<interceptors>
+			<!-- 定义权限控制拦截器 -->
+			<interceptor name="loginInteceptor"
+				class="com.lhq.prj.bms.interceptor.LoginInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			<!-- 定义一个包含权限控制的拦截器栈 -->
+			<interceptor-stack name="mydefault">
+				<interceptor-ref name="loginInteceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<!-- 定义默认拦截器 -->
+		<default-interceptor-ref name="mydefault" />
+		<!-- 定义全局处理结果 -->
+		<global-results>
+			<!-- 逻辑名为login的结果，映射到/login.jsp页面 -->
+			<result name="login">/index.jsp</result>
+		</global-results>
+	</package>
+
+
+	<package name="json" extends="my-default">
 		<!-- 商品管理 -->
 		<action name="saveCommodity" class="commodityAction" method="saveCommodity">
+			<!-- <interceptor-ref name="loginInteceptor"></interceptor-ref> -->
 			<result type="json">
 				<param name="includeProperties">success,dutyId</param>
 			</result>
 		</action>
 		<action name="deleteCommodity" class="commodityAction" method="deleteCommodity">
+			<!-- <interceptor-ref name="loginInteceptor"></interceptor-ref> -->
 			<result type="json">
 				<param name="includeProperties">success</param>
 			</result>
@@ -23,7 +48,8 @@
 				<param name="includeProperties">success</param>
 			</result>
 		</action>
-		<action name="findCommodityByIds" class="commodityAction" method="findByIds">
+		<action name="findCommodityByIds" class="commodityAction"
+			method="findByIds">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
@@ -215,11 +241,9 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-<!-- 		<action name="deleteOrder" class="orderAction" method="deleteOrder">
-			<result type="json">
-				<param name="includeProperties">success</param>
-			</result>
-		</action> -->
+		<!-- <action name="deleteOrder" class="orderAction" method="deleteOrder"> 
+			<result type="json"> <param name="includeProperties">success</param> </result> 
+			</action> -->
 		<action name="updateOrder" class="orderAction" method="updateOrder">
 			<result type="json">
 				<param name="includeProperties">success</param>
@@ -238,29 +262,25 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-		<!-- <action name="orderExport" class="orderAction" method="orderExport">
-			<result type="json">
-				<param name="root">pageBean</param>
-				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
-			</result>
-			<result name="error">/index.jsp</result>
-		</action> -->
+		<!-- <action name="orderExport" class="orderAction" method="orderExport"> 
+			<result type="json"> <param name="root">pageBean</param> <param name="excludeProperties">conditions,limit,start,success,objCondition</param> 
+			</result> <result name="error">/index.jsp</result> </action> -->
 		<action name="orderExport" class="orderAction">
 			<result name="success" type="stream">
-		 		<!-- 指定输出的为Excel文件 -->  
+				<!-- 指定输出的为Excel文件 -->
 				<param name="contentType">application/vnd.ms-excel</param>
 				<!-- 类型是附件和指定下载时文件的默认名字 -->
 				<param name="contentDisposition">attachment;filename=${ excelFile }</param>
-				<!-- 这里的inputName的属性要和action里相应的get方法的名字对应。例如action的对应的方法名是getDownloadFile
-				所以这里用downloadFile -->
+				<!-- 这里的inputName的属性要和action里相应的get方法的名字对应。例如action的对应的方法名是getDownloadFile 
+					所以这里用downloadFile -->
 				<param name="inputName">inputStream</param>
 				<param name="bufferSize">1024</param>
-			</result>		
+			</result>
 		</action>
 		<!-- <action name="findOrderByExample" class="orderAction" method="findByExample"> 
 			<result type="json"> <param name="root">pageBean</param> <param name="excludeProperties">conditions,limit,start,success,objCondition</param> 
 			</result> </action> -->
-			
+
 		<!-- 折扣管理 -->
 		<action name="saveDiscount" class="discountAction" method="saveDiscount">
 			<result type="json">
@@ -274,7 +294,8 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-		<action name="findAllDiscountByUser" class="discountAction" method="findAllDiscountByUser">
+		<action name="findAllDiscountByUser" class="discountAction"
+			method="findAllDiscountByUser">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
@@ -287,14 +308,15 @@
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-		<action name="findDiscountByExample" class="discountAction" method="findDiscountByExample">
+		<action name="findDiscountByExample" class="discountAction"
+			method="findDiscountByExample">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 			<result name="error">/index.jsp</result>
 		</action>
-		
+
 		<!-- 运费管理 -->
 		<action name="saveFreight" class="freightAction" method="saveFreight">
 			<result type="json">
@@ -317,40 +339,35 @@
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-		<action name="findFreightByExample" class="freightAction" method="findByExample">
+		<action name="findFreightByExample" class="freightAction"
+			method="findByExample">
 			<result type="json">
 				<param name="root">pageBean</param>
 				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
 			</result>
 		</action>
-		
+
 		<!-- 上传 -->
-		<!--<action name="upload2" class="freightAction" method="upload">
-	
-			<result type="json">
-			<param name="includeProperties">success</param>
-			</result>
-		</action>
-		
-		-->
+		<!--<action name="upload2" class="freightAction" method="upload"> <result 
+			type="json"> <param name="includeProperties">success</param> </result> </action> -->
 		<action name="upload2" class="freightAction" method="upload">
-			<interceptor-ref name="defaultStack"></interceptor-ref> 
+			<interceptor-ref name="defaultStack"></interceptor-ref>
 			<result type="json">
 				<param name="includeProperties">success</param>
 			</result>
 		</action>
-		
+
 		<action name="exportExcel" class="freightAction">
-		 <result name="success" type="stream">
-		 		<!-- 指定输出的为Excel文件 -->  
+			<result name="success" type="stream">
+				<!-- 指定输出的为Excel文件 -->
 				<param name="contentType">application/vnd.ms-excel</param>
 				<!-- 类型是附件和指定下载时文件的默认名字 -->
 				<param name="contentDisposition">attachment;filename="yunfei.xls"</param>
-				<!-- 这里的inputName的属性要和action里相应的get方法的名字对应。例如action的对应的方法名是getDownloadFile
-				所以这里用downloadFile -->
+				<!-- 这里的inputName的属性要和action里相应的get方法的名字对应。例如action的对应的方法名是getDownloadFile 
+					所以这里用downloadFile -->
 				<param name="inputName">downloadFile</param>
-			</result>		
+			</result>
 		</action>
-		
+
 	</package>
 </struts>
