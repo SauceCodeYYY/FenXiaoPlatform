@@ -890,3 +890,58 @@ var selfOrders = function(tabId, tabText){
 	
 	createTab(tabId, tabText, gridPanel);
 };
+
+/////////////////////反馈查询
+
+var selfExpress = function(tabId, tabText){
+	var selfOrderStore = Ext.create('Ext.data.Store', {
+		storeId:'selfOrderStore',
+		autoLoad: true,
+		fields:['feedbackId', 'dingdanhao', 'danhao', 'yunfei', 'zhekou', 'jinou', 'sku', 'sizeone', 'sizetwo', 'numberl', 'commodity', 'price', 'methods', 'address', 'userName', 'phone', 'zipcode', 'channels', 'leaf', 'remarks', 'userid'],
+		proxy: {
+			type: 'ajax',
+			url: 'findAllFeedbackByUser.action',
+			reader: {
+				type: 'json',
+				root: 'root',
+				totalProperty: 'totalProperty'
+			}
+		}
+	});
+	
+	var toolbarSelfOrder = Ext.create('Ext.toolbar.Toolbar', {
+		items: [{
+				xtype: 'textfield',
+                emptyText: '输入订单号搜索',
+                id: 'manage_selforder_search_text'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function() {
+					selfOrderStore.load({ params: { conditions: Ext.getCmp('manage_selforder_search_text').getValue() } });
+				}
+            }
+		]
+	});
+	
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: selfOrderStore,
+		columns: [
+			{ text: '订单号', dataIndex: 'dingdanhao', flex: 1 },				
+			{ text: '用户编号', dataIndex: 'userid', flex: 1 },
+			{ text: '快递单号', dataIndex: 'danhao', flex: 1 },
+			{ text: '快递公司', dataIndex: 'method', flex: 2 },
+			{ text: '商品名称', dataIndex: 'commodity', flex: 2 }
+			
+		],
+		dockedItems: [toolbarSelfOrder, {
+	        xtype: 'pagingtoolbar',
+	        store: selfOrderStore,   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true
+	    }]
+	});
+	
+	createTab(tabId, tabText, gridPanel);
+};

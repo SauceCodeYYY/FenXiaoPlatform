@@ -1586,3 +1586,525 @@ var yunfeiOrders = function(tabId, tabText){
 	});
 	createTab(tabId, tabText, gridPanel);
 };
+
+////////////////////反馈管理
+var fankuiOrders = function(tabId, tabText){
+	var fankuiOrdersStore = Ext.create('Ext.data.Store', {
+		storeId:'fankuiStore',
+		autoLoad: true,
+		fields:['feedbackId','userid', 'dingdanhao', 'danhao', 'yunfei','zhekou','jinou',
+		        'sku','sizeone','sizetwo','numberl','commodity','price','methods','address','userName',
+		        'phone','zipcode','channels','leaf','remarks'
+		        ],
+		proxy: {
+			type: 'ajax',
+			url: 'findAllFeedback.action',
+			reader: {
+				type: 'json',
+				root: 'root',
+				totalProperty: 'totalProperty'
+			}
+		}
+	});
+	var toolbarFankuiInfo = Ext.create('Ext.toolbar.Toolbar', {
+		items: [
+			{
+				text: '添加反馈信息',
+				iconCls : 'icon-add',
+				handler : function(){
+					var window = Ext.create('Ext.window.Window', {
+						title: '反馈信息',
+						layout: 'fit',
+						modal: true,
+						constrainHeader:true
+					}).show();
+								
+					var formPanel = Ext.create('Ext.form.Panel', {
+						bodyPadding: 5,
+						width: 500,
+						// The form will submit an AJAX request to this URL when submitted
+						url: 'saveFeedback.action',
+						// Fields will be arranged vertically, stretched to full width
+						layout: 'anchor',
+						defaults: {
+							anchor: '100%'
+						},
+						
+						// The fields
+						defaultType: 'textfield',
+						items: [{
+							fieldLabel: '单号',
+							name: 'feedback.danhao',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '用户id',
+							name: 'feedback.userid',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							xtype: 'numberfield',
+							fieldLabel: '运费',
+							name: 'feedback.yunfei',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							
+							fieldLabel: '折扣',
+							name: 'feedback.zhekou',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							xtype: 'numberfield',
+							fieldLabel: '金额',
+							name: 'feedback.jinou',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: 'SKU',
+							name: 'feedback.sku',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '尺码1',
+							name: 'feedback.sizeone',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '尺码2',
+							name: 'feedback.sizetwo',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '数量',
+							name: 'feedback.numberl',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '商品名称',
+							name: 'feedback.commodity',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '上市价格',
+							name: 'feedback.price',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '发货方式',
+							name: 'feedback.methods',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '发货地址',
+							name: 'feedback.address',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '姓名',
+							name: 'feedback.userName',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '电话',
+							name: 'feedback.phone',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '邮编',
+							name: 'feedback.zipcode',
+							allowBlank: false,
+							columnWidth: .45, 
+							padding: 2
+						},{
+							fieldLabel: '发货渠道',
+							name: 'feedback.channels',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '编码',
+							name: 'feedback.leaf',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '备注',
+							name: 'feedback.remarks',
+							allowBlank: false,
+							maxLength: 500,
+							columnWidth: .9
+						}],
+			
+						// Reset and Submit buttons
+						buttons: [{
+							text: 'Reset',
+							handler: function() {
+								this.up('form').getForm().reset();
+							}
+						}, {
+							text: 'Submit',
+							formBind: true, //only enabled once the form is valid
+							disabled: true,
+							handler: function() {
+								var form = this.up('form').getForm();
+								if (form.isValid()) {
+									form.submit({
+										success: function(form, action) {
+									//	var json = Ext.util.JSON.decode(resp.responseText);
+										   Ext.Msg.alert('Success', action.result.msg);
+										   window.close();
+										   Ext.data.StoreManager.lookup('fankuiStore').reload();
+										},
+										failure: function(form, action) {
+											Ext.Msg.alert('Failed', action.result.msg);
+										}
+									});
+								}
+							}
+						}],
+					});
+					window.add(formPanel);
+				}
+			},
+			{
+				text : '编辑反馈管理',
+				iconCls : 'icon-edit',
+				handler : function(){
+							var record = gridPanel.getSelectionModel().getSelection()[0];
+							if(record){
+								var window = Ext.create('Ext.window.Window', {
+									title: '编辑用户',
+									layout: 'fit',
+									modal: true,
+									constrainHeader:true
+								}).show();
+											
+								var formPanel = Ext.create('Ext.form.Panel', {
+									bodyPadding: 5,
+									width: 500,
+									// The form will submit an AJAX request to this URL when submitted
+									url: 'updateFeedback.action',
+									// Fields will be arranged vertically, stretched to full width
+									layout: 'anchor',
+									defaults: {
+										msgTarget: 'side', 
+										anchor: '100%'
+									},
+						
+									// The fields
+									defaultType: 'textfield',
+									items: [{
+										fieldLabel: '单号',
+										name: 'feedback.danhao',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '用户id',
+										name: 'feedback.userid',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										xtype: 'numberfield',
+										fieldLabel: '运费',
+										name: 'feedback.yunfei',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										
+										fieldLabel: '折扣',
+										name: 'feedback.zhekou',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										xtype: 'numberfield',
+										fieldLabel: '金额',
+										name: 'feedback.jinou',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: 'SKU',
+										name: 'feedback.sku',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '尺码1',
+										name: 'feedback.sizeone',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '尺码2',
+										name: 'feedback.sizetwo',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '数量',
+										name: 'feedback.numberl',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '商品名称',
+										name: 'feedback.commodity',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '上市价格',
+										name: 'feedback.price',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '发货方式',
+										name: 'feedback.methods',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '发货地址',
+										name: 'feedback.address',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '姓名',
+										name: 'feedback.userName',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '电话',
+										name: 'feedback.phone',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '邮编',
+										name: 'feedback.zipcode',
+										allowBlank: false,
+										columnWidth: .45, 
+										padding: 2
+									},{
+										fieldLabel: '发货渠道',
+										name: 'feedback.channels',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '编码',
+										name: 'feedback.leaf',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '备注',
+										name: 'feedback.remarks',
+										allowBlank: false,
+										maxLength: 500,
+										columnWidth: .9
+									}],
+						
+									// Reset and Submit buttons
+									buttons: [{
+										text: 'Reset',
+										handler: function() {
+											this.up('form').getForm().reset();
+										}
+									}, {
+										text: 'Submit',
+										formBind: true, //only enabled once the form is valid
+										disabled: true,
+										handler: function() {
+											var form = this.up('form').getForm();
+											if (form.isValid()) {
+												form.submit({
+													success: function(form, action) {
+													   Ext.Msg.alert('Success', action.result.msg);
+													   window.close();
+													   fankuiOrdersStore.reload();
+													},
+													failure: function(form, action) {
+														Ext.Msg.alert('Failed', action.result.msg);
+													}
+												});
+											}
+										}
+									}],
+								});
+								window.add(formPanel);
+							}
+						}
+			},
+			{
+				text : '删除反馈',
+				iconCls : 'icon-del',
+				handler : function() {
+					var record = gridPanel.getSelectionModel().getSelection();
+			//		alert(record[0].getData().freightid);
+					if (record) {
+						Ext.Msg.confirm('确认删除', '你确定删除该条记录?', function(btn) {
+							if (btn == 'yes') {
+								Ext.Ajax.request({
+									url : 'deleteFeedback.action',
+									params : {
+										feedbackId : record[0].getData().feedbackId
+									},
+									success : function() {
+										Ext.Msg.show({
+											title : '成功提示',
+											msg : '删除成功!'
+										});
+										fankuiOrdersStore.reload();
+									},
+									failure : function() {
+										Ext.Msg.show({
+											title : '错误提示',
+											msg : '删除时发生错误!',
+											buttons : Ext.Msg.OK,
+											icon : Ext.Msg.ERROR
+										});
+									}
+								});
+							}
+						});
+					}
+				}
+			}, {
+				xtype: 'textfield',
+                emptyText : '多条件可用逗号或者空格隔开!',
+                id: 'fankui_search_text'
+            }, {
+                xtype: 'button',
+                text: '查询',
+                iconCls : 'icon-search',
+                handler: function() {
+					// Ext.data.StoreManager.lookup('fankuiStore').baseParams.conditions = user_search_book.getValue();
+					//alert(fankui_search_text.getValue());
+					
+					Ext.data.StoreManager.lookup('fankuiStore').load({params : { conditions: Ext.getCmp('fankui_search_text').getValue() } });
+				}
+            },'-',
+            {
+           	 xtype: 'button',
+                text: '导入',
+                iconCls: 'icon-plugin',
+                handler: function() {
+               	 var import_window =  new Ext.Window({
+            			resizable : false,
+            				modal : true,
+            				title : '请选择导入文件',
+            				items: [ 
+            				         new Ext.FormPanel({
+            				        	url: 'upload3.action',
+            				        	defaults: {
+            				        		anchor: '100%',
+            				        	},
+            				        	layout: 'anchor',
+            				        	defaultType: 'textfield',
+            				        	items: [{
+            				        		xtype: 'fileuploadfield',
+            				        		name: 'excelFile',
+            				        		allowBlank: false
+            				        	}],
+            				        	buttons: [{
+            								text: '导入',
+            								handler: function(btn) {
+            									var frm = this.up('form').getForm();
+            									if (frm.isValid()) {
+            										frm.submit({
+            											waitTitle: '请稍候',
+            											waitMsg: '正在提交表单数据,请稍候...',
+            											success: function(form, action) {
+            												Ext.Msg.alert( '提示', "导入成功");
+            												import_window.close();
+            												fankuiOrdersStore.reload();
+            											},
+            											failure: function() {
+            												Ext.Msg.show({
+            													title: '错误提示',
+            													msg: '该商品可能已经存在!',
+            													buttons: Ext.Msg.OK,
+            													icon: Ext.Msg.ERROR
+            												});
+            											}
+            										});
+            									}
+            								}
+            							}, {
+            								text: '重置',
+            								handler: function() {
+            									this.up('form').getForm().reset();
+            								}
+            							}, {
+            								text: '取消',
+            								handler: function() {
+            									import_window.close();
+            								}
+            							}]
+            				        })
+            				]
+            			}).show();
+                }
+           }
+		]
+	});
+	
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: fankuiOrdersStore,
+		columns: [
+		    { text: '订单号', dataIndex: 'dingdanhao' },
+		    { text: '用户id', dataIndex: 'userid' },
+			{ text: '单号', dataIndex: 'danhao' },
+			{ text: '运费', dataIndex: 'yunfei'},
+			{ text: '折扣', dataIndex: 'zhekou'},
+			{ text: '金额', dataIndex: 'jinou'},
+			{ text: 'SKU', dataIndex: 'sku'},
+			{ text: '尺码1', dataIndex: 'sizeone'},
+			{ text: '尺码2', dataIndex: 'sizetwo'},
+			{ text: '数量', dataIndex: 'numberl'},
+			{ text: '商品名称', dataIndex: 'commodity'},
+			{ text: '上市价格', dataIndex: 'price'},
+			{ text: '发货方式', dataIndex: 'methods'},
+			{ text: '发货地址', dataIndex: 'address'},
+			{ text: '姓名', dataIndex: 'userName'},
+			{ text: '电话', dataIndex: 'phone'},
+			{ text: '邮编', dataIndex: 'zipcode'},
+			{ text: '发货渠道', dataIndex: 'channels'},
+			{ text: '编码', dataIndex: 'leaf'},
+			{ text: '备注', dataIndex: 'remarks'}
+		
+		],
+		dockedItems: [toolbarFankuiInfo,{
+	        xtype: 'pagingtoolbar',
+	        store: Ext.data.StoreManager.lookup('fankuiStore'),   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true,
+	    }]
+	});
+	createTab(tabId, tabText, gridPanel);
+};
+

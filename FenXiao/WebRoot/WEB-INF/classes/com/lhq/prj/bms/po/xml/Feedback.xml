@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Feedback">
+
+	<typeAlias alias="Feedback" type="com.lhq.prj.bms.po.Feedback" />
+	<typeAlias alias="page" type="com.lhq.prj.bms.core.Page" />
+	<typeAlias alias="user" type="com.lhq.prj.bms.po.User" />
+	<parameterMap class="Feedback" id="pm_user_without_id">	
+		<!--<parameter property="feedbackId" javaType="integer" jdbcType="NUMBER" />
+		-->
+		<parameter property="dingdanhao" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="danhao" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="userid" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="yunfei" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="zhekou" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="jinou" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="sku" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="sizeone" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="sizetwo" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="numberl" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="commodity" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="price" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="methods" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="address" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="userName" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="phone" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="zipcode" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="channels" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="leaf" javaType="string" jdbcType="VARCHAR" />
+		<parameter property="remarks" javaType="string" jdbcType="VARCHAR" />
+		
+	</parameterMap>
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   feedbackId = #feedbackId:NUMBER#
+	    ]]>
+	</sql>
+
+	<insert id="save" parameterMap="pm_user_without_id">
+		<![CDATA[
+			INSERT INTO t_feedback
+						( dingdanhao, danhao,userid,yunfei,zhekou,jinou,sku,sizeone,sizetwo,numberl,commodity,price,methods,address,userName,phone,zipcode,channels,leaf,remarks) 
+				 VALUES ( ?, ?, ?, ?,?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT @@IDENTITY AS ID
+			]]>
+		</selectKey>
+	</insert>
+
+	<delete id="deleteById" parameterClass="integer">
+		<![CDATA[
+			delete t_feedback
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</delete>
+	
+	
+	
+	<update id="update" parameterClass="Feedback">
+		<![CDATA[
+			UPDATE t_feedback
+		]]>
+		<dynamic prepend="SET">
+			<isNotNull property="dingdanhao" prepend=",">
+				<![CDATA[
+					dingdanhao = #dingdanhao:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="danhao" prepend=",">
+				<![CDATA[
+					danhao = #danhao:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="yunfei" prepend=",">
+				<![CDATA[
+					yunfei = #yunfei:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="zhekou" prepend=",">
+				<![CDATA[
+					zhekou = #zhekou:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="jinou" prepend=",">
+				<![CDATA[
+					jinou = #jinou:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="sku" prepend=",">
+				<![CDATA[
+					sku = #sku:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="sizeone" prepend=",">
+				<![CDATA[
+					sizeone = #sizeone:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="sizetwo" prepend=",">
+				<![CDATA[
+					sizetwo = #sizetwo:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="numberl" prepend=",">
+				<![CDATA[
+					numberl = #numberl:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="commodity" prepend=",">
+				<![CDATA[
+					commodity = #commodity:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="price" prepend=",">
+				<![CDATA[
+					 price= #price:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="methods" prepend=",">
+				<![CDATA[
+					methods = #methods:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="address" prepend=",">
+				<![CDATA[
+					address = #address:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="userName" prepend=",">
+				<![CDATA[
+					userName = #userName:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="phone" prepend=",">
+				<![CDATA[
+					 phone= #phone:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="zipcode" prepend=",">
+				<![CDATA[
+					 zipcode= #zipcode:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="channels" prepend=",">
+				<![CDATA[
+					channels = #channels:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="leaf" prepend=",">
+				<![CDATA[
+					leaf = #leaf:VARCHAR#
+				]]>
+			</isNotNull>
+			<isNotNull property="remarks" prepend=",">
+				<![CDATA[
+					remarks = #remarks:VARCHAR#
+				]]>
+			</isNotNull>
+			
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="byUserIdCondition" />
+		</dynamic>
+	</update>
+
+
+	<sql id="findUserByPageCondition">
+		<isNotEmpty property="conditions">
+			<iterate property="conditions" open="(" close=")" conjunction="OR">
+				<![CDATA[
+					upper(dingdanhao) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+					 OR upper(danhao) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'    
+				    OR upper(commodity) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				     OR upper(address) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				     OR upper(methods) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				     OR upper(channels) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				     OR upper(zipcode) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				      OR upper(methods) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+				       OR upper(userName) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%' 
+			          OR upper(remarks) LIKE '%' + upper(#conditions[]:VARCHAR#) + '%'
+		    	]]>
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByPage" parameterClass="page" resultClass="Feedback">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_feedback 
+					WHERE (feedbackId >= (SELECT MAX(feedbackId) FROM (SELECT TOP $start$ feedbackId FROM t_feedback
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY feedbackId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY feedbackId
+		]]>
+	</select>
+
+	<select id="findByCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_feedback  
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findUserByPageCondition" />
+		</dynamic>
+	</select>
+
+	<select id="findByExample" parameterClass="user" resultClass="Feedback">
+		<![CDATA[
+			SELECT * FROM t_feedback  
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="feedbackId" prepend="AND">
+				userId = #userid:INT#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<sql id="findFeedbackByPageCondition">
+		<isNotEmpty property="conditions">
+			<![CDATA[
+				upper(dingdanhao) LIKE '%' + upper(#conditions[0]:VARCHAR#) + '%'
+	    	]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByPageAndUser" parameterClass="page" resultClass="feedback">
+		<![CDATA[
+			SELECT TOP $limit$ * FROM t_feedback 
+					WHERE (feedbackId >= (SELECT MAX(feedbackId) FROM (SELECT TOP $start$ feedbackId FROM t_feedback 
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findFeedbackByPageCondition" />
+		</dynamic>
+		<![CDATA[
+			ORDER BY feedbackId ) AS T)) 
+		]]>
+		<dynamic prepend="AND">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findFeedbackByPageCondition" />
+		</dynamic>
+		<!--  -->
+		<![CDATA[
+			ORDER BY feedbackId
+		]]>
+	</select>
+	
+	
+	<select id="findByUserCount" parameterClass="page" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_feedback
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotNull property="userId" prepend="AND">
+				userId=#userId:LONG#
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="AND">
+			<include refid="findFeedbackByPageCondition" />
+		</dynamic>
+	</select>
+</sqlMap>

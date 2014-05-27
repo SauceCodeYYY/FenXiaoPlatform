@@ -23,8 +23,9 @@
 		<default-interceptor-ref name="mydefault" />
 		<!-- 定义全局处理结果 -->
 		<global-results>
-			<!-- 逻辑名为login的结果，映射到/login.jsp页面 -->
+			<!-- 逻辑名为login的结果，映射到/index.jsp页面 -->
 			<result name="login">/index.jsp</result>
+			<result name="error">/index.jsp</result>
 		</global-results>
 	</package>
 
@@ -369,5 +370,45 @@
 			</result>
 		</action>
 
+		<!-- 反馈管理 -->	
+		<action name="saveFeedback" class="feedbackAction" method="saveFeedback">
+			<result type="json">
+				<param name="includeProperties">success,userId</param>
+			</result>
+		</action>
+		<action name="deleteFeedback" class="feedbackAction" method="deleteFeedback">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="updateFeedback" class="feedbackAction" method="updateFeedback">
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
+		<action name="findAllFeedback" class="feedbackAction" method="findAllFeedback">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findAllFeedbackByUser" class="feedbackAction" method="findAllFeedbackByUser">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="findFeedbackByExample" class="feedbackAction" method="findByExample">
+			<result type="json">
+				<param name="root">pageBean</param>
+				<param name="excludeProperties">conditions,limit,start,success,objCondition</param>
+			</result>
+		</action>
+		<action name="upload3" class="feedbackAction" method="upload">
+			<interceptor-ref name="defaultStack"></interceptor-ref> 
+			<result type="json">
+				<param name="includeProperties">success</param>
+			</result>
+		</action>
 	</package>
 </struts>

@@ -37,4 +37,8 @@
 	<bean id="freightService" class="com.lhq.prj.bms.service.impl.FreightService">
 		<property name="freightDao" ref="freightDao" />
 	</bean>
+	
+	<bean id="feedbackService" class="com.lhq.prj.bms.service.impl.FeedbackService">
+		<property name="feedbackDao" ref="feedbackDao" />
+	</bean>
 </beans>

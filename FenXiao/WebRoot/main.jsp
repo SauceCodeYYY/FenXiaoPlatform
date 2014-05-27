@@ -38,6 +38,12 @@
 	}
 	var userId = "${ user.userId }";
 	
+	Ext.Ajax.on("requestexception",function(conn,response,options){
+		if(response.status==408){
+			window.location="login.jsp";
+		}
+	});
+	
 	var selfWithdraw = function(tabId, tabText){
 		var withdrawStore = Ext.create('Ext.data.Store', {
 			storeId:'withdrawStore',
@@ -239,6 +245,7 @@
 	                              			case "selfAddr": selfAddr(id, text); break;
 	                              			case "selfPayPwd": selfPayPwd(id, text); break;
 	                              			case "selfOrders": selfOrders(id, text); break;
+	                              			case "selfExpress": selfExpress(id, text); break;
 	                              			case "prodSearch": prodSearch(id, text); break;
 	                              			case "shoppingCart": shoppingCart(id, text); break;
 	                              			case "manageUsers": userInfo(id, text); break;
@@ -247,6 +254,7 @@
 	           								case "manageOrders": orderInfo(id, text); break;
 	           								case "manageDiscount": discountInfo(id, text); break;
 									        case "yunfeiOrders": yunfeiOrders(id, text); break;
+    									    case "fankuiOrders": fankuiOrders(id, text); break;
 	                              		}
 	                               }
                                }  

@@ -41,4 +41,8 @@
 	<bean name="freightAction" class="com.lhq.prj.bms.action.FreightAction" scope="prototype">
 		<property name="freightService" ref="freightService" />
 	</bean>
+	
+	<bean name="feedbackAction" class="com.lhq.prj.bms.action.FeedbackAction" scope="prototype">
+		<property name="feedbackService" ref="feedbackService" />
+	</bean>
 </beans>

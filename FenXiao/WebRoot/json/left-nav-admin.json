@@ -7,7 +7,8 @@
 				{"id":"selfRecharge", "text":"帐户充值","leaf":true},
 				{"id":"selfOrders","text":"我的订单","leaf":true},
 				{"id":"selfAddr","text":"地址管理","leaf":true},
-				{"id":"selfPayPwd","text":"支付密码","leaf":true}
+				{"id":"selfPayPwd","text":"支付密码","leaf":true},
+				{"id":"selfExpress","text":"快递查询","leaf":true}
 			]
 		},
 		{"id":"prodCenter","text":"商品中心","leaf":false,"children":
@@ -23,7 +24,8 @@
 				{"id":"manageProds","text":"商品管理","leaf":true},
 				{"id":"manageOrders","text":"订单管理","leaf":true},
 				{"id":"manageDiscount","text":"折扣管理","leaf":true},
-				{"id":"yunfeiOrders","text":"运费管理","leaf":true}
+				{"id":"yunfeiOrders","text":"运费管理","leaf":true},
+				{"id":"fankuiOrders","text":"反馈管理","leaf":true}
 			]
 		}
 	]
