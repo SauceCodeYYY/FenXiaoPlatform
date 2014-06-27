@@ -73,6 +73,16 @@
 					payPwd = #payPwd:VARCHAR#
 				]]>
 			</isNotEmpty>
+			<isNotEmpty property="points" prepend=",">
+				<![CDATA[
+					points = #points:NUMBER#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="balance" prepend=",">
+				<![CDATA[
+					balance = #balance:NUMBER#
+				]]>
+			</isNotEmpty>
 		</dynamic>
 		<dynamic prepend="WHERE">
 			<include refid="byUserIdCondition" />

@@ -111,7 +111,7 @@ var userInfo = function(tabId, tabText){
 									});
 								}
 							}
-						}],
+						}]
 					});
 					window.add(formPanel);
 				}
@@ -206,7 +206,7 @@ var userInfo = function(tabId, tabText){
 												});
 											}
 										}
-									}],
+									}]
 								});
 								window.add(formPanel);
 							}
@@ -272,7 +272,7 @@ var userInfo = function(tabId, tabText){
 	        xtype: 'pagingtoolbar',
 	        store: userInfoStore,   // same store GridPanel is using
 	        dock: 'bottom',
-	        displayInfo: true,
+	        displayInfo: true
 	    }]
 	});
 	
@@ -460,7 +460,7 @@ var prodInfo = function(tabId, tabText){
                 			url: 'saveCommodity.action',
                 			defaults: {
                 				msgTarget: 'side', // 验证信息显示右边
-                			    anchor: '100%',
+                			    anchor: '100%'
                 			},
                 			layout: 'column',
                 	    	defaultType: 'textfield',
@@ -595,7 +595,7 @@ var prodInfo = function(tabId, tabText){
              				         new Ext.FormPanel({
              				        	url: 'upload.action',
              				        	defaults: {
-             				        		anchor: '100%',
+             				        		anchor: '100%'
              				        	},
              				        	layout: 'anchor',
              				        	defaultType: 'textfield',
@@ -682,7 +682,7 @@ var prodInfo = function(tabId, tabText){
 	        xtype: 'pagingtoolbar',
 	        store: prodInfoStore,   // same store GridPanel is using
 	        dock: 'bottom',
-	        displayInfo: true,
+	        displayInfo: true
 	    }]
 	});
 	
@@ -838,7 +838,7 @@ var orderInfo = function(tabId, tabText){
              				         new Ext.FormPanel({
              				        	url: 'orderExport.action',
              				        	defaults: {
-             				        		anchor: '100%',
+             				        		anchor: '100%'
              				        	},
              				        	standardSubmit: true,
              				        	method: 'POST',
@@ -1002,7 +1002,7 @@ var orderInfo = function(tabId, tabText){
 		    					        xtype: 'pagingtoolbar',
 		    					        store: orderItemsStore,   // same store GridPanel is using
 		    					        dock: 'bottom',
-		    					        displayInfo: true,
+		    					        displayInfo: true
 		    					    }]
 		    		    		});
 		    		    		createTab("order-" + record.get('orderId'), "订单-" + record.get('orderId'), orderItemsPanel);
@@ -1126,7 +1126,7 @@ var discountInfo = function(tabId, tabText){
         		        									});
         		        								}
         		        							}
-        		        						}],
+        		        						}]
         		        					});
         		        					window.add(formPanel);
         		        				}
@@ -1244,7 +1244,7 @@ var discountInfo = function(tabId, tabText){
 //    		        		alert(1)
     		        		createTab("discount-" + uId, "用户折扣-" + uId, gridPanel);
         				}
-        			},
+        			}
 	        	});
 	        }
 	    }]
@@ -1343,7 +1343,7 @@ var yunfeiOrders = function(tabId, tabText){
 									});
 								}
 							}
-						}],
+						}]
 					});
 					window.add(formPanel);
 				}
@@ -1431,7 +1431,7 @@ var yunfeiOrders = function(tabId, tabText){
 												});
 											}
 										}
-									}],
+									}]
 								});
 								window.add(formPanel);
 							}
@@ -1515,7 +1515,7 @@ var yunfeiOrders = function(tabId, tabText){
             				         new Ext.FormPanel({
             				        	url: 'upload2.action',
             				        	defaults: {
-            				        		anchor: '100%',
+            				        		anchor: '100%'
             				        	},
             				        	layout: 'anchor',
             				        	defaultType: 'textfield',
@@ -1581,7 +1581,7 @@ var yunfeiOrders = function(tabId, tabText){
 	        xtype: 'pagingtoolbar',
 	        store: Ext.data.StoreManager.lookup('yunfeiStore'),   // same store GridPanel is using
 	        dock: 'bottom',
-	        displayInfo: true,
+	        displayInfo: true
 	    }]
 	});
 	createTab(tabId, tabText, gridPanel);
@@ -1777,7 +1777,7 @@ var fankuiOrders = function(tabId, tabText){
 									});
 								}
 							}
-						}],
+						}]
 					});
 					window.add(formPanel);
 				}
@@ -1953,7 +1953,7 @@ var fankuiOrders = function(tabId, tabText){
 												});
 											}
 										}
-									}],
+									}]
 								});
 								window.add(formPanel);
 							}
@@ -2021,7 +2021,7 @@ var fankuiOrders = function(tabId, tabText){
             				         new Ext.FormPanel({
             				        	url: 'upload3.action',
             				        	defaults: {
-            				        		anchor: '100%',
+            				        		anchor: '100%'
             				        	},
             				        	layout: 'anchor',
             				        	defaultType: 'textfield',
@@ -2102,7 +2102,7 @@ var fankuiOrders = function(tabId, tabText){
 	        xtype: 'pagingtoolbar',
 	        store: Ext.data.StoreManager.lookup('fankuiStore'),   // same store GridPanel is using
 	        dock: 'bottom',
-	        displayInfo: true,
+	        displayInfo: true
 	    }]
 	});
 	createTab(tabId, tabText, gridPanel);

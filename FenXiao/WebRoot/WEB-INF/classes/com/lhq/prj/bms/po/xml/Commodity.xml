@@ -282,9 +282,9 @@
 	<select id="findByPage" parameterClass="page" resultClass="commodity">
 		<![CDATA[
 			SELECT TOP $limit$ * FROM t_commodity 
-					WHERE state='online' and (subjectId>= (SELECT MAX(subjectId) FROM (SELECT TOP $start$ subjectId FROM t_commodity  
+					WHERE state='online' and (subjectId>= (SELECT MAX(subjectId) FROM (SELECT TOP $start$ subjectId FROM t_commodity  WHERE state='online' 
 		]]>
-		<dynamic prepend="WHERE">
+		<dynamic prepend="AND">
 			<include refid="findUserByPageCondition" />
 		</dynamic>
 		<![CDATA[

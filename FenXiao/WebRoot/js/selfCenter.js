@@ -95,19 +95,19 @@ var selfInfo = function(tabId, tabText){
 			            }
 					},{
 						fieldLabel: '账户余额',
-						name: 'user.balance',
+						//name: 'user.balance',
 						value: currentUser.data.balance,
 						readOnly: true,
 						disabled: true
 					},{
 						fieldLabel: '积分',
-						name: 'user.points',
+						//name: 'user.points',
 						value: currentUser.data.points,
 						readOnly: true,
 						disabled: true
 					},{
 						fieldLabel: '角色',
-						name: 'user.role',
+						//name: 'user.role',
 						allowBlank: false,
 						value: currentUser.data.role == "admin"? "管理员": "普通用户",
 						readOnly: true,
@@ -136,7 +136,7 @@ var selfInfo = function(tabId, tabText){
 								});
 							}
 						}
-					}],
+					}]
 				});
 		    	var panel = new Ext.panel.Panel({
 		    		bodyPadding: 5,
@@ -216,7 +216,7 @@ var selfRecharge = function(tabId, tabText){
 						},{
 							fieldLabel: '账户名称',
 							name: 'recharge.accountName',
-							allowBlank: false,
+							allowBlank: false
 						},{
 							fieldLabel: '充值金额',
 							name: 'recharge.amount',
@@ -224,7 +224,7 @@ var selfRecharge = function(tabId, tabText){
 						},{
 							fieldLabel: '淘宝订单编号',
 							name: 'recharge.tbOrderId',
-							allowBlank: false,
+							allowBlank: false
 						},{
 							fieldLabel: '提交日期',
 							name: 'recharge.submitTime',
@@ -235,7 +235,7 @@ var selfRecharge = function(tabId, tabText){
 							xtype: 'textareafield',
 							fieldLabel: '备注',
 							name: 'recharge.note',
-							allowBlank: true,
+							allowBlank: true
 						},{
 							xtype: 'hiddenfield',
 							name: 'recharge.state',
@@ -265,7 +265,7 @@ var selfRecharge = function(tabId, tabText){
 			             				         new Ext.FormPanel({
 			             				        	url: 'checkPayPwd.action',
 			             				        	defaults: {
-			             				        		anchor: '100%',
+			             				        		anchor: '100%'
 			             				        	},
 			             				        	layout: 'anchor',
 			             				        	defaultType: 'textfield',
@@ -317,7 +317,7 @@ var selfRecharge = function(tabId, tabText){
 			             			}).show();
 								}
 							}
-						}],
+						}]
 					});
 					window.add(formPanel);
 				}
@@ -453,7 +453,7 @@ var selfAddr = function (tabId, tabText){
 						},{
 							fieldLabel: '市',
 							name: 'address.city',
-							allowBlank: false,
+							allowBlank: false
 						},{
 							fieldLabel: '区',
 							name: 'address.district',
@@ -501,7 +501,7 @@ var selfAddr = function (tabId, tabText){
 									});
 								}
 							}
-						}],
+						}]
 					});
 					window.add(formPanel);
 				}
@@ -698,7 +698,7 @@ var selfPayPwd = function(tabId, tabText) {
 					});
 				}
 			}
-		}],
+		}]
 	});
 	var panel = Ext.create('Ext.panel.Panel', {
 		bodyPadding: 5,
@@ -876,7 +876,7 @@ var selfOrders = function(tabId, tabText){
 		    					        xtype: 'pagingtoolbar',
 		    					        store: orderItemsStore,   // same store GridPanel is using
 		    					        dock: 'bottom',
-		    					        displayInfo: true,
+		    					        displayInfo: true
 		    					    }]
 		    		    		});
 		    		    		createTab("order-" + record.get('orderId'), "订单-" + record.get('orderId'), orderItemsPanel);
@@ -894,8 +894,8 @@ var selfOrders = function(tabId, tabText){
 /////////////////////反馈查询
 
 var selfExpress = function(tabId, tabText){
-	var selfOrderStore = Ext.create('Ext.data.Store', {
-		storeId:'selfOrderStore',
+	var selfExpressStore = Ext.create('Ext.data.Store', {
+		storeId:'selfExpressStore',
 		autoLoad: true,
 		fields:['feedbackId', 'dingdanhao', 'danhao', 'yunfei', 'zhekou', 'jinou', 'sku', 'sizeone', 'sizetwo', 'numberl', 'commodity', 'price', 'methods', 'address', 'userName', 'phone', 'zipcode', 'channels', 'leaf', 'remarks', 'userid'],
 		proxy: {
@@ -913,31 +913,31 @@ var selfExpress = function(tabId, tabText){
 		items: [{
 				xtype: 'textfield',
                 emptyText: '输入订单号搜索',
-                id: 'manage_selforder_search_text'
+                id: 'manage_selfexpress_search_text'
             }, {
                 xtype: 'button',
                 text: '查询',
                 iconCls: 'icon-search',
                 handler: function() {
-					selfOrderStore.load({ params: { conditions: Ext.getCmp('manage_selforder_search_text').getValue() } });
+					selfExpressStore.load({ params: { conditions: Ext.getCmp('manage_selfexpress_search_text').getValue() } });
 				}
             }
 		]
 	});
 	
 	var gridPanel = Ext.create('Ext.grid.Panel', {
-		store: selfOrderStore,
+		store: selfExpressStore,
 		columns: [
 			{ text: '订单号', dataIndex: 'dingdanhao', flex: 1 },				
 			{ text: '用户编号', dataIndex: 'userid', flex: 1 },
 			{ text: '快递单号', dataIndex: 'danhao', flex: 1 },
-			{ text: '快递公司', dataIndex: 'method', flex: 2 },
+			{ text: '快递公司', dataIndex: 'methods', flex: 2 },
 			{ text: '商品名称', dataIndex: 'commodity', flex: 2 }
 			
 		],
 		dockedItems: [toolbarSelfOrder, {
 	        xtype: 'pagingtoolbar',
-	        store: selfOrderStore,   // same store GridPanel is using
+	        store: selfExpressStore,   // same store GridPanel is using
 	        dock: 'bottom',
 	        displayInfo: true
 	    }]

@@ -30,7 +30,7 @@
 <script type="text/javascript" src="js/selfCenter.js"></script>
 <script type="text/javascript" src="js/prodCenter.js"></script>
 <script type="text/javascript" src="js/manageCenter.js"></script>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 	// var currentUser = '当前用户:<s:property value="#session.user.userName"/>';
 	var nav = '<s:property value="tip"/>';
 	if(nav == '' || nav.length <= 0){
@@ -189,23 +189,9 @@
 		// 上，logo 区域
 		this.topPanel = Ext.create('Ext.panel.Panel', {
 			region : 'north',
-			height : 59,
-			html: '<a href="logout.action"><B>退出</B></a>&nbsp;&nbsp;'+
-		  	    '<a href="tencent://message/?uin=531683074&Site=www.xinnki.com&Menu=yes" target="_blank" title="客服一">[客服1]</a><IMG height=12 src="images/qq.jpg" width=18></br>'+
-     		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tencent://message/?uin=1546026460&Site=www.xinnki.com&Menu=yes" target="_blank" title="客服一">[客服2]</a><IMG height=12 src="images/qq.jpg" width=18></br>'+
-     		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tencent://message/?uin=173185172&Site=www.xinnki.com&Menu=yes" target="_blank" title="客服一">[客服3]<IMG height=12 src="images/qq.jpg" width=18></a>',
-
-
-			 bodyStyle: {  
-                        //background: '#ffc',  
-                        background: 'url(images/131415.jpg) no-repeat #FFFFFF center',  
-                        padding: '10px'  ,
-                   	    width:'1000px'
-                      //  height:'45px'
-                    }
-			
+			height : 55,
+			html: "<a href='logout.action'>登出</a>"
 		});
-
 
 		// 上，信息栏
 		this.topInfo = Ext.create('Ext.panel.Panel', {
@@ -227,14 +213,6 @@
 		this.rightPanel = Ext.create('Ext.tab.Panel', {
 			region : 'center',
 			layout : 'fit',
-			//bodyStyle:"background-image:url(images/2681.jpg)",
-			 bodyStyle: {  
-                        //background: '#ffc',  
-                        background: 'url(images/902.jpg) no-repeat #FFFFFF center',  
-                        padding: '10px'  ,
-                        width:'300px',
-                        height:'250px'
-                    },  
 			minTabWidth : 120
 		});
 		
@@ -320,7 +298,7 @@
 			items : [ this.topPanel, this.topInfo, this.leftPanel, this.rightPanel ]
 		});
 	});
---></script>
+</script>
 <body>
 </body>
 </html>

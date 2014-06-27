@@ -11,7 +11,10 @@ var prodSearch = function(id, text) {
 	        text: '查询',
 	        iconCls: 'icon-search',
 	        handler: function() {
-	        	if (Ext.getCmp('prodSearchText').getValue().trim() == ''){
+	        	//if (Ext.getCmp('prodSearchText').getValue().trim() == ''){
+
+	    	if (Ext.String.trim(Ext.getCmp('prodSearchText').getValue()) == ""){
+
 					Ext.Msg.alert('提示', '请输入货号!');
 	        		return;
 	        	}
@@ -28,7 +31,8 @@ var prodSearch = function(id, text) {
 	        				totalProperty: 'totalProperty'
 	        			},
 	        			extraParams: {
-	        				conditions: Ext.getCmp('prodSearchText').getValue().trim()
+	        				//conditions: Ext.getCmp('prodSearchText').getValue().trim()
+	        				conditions: Ext.String.trim(Ext.getCmp('prodSearchText').getValue())
 	        			}
 	        		}, 
         			listeners: {
@@ -80,7 +84,7 @@ var prodSearch = function(id, text) {
 		        		// add new size to current channel's sizes array 
 		        		subobj['sizes'].push({
 			        		'size': record.get('sizeone'),
-			        		'amount': record.get('numbers'),
+			        		'amount': record.get('numbers')
 			        	});
 		        	});
 //		        	alert(Ext.encode(resultArr[resultArr.length - 1]));
@@ -187,7 +191,7 @@ var prodSearch = function(id, text) {
 		        	                        			width: 480,
 		        	                        			url: 'saveCartItem.action',
 		        	                        			defaults: {
-		        	                        			    anchor: '100%',
+		        	                        			    anchor: '100%'
 		        	                        			},
 		        	                        			layout: 'anchor',
 		        	                        	    	defaultType: 'textfield',
@@ -642,7 +646,7 @@ var shoppingCart = function(tabId, tabText){
 			             				         new Ext.FormPanel({
 			             				        	url: 'checkPayPwd.action',
 			             				        	defaults: {
-			             				        		anchor: '100%',
+			             				        		anchor: '100%'
 			             				        	},
 			             				        	layout: 'anchor',
 			             				        	defaultType: 'textfield',

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="GBK" ?>
 
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
@@ -113,7 +113,7 @@
 			<include refid="byExactSubmitTimeCondition" />
 		</dynamic>
 		<![CDATA[
-			and state = 'å·²æäº¤'
+			and state = 'ÒÑÌá½»'
 		]]>
 	</select>
 	

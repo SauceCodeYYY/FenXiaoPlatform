@@ -1,6 +1,10 @@
+#Sat Jun 07 15:54:48 CST 2014
 eclipse.preferences.version=1
 encoding//WebRoot/json/left-nav-admin.json=UTF-8
 encoding//WebRoot/json/left-nav-user.json=UTF-8
 encoding//WebRoot/json/userInfo.json=UTF-8
 encoding//src/com/lhq/prj/bms/action/UserAction.java=GBK
+encoding//src/com/lhq/prj/bms/po/xml/Order.xml=UTF-8
 encoding//src/com/lhq/prj/bms/service/ICommodityService.java=UTF-8
+encoding/<project>=UTF-8
+encoding/src=UTF-8

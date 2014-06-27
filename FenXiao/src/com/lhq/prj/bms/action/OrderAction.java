@@ -3,6 +3,7 @@ package com.lhq.prj.bms.action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -311,7 +312,7 @@ public class OrderAction extends BaseAction {
 				cell.setCellValue(order.getOrderId());
 
 				cell = row.createCell(1);
-				cell.setCellValue("");
+				cell.setCellValue(order.getDeliveryFee());
 
 				cell = row.createCell(2);
 				cell.setCellValue(order.getNote());
@@ -352,11 +353,12 @@ public class OrderAction extends BaseAction {
 
 		// String fileName=RandomStringUtils.randomAlphanumeric(10);
 		String basePath = getServletContext().getRealPath("/");
-		String fileName = "orders-" + new SimpleDateFormat("yyyy_MM_dd").format(new Date());
+		String fileName = "orders-";
 		setExcelFile(fileName);
 		// System.out.println(fileName);
-		fileName = new StringBuffer( basePath + fileName).append(".xls").toString();
+		fileName = new StringBuffer(fileName).append(".xls").toString();
 		File file = new File(fileName);
+		//System.out.println(file.createNewFile());
 		try {
 			OutputStream os = new FileOutputStream(file);
 			wb.write(os);
@@ -477,5 +479,15 @@ public class OrderAction extends BaseAction {
 
 	public void setTip(String tip) {
 		this.tip = tip;
+	}
+	
+	public static void main(String[] args){
+		File a = new File("C:\\1.xls");
+		try {
+			a.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
