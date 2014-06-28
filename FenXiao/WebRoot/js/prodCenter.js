@@ -41,7 +41,6 @@ var prodSearch = function(id, text) {
         				}
         			}
 	        	});
-//	        	alert(1)
 	        	function processResult (){
 		        	var resultArr = [];
 		        	prodSearchStore.each(function(record) {
@@ -83,11 +82,11 @@ var prodSearch = function(id, text) {
 		        		}
 		        		// add new size to current channel's sizes array 
 		        		subobj['sizes'].push({
-			        		'size': record.get('sizeone'),
+			        		'size': record.get('sizeone').replace(".", "_"),
 			        		'amount': record.get('numbers')
 			        	});
 		        	});
-//		        	alert(Ext.encode(resultArr[resultArr.length - 1]));
+		        	//alert(Ext.encode(resultArr[resultArr.length - 1]));
 		        	var resultPanels = [];
 		        	var columnArray = {};
 		        	for (var i = 0; i < resultArr.length; i++){
@@ -109,7 +108,7 @@ var prodSearch = function(id, text) {
 		        			for (var k = 0; k < sizes.length; k++){
 		        				if (!sizePos[sizes[k]['size']]){
 			        				fields.push({ name: sizes[k]['size'], type: 'int' });
-			        				columns.push({ text: sizes[k]['size'], dataIndex: sizes[k]['size'] });
+			        				columns.push({ text: sizes[k]['size'].replace("_", "."), dataIndex: sizes[k]['size'] });
 			        				sizePos[sizes[k]['size']] = pos++;
 		        				}
 			        			data[sizes[k]['size']] = sizes[k]['amount'];
@@ -117,9 +116,10 @@ var prodSearch = function(id, text) {
 		        			items.push(data);
 		        		}
 	        			columnArray[novid] = columns;
-	//	        		alert(Ext.encode(items));
-	//	        		alert(Ext.encode(fields));
-//		        		alert(Ext.encode(columns));
+		        		//alert(Ext.encode(items));
+		        		//alert(Ext.encode(fields));
+		        		//alert(Ext.encode(columns));
+//	        			alert(2.1)
 		        		var resultStore = Ext.create('Ext.data.Store', {
 		        			storeId: 'resultStore_'+ novid,
 		        		    fields: fields,
@@ -136,6 +136,7 @@ var prodSearch = function(id, text) {
 		        		if (oldPanel){
 		        			oldPanel.close();
 		        		}
+		        		//alert(2.5)
 		        		var gridPanel = Ext.create('Ext.grid.Panel', {
 		        			id: novid,
 		        			title: novid,
@@ -257,9 +258,11 @@ var prodSearch = function(id, text) {
 		        		    	}
 		        		    }
 		        		});
-//		        		alert(3)
+//		        		alert(2)
 		        		resultPanels.push(gridPanel);
+		        		//alert(2)
 		        	}
+		        	//alert(3)
 		        	var resultPanel = Ext.create('Ext.panel.Panel', {
 		        	    title: '查询结果',
 		        	    layout: 'fit',
@@ -280,6 +283,7 @@ var prodSearch = function(id, text) {
 		        	       }]
 		        	  }]
 		        	});
+		        	//alert(4)
 		        	var old = Ext.getCmp("prodSearchResults");
 		        	if (old){
 		        		old.close();
@@ -550,12 +554,11 @@ var shoppingCart = function(tabId, tabText){
 											return;
 										}
 										checkoutStore.each(function(rec){
-											// alert(1)
 											var queried = yunfeiOrdersStore.queryBy(function (rcd, id){
-												//alert(rcd.get("priovice") + " " + Ext.getCmp("order-province").getValue() + " " + rcd.get("channel") + " " + rec.get("channel"));
+												// alert(rcd.get("priovice") + "---" + Ext.getCmp("order-province").getValue() + " " + rcd.get("channel") + " " + rec.get("channel"));
 												return rcd.get("priovice") == province && rec.get("channel") == rcd.get("channel"); 
 											});
-											// alert(records[0]);
+											//alert(queried.getCount());
 											var delivery = queried.get(0);
 											var amount = rec.get("amount");
 											var fee = 0;
@@ -563,6 +566,7 @@ var shoppingCart = function(tabId, tabText){
 												msg = "运费到付";
 												fee = 0;
 											} else {
+												msg = "圆通速递<br>";
 												//alert(delivery)
 												msg += delivery.get("channel") + "到" + delivery.get("priovice") + "：首重" + delivery.get("firstfreight") + "元，续重：" + delivery.get("lastfreight") + "元<br>";
 												// alert(msg);

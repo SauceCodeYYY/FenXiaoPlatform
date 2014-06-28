@@ -32,7 +32,7 @@ var selfInfo = function(tabId, tabText){
 					defaults: {
 						anchor: '100%'
 					},
-		
+					submitEmptyText: false,
 					// The fields
 					defaultType: 'textfield',
 					items: [{
@@ -51,13 +51,13 @@ var selfInfo = function(tabId, tabText){
 					},{
 						fieldLabel: '旧登录密码',
 						name: 'oldPwd',
-						inputType: 'password',
-						emptyText: '如果不需要更改登录密码, 留空即可'
+						inputType: 'password'
+						//emptyText: '如果不需要更改登录密码, 留空即可'
 					},{
 						fieldLabel: '新登录密码',
 						name: 'user.password',
-						inputType: 'password',
-						emptyText: '如果不需要更改登录密码, 留空即可'
+						inputType: 'password'
+						//emptyText: '如果不需要更改登录密码, 留空即可'
 					},{
 						fieldLabel: '新登录密码确认',
 						name: 'user.passwordConfirm',
@@ -72,7 +72,7 @@ var selfInfo = function(tabId, tabText){
 			                    else 
 			                        return "密码输入不一致";
 			            },
-						emptyText: '如果不需要更改登录密码, 留空即可'
+						emptyText: '如果不需要更改登录密码, 全部留空即可'
 					},{
 						fieldLabel: '邮箱',
 						name: 'user.email',

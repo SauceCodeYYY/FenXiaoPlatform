@@ -171,7 +171,9 @@ public class UserAction extends BaseAction {
 			return ERROR;
 		}
 		if (user != null) {
-			if(user.getPassword() != null) {
+			//System.out.println(user.getPassword());
+			//System.out.println(oldPwd);
+			if(user.getPassword() != null && !user.getPassword().isEmpty()) {
 				if (oldPwd.equals(currUser.getPassword())){
 					success = userService.updateUser(user);
 				} else {
