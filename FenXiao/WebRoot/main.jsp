@@ -277,6 +277,7 @@
 	           								case "manageDiscount": discountInfo(id, text); break;
 									        case "yunfeiOrders": yunfeiOrders(id, text); break;
     									    case "fankuiOrders": fankuiOrders(id, text); break;
+    									    // case "gonggaoOrders": gonggaoOrders(id, text); break;
 	                              		}
 	                               }
                                }  
@@ -317,10 +318,12 @@
 		Ext.create('Ext.container.Viewport', {
 			layout : 'border',
 			renderTo : Ext.getBody(),
-			items : [ this.topPanel, this.topInfo, this.leftPanel, this.rightPanel ]
+			items : [ this.topPanel, /* this.topInfo, */ this.leftPanel, this.rightPanel ]
 		});
+		
+		gonggaoOrders("announcementOrders", "公告");
 	});
---></script>
+</script>
 <body>
 </body>
 </html>

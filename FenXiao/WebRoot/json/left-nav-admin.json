@@ -6,7 +6,6 @@
 				{"id":"selfInfo", "text":"个人信息","leaf":true},
 				{"id":"selfRecharge", "text":"帐户充值","leaf":true},
 				{"id":"selfOrders","text":"我的订单","leaf":true},
-				{"id":"selfAddr","text":"地址管理","leaf":true},
 				{"id":"selfPayPwd","text":"支付密码","leaf":true},
 				{"id":"selfExpress","text":"快递查询","leaf":true}
 			]

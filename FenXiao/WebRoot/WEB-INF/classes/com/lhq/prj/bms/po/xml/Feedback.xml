@@ -32,7 +32,7 @@
 		<parameter property="channels" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="leaf" javaType="string" jdbcType="VARCHAR" />
 		<parameter property="remarks" javaType="string" jdbcType="VARCHAR" />
-		
+		<parameter property="submitTime" javaType="string" jdbcType="VARCHAR" />
 	</parameterMap>
 	<sql id="byUserIdCondition">
 		<![CDATA[
@@ -43,8 +43,8 @@
 	<insert id="save" parameterMap="pm_user_without_id">
 		<![CDATA[
 			INSERT INTO t_feedback
-						( dingdanhao, danhao,userid,yunfei,zhekou,jinou,sku,sizeone,sizetwo,numberl,commodity,price,methods,address,userName,phone,zipcode,channels,leaf,remarks) 
-				 VALUES ( ?, ?, ?, ?,?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?)
+						( dingdanhao, danhao,userid,yunfei,zhekou,jinou,sku,sizeone,sizetwo,numberl,commodity,price,methods,address,userName,phone,zipcode,channels,leaf,remarks,submitTime) 
+				 VALUES ( ?, ?, ?, ?,?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)
 		]]>
 		<selectKey resultClass="int">
 			<![CDATA[

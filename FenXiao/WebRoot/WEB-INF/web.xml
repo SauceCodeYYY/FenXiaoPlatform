@@ -4,28 +4,27 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<filter>
-        <filter-name>CharacterEncodingFilter</filter-name>
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-        <init-param>
-            <param-name>forceEncoding</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
 
-    <filter-mapping>
-     <filter-name>CharacterEncodingFilter</filter-name>
-     <url-pattern>/*</url-pattern>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<filter>
 		<filter-name>struts2</filter-name>
 		<filter-class>
-  	 org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter
-		</filter-class>
+			org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>struts2</filter-name>
@@ -38,8 +37,47 @@
 		</param-value>
 	</context-param>
 	<listener>
-		<listener-class>
-			org.springframework.web.context.ContextLoaderListener
-		</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
+
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>addUserServleter</servlet-name>
+		<servlet-class>com.lhq.prj.bms.servlet.addUserServleter</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>addUserServlet</servlet-name>
+		<servlet-class>com.lhq.prj.bms.servlet.addUserServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>daojdbc</servlet-name>
+		<servlet-class>com.daojdbc</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>Dao</servlet-name>
+		<servlet-class>com.lhq.prj.bms.daojdbc.Dao</servlet-class>
+	</servlet>
+
+
+
+	<servlet-mapping>
+		<servlet-name>addUserServlet</servlet-name>
+		<url-pattern>/register.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>daojdbc</servlet-name>
+		<url-pattern>/servlet/daojdbc</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Dao</servlet-name>
+		<url-pattern>/servlet/Dao</url-pattern>
+	</servlet-mapping>
 </web-app>

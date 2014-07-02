@@ -51,6 +51,11 @@ var userInfo = function(tabId, tabText){
 							inputType: 'password',
 							allowBlank: false
 						},{
+							fieldLabel: '支付密码',
+							name: 'user.payPwd',
+							inputType: 'password',
+							allowBlank: false
+						},{
 							fieldLabel: '邮箱',
 							name: 'user.email',
 							allowBlank: false
@@ -1594,7 +1599,7 @@ var fankuiOrders = function(tabId, tabText){
 		autoLoad: true,
 		fields:['feedbackId','userid', 'dingdanhao', 'danhao', 'yunfei','zhekou','jinou',
 		        'sku','sizeone','sizetwo','numberl','commodity','price','methods','address','userName',
-		        'phone','zipcode','channels','leaf','remarks'
+		        'phone','zipcode','channels','leaf','remarks',"submitTime"
 		        ],
 		proxy: {
 			type: 'ajax',
@@ -2095,8 +2100,8 @@ var fankuiOrders = function(tabId, tabText){
 			{ text: '邮编', dataIndex: 'zipcode'},
 			{ text: '发货渠道', dataIndex: 'channels'},
 			{ text: '编码', dataIndex: 'leaf'},
-			{ text: '备注', dataIndex: 'remarks'}
-		
+			{ text: '备注', dataIndex: 'remarks'},
+			{ text: '下单日期', dataIndex: 'submitTime'}
 		],
 		dockedItems: [toolbarFankuiInfo,{
 	        xtype: 'pagingtoolbar',
@@ -2107,4 +2112,243 @@ var fankuiOrders = function(tabId, tabText){
 	});
 	createTab(tabId, tabText, gridPanel);
 };
+
+
+var gonggaoOrders = function(tabId, tabText){
+	var announcementStore = Ext.create('Ext.data.Store', {
+		storeId: 'announcementStore',
+		autoLoad: {start: 0, limit: 25},
+		pageSize: 25,
+		fields:['id', 'content', 'state'],
+		proxy: {
+			type: 'ajax',
+			url: 'json/userInfo.json',
+			reader: {
+				type: 'json',
+				root: 'items',
+				totalProperty: 'total'
+			}
+		}
+	});
+	announcementStore.load({
+	    params:{
+	        start:0,
+	        limit: 25
+	    }
+	});
+	var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: announcementStore,
+		columns: [
+			{ text: '编号', dataIndex: 'id', flex: 1 },
+			{ text: '内容', dataIndex: 'content', flex: 10 }
+			/*{ text: '状态', dataIndex: 'state', flex: 3 },*/
+		]/*,
+		dockedItems: [{
+	        xtype: 'pagingtoolbar',
+	        store: announcementStore,   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true
+  		}]*/
+	});
+
+	/*var toolbarGonggaoInfo = Ext.create('Ext.toolbar.Toolbar', {
+		items: [
+			{
+				text: '添加公告信息',
+				iconCls : 'icon-add',
+				handler : function(){
+					var window = Ext.create('Ext.window.Window', {
+						title: '公告信息',
+						layout: 'fit',
+						modal: true,
+						constrainHeader:true
+					}).show();
+								
+					var formPanel = Ext.create('Ext.form.Panel', {
+						bodyPadding: 5,
+						width: 500,
+						// The form will submit an AJAX request to this URL when submitted
+						url: 'saveFeedback.action',
+						// Fields will be arranged vertically, stretched to full width
+						layout: 'anchor',
+						defaults: {
+							anchor: '100%'
+						},
+						
+						// The fields
+						defaultType: 'textfield',
+						items: [{
+							fieldLabel: '单号',
+							name: 'feedback.danhao',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						},{
+							fieldLabel: '用户id',
+							name: 'feedback.userid',
+							allowBlank: false,
+							columnWidth: .45,
+							padding: 2
+						}],
+			
+						// Reset and Submit buttons
+						buttons: [{
+							text: 'Reset',
+							handler: function() {
+								this.up('form').getForm().reset();
+							}
+						}, {
+							text: 'Submit',
+							formBind: true, //only enabled once the form is valid
+							disabled: true,
+							handler: function() {
+								var form = this.up('form').getForm();
+								if (form.isValid()) {
+									form.submit({
+										success: function(form, action) {
+									//	var json = Ext.util.JSON.decode(resp.responseText);
+										   Ext.Msg.alert('Success', action.result.msg);
+										   window.close();
+										   Ext.data.StoreManager.lookup('gonggaoStore').reload();
+										},
+										failure: function(form, action) {
+											Ext.Msg.alert('Failed', action.result.msg);
+										}
+									});
+								}
+							}
+						}]
+					});
+					window.add(formPanel);
+				}
+			},
+			{
+				text : '编辑公告管理',
+				iconCls : 'icon-edit',
+				handler : function(){
+							var record = gridPanel.getSelectionModel().getSelection()[0];
+							if(record){
+								var window = Ext.create('Ext.window.Window', {
+									title: '编辑用户',
+									layout: 'fit',
+									modal: true,
+									constrainHeader:true
+								}).show();
+											
+								var formPanel = Ext.create('Ext.form.Panel', {
+									bodyPadding: 5,
+									width: 500,
+									// The form will submit an AJAX request to this URL when submitted
+									url: 'updateFeedback.action',
+									// Fields will be arranged vertically, stretched to full width
+									layout: 'anchor',
+									defaults: {
+										msgTarget: 'side', 
+										anchor: '100%'
+									},
+						
+									// The fields
+									defaultType: 'textfield',
+									items: [{
+										fieldLabel: '单号',
+										name: 'feedback.danhao',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									},{
+										fieldLabel: '用户id',
+										name: 'feedback.userid',
+										allowBlank: false,
+										columnWidth: .45,
+										padding: 2
+									}],
+						
+									// Reset and Submit buttons
+									buttons: [{
+										text: 'Reset',
+										handler: function() {
+											this.up('form').getForm().reset();
+										}
+									}, {
+										text: 'Submit',
+										formBind: true, //only enabled once the form is valid
+										disabled: true,
+										handler: function() {
+											var form = this.up('form').getForm();
+											if (form.isValid()) {
+												form.submit({
+													success: function(form, action) {
+													   Ext.Msg.alert('Success', action.result.msg);
+													   window.close();
+													   gonggaoOrdersStore.reload();
+													},
+													failure: function(form, action) {
+														Ext.Msg.alert('Failed', action.result.msg);
+													}
+												});
+											}
+										}
+									}]
+								});
+								window.add(formPanel);
+							}
+						}
+			},
+			{
+				text : '删除公告',
+				iconCls : 'icon-del',
+				handler : function() {
+					var record = gridPanel.getSelectionModel().getSelection();
+			//		alert(record[0].getData().freightid);
+					if (record) {
+						Ext.Msg.confirm('确认删除', '你确定删除该条记录?', function(btn) {
+							if (btn == 'yes') {
+								Ext.Ajax.request({
+									url : 'deleteFeedback.action',
+									params : {
+										feedbackId : record[0].getData().feedbackId
+									},
+									success : function() {
+										Ext.Msg.show({
+											title : '成功提示',
+											msg : '删除成功!'
+										});
+										gonggaoOrdersStore.reload();
+									},
+									failure : function() {
+										Ext.Msg.show({
+											title : '错误提示',
+											msg : '删除时发生错误!',
+											buttons : Ext.Msg.OK,
+											icon : Ext.Msg.ERROR
+										});
+									}
+								});
+							}
+						});
+					}
+				}
+			}
+		]
+	});*/
+	
+	/*var gridPanel = Ext.create('Ext.grid.Panel', {
+		store: gonggaoOrdersStore,
+		columns: [
+		    { text: '订单号', dataIndex: 'dingdanhao' },
+		    { text: '用户id', dataIndex: 'userid' },
+		
+		
+		],
+		dockedItems: [toolbarGonggaoInfo,{
+	        xtype: 'pagingtoolbar',
+	        store: Ext.data.StoreManager.lookup('gonggaoStore'),   // same store GridPanel is using
+	        dock: 'bottom',
+	        displayInfo: true
+	    }]
+	});*/
+	createTab(tabId, tabText, gridPanel);
+};
+
+
 

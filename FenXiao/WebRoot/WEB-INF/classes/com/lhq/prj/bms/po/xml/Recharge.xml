@@ -116,7 +116,7 @@
 			<include refid="findRechargeByPageCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId ) AS T)) 
+			ORDER BY rechargeId) AS T)) 
 		]]>
 		<dynamic prepend="AND">
 			<isNotNull property="userId" prepend="AND">
@@ -128,7 +128,7 @@
 		</dynamic>
 		<!--  -->
 		<![CDATA[
-			ORDER BY rechargeId
+			ORDER BY rechargeId DESC
 		]]>
 	</select>
 	
@@ -141,13 +141,13 @@
 			<include refid="findRechargeByPageAndUserCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId ) AS T)) 
+			ORDER BY rechargeId) AS T)) 
 		]]>
 		<dynamic prepend="AND">
 			<include refid="findRechargeByPageAndUserCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId
+			ORDER BY rechargeId DESC
 		]]>
 	</select>
 
@@ -194,13 +194,13 @@
 			<include refid="findRechargeByTimeCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId ) AS T)) 
+			ORDER BY rechargeId DESC) AS T)) 
 		]]>
 		<dynamic prepend="AND">
 			<include refid="findRechargeByTimeCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId
+			ORDER BY rechargeId DESC
 		]]>
 	</select>
 	
@@ -227,7 +227,7 @@
 			<include refid="findRechargeByTimeCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId ) AS T)) 
+			ORDER BY rechargeId DESC) AS T)) 
 		]]>
 		<dynamic prepend="AND">
 			<isNotNull property="userId" prepend="AND">
@@ -238,8 +238,8 @@
 			<include refid="findRechargeByTimeCondition" />
 		</dynamic>
 		<![CDATA[
-			ORDER BY rechargeId
-		]]>
+			ORDER BY rechargeId DESC
+		]]> 
 	</select>
 	
 	<select id="findByTimeAndUserCount" parameterClass="page" resultClass="int">

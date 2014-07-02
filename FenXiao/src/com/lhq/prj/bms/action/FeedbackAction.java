@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,6 +183,8 @@ public class FeedbackAction extends BaseAction {
 				ros.getCell(17).setCellType(HSSFCell.CELL_TYPE_STRING);
 				ros.getCell(18).setCellType(HSSFCell.CELL_TYPE_STRING);
 				ros.getCell(19).setCellType(HSSFCell.CELL_TYPE_STRING);
+				// 下单日期
+				ros.getCell(20).setCellType(HSSFCell.CELL_TYPE_NUMERIC);
 
 				Feedback bean = new Feedback();
 				bean.setRemarks(ros.getCell(0).getStringCellValue());
@@ -203,6 +207,7 @@ public class FeedbackAction extends BaseAction {
 				bean.setLeaf(ros.getCell(17).getStringCellValue());
 				bean.setUserid(ros.getCell(18).getStringCellValue());
 				bean.setDingdanhao(ros.getCell(19).getStringCellValue());
+				bean.setSubmitTime(new SimpleDateFormat("yyyy-MM-dd").format(ros.getCell(20).getDateCellValue()));
 
 				feedbackId = (Integer) feedbackService.saveFeedback(bean);
 				if (feedbackId != null) {

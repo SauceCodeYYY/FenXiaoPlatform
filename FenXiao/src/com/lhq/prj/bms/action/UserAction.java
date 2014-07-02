@@ -35,7 +35,7 @@ public class UserAction extends BaseAction {
 
 	private Integer page;
 
-	private Integer userId;
+	private Long userId;
 
 	private String userName;
 
@@ -46,11 +46,11 @@ public class UserAction extends BaseAction {
 	private String tip;
 
 	private Float total;
-	
+
 	private String oldPwd;
-	
+
 	private String oldPayPwd;
-	
+
 	public String logout() {
 		getSession().removeAttribute("user");
 		success = true;
@@ -76,39 +76,65 @@ public class UserAction extends BaseAction {
 		}
 	}
 
-	public String checkPayPwd(){
-		User currUser = (User)getSession().getAttribute("user");
-		if (null == currUser){
+	public String checkPayPwd() {
+		User currUser = (User) getSession().getAttribute("user");
+		if (null == currUser) {
 			return ERROR;
 		}
-		if (user.getPayPwd().equals(currUser.getPayPwd())){
+		if (user.getPayPwd().equals(currUser.getPayPwd())) {
 			success = true;
 		} else {
 			success = false;
 		}
 		return SUCCESS;
 	}
-	
-	public String checkBalance(){
-		User currUser = (User)getSession().getAttribute("user");
-		if (null == currUser){
+
+	public String checkBalance() {
+		User currUser = (User) getSession().getAttribute("user");
+		if (null == currUser) {
 			return ERROR;
 		}
-		if (currUser.getBalance() >= total){
+		if (currUser.getBalance() >= total) {
 			success = true;
 		} else {
 			success = false;
 		}
 		return SUCCESS;
 	}
-	
+
+	/**
+	 * ×¢²á
+	 * 
+	 * @return
+	 */
+
+	public String register() {
+		System.out.println("begin action");
+		User user = new User();
+		user.setUserName(userName);
+		user.setPassword(password);
+		userId = (Long) userService.saveUser(user);
+		if (userId != null) {
+			success = true;
+
+		} else {
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+
+	public String test1() {
+		System.out.println("123123132");
+		return SUCCESS;
+	}
+
 	/**
 	 * Ìí¼ÓÓÃ»§
 	 * 
 	 * @return
 	 */
 	public String saveUser() {
-		userId = (Integer) userService.saveUser(user);
+		userId = (Long) userService.saveUser(user);
 		if (userId != null) {
 			success = true;
 		}
@@ -126,9 +152,10 @@ public class UserAction extends BaseAction {
 		List<String> conditions = new ArrayList<String>();
 		MyUtils.addToCollection(conditions, MyUtils.split(strCondition, " ,"));
 		List<String> utf8Condition = new ArrayList<String>();
-		for (String c: conditions){
+		for (String c : conditions) {
 			try {
-				utf8Condition.add(new String(c.getBytes("iso-8859-1"), "utf-8"));
+				utf8Condition
+						.add(new String(c.getBytes("iso-8859-1"), "utf-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -167,21 +194,21 @@ public class UserAction extends BaseAction {
 	 */
 	public String updateUser() throws Exception {
 		User currUser = (User) getSession().getAttribute("user");
-		if (currUser == null){
+		if (currUser == null) {
 			return ERROR;
 		}
 		if (user != null) {
-			//System.out.println(user.getPassword());
-			//System.out.println(oldPwd);
-			if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-				if (oldPwd.equals(currUser.getPassword())){
+			// System.out.println(user.getPassword());
+			// System.out.println(oldPwd);
+			if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+				if (oldPwd.equals(currUser.getPassword())) {
 					success = userService.updateUser(user);
 				} else {
 					success = false;
 					setTip("µÇÂ¼ÃÜÂë´íÎó!");
 				}
-			} else if (user.getPayPwd() != null){
-				if (currUser.getPayPwd().equals(oldPayPwd)){
+			} else if (user.getPayPwd() != null) {
+				if (currUser.getPayPwd().equals(oldPayPwd)) {
 					success = userService.updateUser(user);
 				} else {
 					success = false;
@@ -218,11 +245,11 @@ public class UserAction extends BaseAction {
 		this.user = user;
 	}
 
-	public Integer getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

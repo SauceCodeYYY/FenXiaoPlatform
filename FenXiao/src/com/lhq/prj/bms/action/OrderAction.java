@@ -276,6 +276,10 @@ public class OrderAction extends BaseAction {
 		cell = row.createCell(12);
 		cell.setCellStyle(cellStyle); // 设置单元格样式
 		cell.setCellValue("发货地址");
+		
+		cell = row.createCell(13);
+		cell.setCellStyle(cellStyle); // 设置单元格样式
+		cell.setCellValue("下单日期");
 
 		int rowNum = 1;
 		pageBean = new Page();
@@ -347,6 +351,9 @@ public class OrderAction extends BaseAction {
 				cell = row.createCell(12);
 				cell.setCellValue(order.getAddress());
 
+				cell = row.createCell(13);
+				cell.setCellValue(order.getSubmitTime().toString());
+				
 				rowNum++;
 			}
 		}

@@ -40,10 +40,10 @@
 	}
 </script>
 <body>
-<s:form action="login.action" method="post">
+<s:form action="register.do" method="post">
 	<s:textfield name="userName" label="用户名"></s:textfield>
 	<s:password name="password" label="密码"></s:password>
-	<s:submit value="登录"></s:submit>
+	<s:submit value="注册"></s:submit>
 </s:form>
 </body>	
 </html>

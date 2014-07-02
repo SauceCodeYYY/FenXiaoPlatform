@@ -897,7 +897,7 @@ var selfExpress = function(tabId, tabText){
 	var selfExpressStore = Ext.create('Ext.data.Store', {
 		storeId:'selfExpressStore',
 		autoLoad: true,
-		fields:['feedbackId', 'dingdanhao', 'danhao', 'yunfei', 'zhekou', 'jinou', 'sku', 'sizeone', 'sizetwo', 'numberl', 'commodity', 'price', 'methods', 'address', 'userName', 'phone', 'zipcode', 'channels', 'leaf', 'remarks', 'userid'],
+		fields:['feedbackId', 'dingdanhao', 'danhao', 'yunfei', 'zhekou', 'jinou', 'sku', 'sizeone', 'sizetwo', 'numberl', 'commodity', 'price', 'methods', 'address', 'userName', 'phone', 'zipcode', 'channels','sku', 'leaf', 'remarks', 'userid', 'submitTime'],
 		proxy: {
 			type: 'ajax',
 			url: 'findAllFeedbackByUser.action',
@@ -932,7 +932,9 @@ var selfExpress = function(tabId, tabText){
 			{ text: '用户编号', dataIndex: 'userid', flex: 1 },
 			{ text: '快递单号', dataIndex: 'danhao', flex: 1 },
 			{ text: '快递公司', dataIndex: 'methods', flex: 2 },
-			{ text: '商品名称', dataIndex: 'commodity', flex: 2 }
+			{ text: '商品名称', dataIndex: 'commodity', flex: 2 },
+			{ text: '货号', dataIndex: 'sku', flex: 2 },
+			{ text: '下单日期', dataIndex: 'submitTime', flex: 2}
 			
 		],
 		dockedItems: [toolbarSelfOrder, {
