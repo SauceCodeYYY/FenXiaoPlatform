@@ -1,12 +1,16 @@
 package com.lhq.prj.bms.action;
 
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.lhq.prj.bms.core.BaseAction;
 import com.lhq.prj.bms.core.MyUtils;
 import com.lhq.prj.bms.core.Page;
+import com.lhq.prj.bms.md5.MyMD5Util;
 import com.lhq.prj.bms.po.User;
 import com.lhq.prj.bms.service.IUserService;
 
@@ -50,6 +54,8 @@ public class UserAction extends BaseAction {
 	private String oldPwd;
 
 	private String oldPayPwd;
+	
+	private static Map usersl = new HashMap();
 
 	public String logout() {
 		getSession().removeAttribute("user");
@@ -57,23 +63,52 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public static boolean loginValid(String userNames, String passwords)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		String pwdInDb = (String) usersl.get(userNames);
+		System.out.println("===UserAction.loginValid===" + pwdInDb);
+		if (null != pwdInDb) { // 该用户存在
+			return MyMD5Util.validPassword(passwords, pwdInDb);
+		} else {
+			System.out.println("不存在该用户！！！");
+			return false;
+		}
+	}
+
 	public String login() {
 		User user = new User();
 		user.setUserName(userName);
 		user.setPassword(password);
+		// ////////////md5
+		System.out.println("===UserAction.login===" + getRequest().getParameter("userName") + " " + getRequest().getParameter("password"));
 		User _user = userService.login(user);
+		System.out.println("===UserAction.login===" + _user);
 		if (_user != null) {
-			if ("admin".equals(_user.getRole())) {
-				this.setTip("admin");// 管理员
-			} else {
-				this.setTip("user");// 普通用户
+			try {
+				if (loginValid(_user.getUserName(), _user.getPassword())) {
+					System.out.println("欢迎登陆！！！");
+					if ("admin".equals(_user.getRole())) {
+						this.setTip("admin");// 管理员
+					} else {
+						this.setTip("user");// 普通用户
+					}
+
+					getSession().setAttribute("user", _user);
+					success = true;
+				} else {
+					System.out.println("口令错误，请重新输入！！！");
+				}
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
-			getSession().setAttribute("user", _user);
-			return SUCCESS;
+
 		} else {
 			this.setTip("用户名或者密码错误!");
 			return INPUT;
 		}
+		return SUCCESS;
 	}
 
 	public String checkPayPwd() {
@@ -201,14 +236,16 @@ public class UserAction extends BaseAction {
 			// System.out.println(user.getPassword());
 			// System.out.println(oldPwd);
 			if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-				if (oldPwd.equals(currUser.getPassword())) {
+				if (MyMD5Util.validPassword(oldPwd, currUser.getPassword())) {
+					user.setPassword(MyMD5Util.getEncryptedPwd(user.getPassword()));
 					success = userService.updateUser(user);
 				} else {
 					success = false;
 					setTip("登录密码错误!");
 				}
-			} else if (user.getPayPwd() != null) {
-				if (currUser.getPayPwd().equals(oldPayPwd)) {
+			} else if (user.getPayPwd() != null && !user.getPayPwd().isEmpty()) {
+				if (MyMD5Util.validPassword(oldPayPwd, currUser.getPayPwd())) {
+					user.setPayPwd(MyMD5Util.getEncryptedPwd(user.getPayPwd()));
 					success = userService.updateUser(user);
 				} else {
 					success = false;

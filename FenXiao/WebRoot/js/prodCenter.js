@@ -300,7 +300,7 @@ var shoppingCart = function(tabId, tabText){
 	var shoppingCartStore = Ext.create('Ext.data.Store', {
 		storeId:'shoppingCartStore',
 		autoLoad: true,
-		fields:['cartItemId', 'userId', 'subjectId', 'novid', 'channel', 'size', 'tagprice', 'discount', 'amount', 'time'],
+		fields:['cartItemId', 'userId', 'subjectId', 'novid', 'channel', 'size', 'tagprice', 'discount', { name: 'amount', type: 'number' }, 'time'],
 		proxy: {
 			type: 'ajax',
 			url: 'findbyCartItem.action',
@@ -794,34 +794,72 @@ var shoppingCart = function(tabId, tabText){
 						    }],
 						    listeners: {
 						    	'edit': function(editor, e) {
-						    		// update amount
-						    		e.record.set('amount', e.value);
-						    		
-						    		// update total price
-						    		e.record.set('total', e.record.get('tagprice') * e.record.get('amount') * e.record.get('personalDiscount'));
-						    		
-						    		// update delivery fee
-						    		var province = Ext.getCmp("order-province");
-									var order_delivery = Ext.getCmp("order-deliver");
-									if (!province || !province.getValue() || !order_delivery || !order_delivery.getValue()) {
-										e.record.set("deliveryFee", 0);
-									}
-									var queried = yunfeiOrdersStore.queryBy(function (rcd, id){
-										return rcd.get("priovice") == province.getValue() && e.record.get("channel") == rcd.get("channel"); 
-									});
-									var delivery = queried.get(0);
-									var amount = e.record.get("amount");
-									var fee = 0;
-									if (order_delivery.getValue() == "顺丰速运"){
-										fee = 0;
-									} else {
-										if (amount > 1){
-											fee = delivery.get("firstfreight") * 1 + (amount - 1) * delivery.get("lastfreight");
-										} else {
-											fee = delivery.get("firstfreight") * amount;
-										}
-									}
-									e.record.set("deliveryFee", fee);
+						    		var record = e.record;
+						    		var novid = record.get("novid");
+									var size = record.get("size");
+									var channel = record.get("channel");
+									var singleProdStore = Ext.create('Ext.data.Store', {
+						    			autoLoad: true,
+						    			fields:['subjectId', 'novid', 'brand', 'sizeone', 'sizetwo', 'largeclass', 'styles', 'categoryId', 'color', 'object', 
+						    			        'subjectName', 'tagprice', 'discount', 'seasons', 'series', 'sex', 'year', 'remarks', 'province', 'channel', 'newNovid', 'monthl', 'numbers', 'total'],
+						    			proxy: {
+						    				type: 'ajax',
+						    				url: 'findExact.action',
+						    				extraParams: {
+							    				"commodity.sizeone": size,
+							    				"commodity.novid": novid,
+							    				"commodity.channel": channel
+						    		        },
+						    				reader: {
+						    					type: 'json',
+						    					root: 'root',
+						    					totalProperty: 'totalProperty'
+						    				}
+						    			},
+						    		    listeners : {
+						    		    	load: function(){ 
+						    		    		if (singleProdStore.getCount() == 0){
+						    		    			Ext.Msg.alert("错误提示", "找不到商品信息!");
+						    		    			return;
+								        		}
+						    		    		var numbers = singleProdStore.getAt(0).get('numbers');
+						    		    		// alert(novid + " " + size + " " + channel + " " + v + " " + numbers);
+								    			if (e.value > numbers) {
+								    				Ext.Msg.alert("提示", "库存不够");
+								    				e.record.set('amount', e.originalValue);
+								    			} else {
+								    				// update amount
+										    		e.record.set('amount', e.value);
+										    		
+										    		// update total price
+										    		e.record.set('total', e.record.get('tagprice') * e.record.get('amount') * e.record.get('personalDiscount'));
+										    		
+										    		// update delivery fee
+										    		var province = Ext.getCmp("order-province");
+													var order_delivery = Ext.getCmp("order-deliver");
+													if (!province || !province.getValue() || !order_delivery || !order_delivery.getValue()) {
+														e.record.set("deliveryFee", 0);
+													}
+													var queried = yunfeiOrdersStore.queryBy(function (rcd, id){
+														return rcd.get("priovice") == province.getValue() && e.record.get("channel") == rcd.get("channel"); 
+													});
+													var delivery = queried.get(0);
+													var amount = e.record.get("amount");
+													var fee = 0;
+													if (order_delivery.getValue() == "顺丰速运"){
+														fee = 0;
+													} else {
+														if (amount > 1){
+															fee = delivery.get("firstfreight") * 1 + (amount - 1) * delivery.get("lastfreight");
+														} else {
+															fee = delivery.get("firstfreight") * amount;
+														}
+													}
+													e.record.set("deliveryFee", fee);
+								    			}
+						    		    	}
+						    		    }
+							    	});
 						    	}
 						    }
 						});
@@ -846,7 +884,9 @@ var shoppingCart = function(tabId, tabText){
 			{ text: '数量', dataIndex: 'amount', editor: {
                 xtype: 'numberfield',
                 allowBlank: false
-            }, flex: 1 },
+            }, convert: function (v, record) {
+				
+			 }, flex: 1 },
             { text: '添加时间', dataIndex: 'time', flex: 2 }
 		],
 		selModel: Ext.create('Ext.selection.CheckboxModel',{mode: "SIMPLE"}),
@@ -868,21 +908,59 @@ var shoppingCart = function(tabId, tabText){
 	    		var p = {};
 	    		p[field] = e.value;
 	    		p["cartItem.cartItemId"] = e.record.getData().cartItemId;
-	    	    Ext.Ajax.request({
-	    			url : 'updateCartItem.action',
-	    			params : p,
-	    			success : function() {
-	    				//selfAddrStore.reload();
+	    		var record = e.record;
+	    		var novid = record.get("novid");
+				var size = record.get("size");
+				var channel = record.get("channel");
+				var singleProdStore = Ext.create('Ext.data.Store', {
+	    			autoLoad: true,
+	    			fields:['subjectId', 'novid', 'brand', 'sizeone', 'sizetwo', 'largeclass', 'styles', 'categoryId', 'color', 'object', 
+	    			        'subjectName', 'tagprice', 'discount', 'seasons', 'series', 'sex', 'year', 'remarks', 'province', 'channel', 'newNovid', 'monthl', 'numbers', 'total'],
+	    			proxy: {
+	    				type: 'ajax',
+	    				url: 'findExact.action',
+	    				extraParams: {
+		    				"commodity.sizeone": size,
+		    				"commodity.novid": novid,
+		    				"commodity.channel": channel
+	    		        },
+	    				reader: {
+	    					type: 'json',
+	    					root: 'root',
+	    					totalProperty: 'totalProperty'
+	    				}
 	    			},
-	    			failure : function() {
-	    				Ext.Msg.show({
-	    					title : '提示',
-	    					msg : '更新时发生错误!',
-	    					buttons : Ext.Msg.OK,
-	    					icon : Ext.Msg.ERROR
-	    				});
-	    			}
-	    		});
+	    		    listeners : {
+	    		    	load: function(){ 
+	    		    		if (singleProdStore.getCount() == 0){
+	    		    			Ext.Msg.alert("错误提示", "找不到商品信息!");
+	    		    			return;
+			        		}
+	    		    		var numbers = singleProdStore.getAt(0).get('numbers');
+	    		    		// alert(novid + " " + size + " " + channel + " " + v + " " + numbers);
+			    			if (e.value > numbers) {
+			    				Ext.Msg.alert("提示", "库存不够");
+			    				e.record.set("amount", e.originalValue);
+			    			} else {
+			    				Ext.Ajax.request({
+			    	    			url : 'updateCartItem.action',
+			    	    			params : p,
+			    	    			success : function() {
+			    	    				//selfAddrStore.reload();
+			    	    			},
+			    	    			failure : function() {
+			    	    				Ext.Msg.show({
+			    	    					title : '提示',
+			    	    					msg : '更新时发生错误!',
+			    	    					buttons : Ext.Msg.OK,
+			    	    					icon : Ext.Msg.ERROR
+			    	    				});
+			    	    			}
+			    	    		});
+			    			}
+	    		    	}
+	    		    }
+		    	});
 	    	}
 	    }
 	});

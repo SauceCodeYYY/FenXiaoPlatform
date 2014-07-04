@@ -6,31 +6,31 @@
 <struts>
 	<include file="struts-default.xml" />
 
-	<package name="my-default" extends="json-default">
+	<!-- <package name="my-default" extends="json-default">
 		<interceptors>
-			<!-- 定义权限控制拦截器 -->
+			定义权限控制拦截器
 			<interceptor name="loginInteceptor"
 				class="com.lhq.prj.bms.interceptor.LoginInterceptor">
 				<param name="excludeMethods">login,regist</param>
 			</interceptor>
-			<!-- 定义一个包含权限控制的拦截器栈 -->
+			定义一个包含权限控制的拦截器栈
 			<interceptor-stack name="mydefault">
 				<interceptor-ref name="loginInteceptor" />
 				<interceptor-ref name="defaultStack" />
 			</interceptor-stack>
 		</interceptors>
-		<!-- 定义默认拦截器 -->
+		定义默认拦截器
 		<default-interceptor-ref name="mydefault" />
-		<!-- 定义全局处理结果 -->
+		定义全局处理结果
 		<global-results>
-			<!-- 逻辑名为login的结果，映射到/index.jsp页面 -->
+			逻辑名为login的结果，映射到/index.jsp页面
 			<result name="login">/index.jsp</result>
 			<result name="error">/index.jsp</result>
 		</global-results>
-	</package>
+	</package> -->
 
 
-	<package name="json" extends="my-default">
+	<package name="json" extends="json-default">
 		<!-- 商品管理 -->
 		<action name="saveCommodity" class="commodityAction" method="saveCommodity">
 			<!-- <interceptor-ref name="loginInteceptor"></interceptor-ref> -->

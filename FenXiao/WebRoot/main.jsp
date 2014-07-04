@@ -32,7 +32,7 @@
 <script type="text/javascript" src="js/manageCenter.js"></script>
 <script type="text/javascript"><!--
 	// var currentUser = '当前用户:<s:property value="#session.user.userName"/>';
-	var nav = '<s:property value="tip"/>';
+	var nav = '<s:property value="#session.tip"/>';
 	if(nav == '' || nav.length <= 0){
 		location = 'index.jsp';
 	}

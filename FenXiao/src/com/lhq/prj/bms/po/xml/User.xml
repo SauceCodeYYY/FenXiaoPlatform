@@ -142,7 +142,7 @@
 	<select id="login" parameterClass="user" resultClass="user">
 		<![CDATA[
 			SELECT * FROM t_user 
-					WHERE userName = #userName:VARCHAR# and password = #password:VARCHAR#
+					WHERE userName = #userName:VARCHAR#
 		]]>
 	</select>
 	

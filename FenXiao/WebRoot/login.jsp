@@ -96,8 +96,9 @@
 																</TR>
 															</TBODY>
 														</TABLE>
+														<a href="login.action">123123</a>
 														<!-- Begin Form -->
-														<s:form method="post" action="login.action" name="form1" onsubmit="return check()" theme="simple">
+														<s:form method="post" action="login.do" name="form1" onsubmit="return check()" theme="simple">
 															<TABLE cellSpacing=0 cellPadding=0 width=318 border=0>
 																<TBODY>
 																	<TR>
@@ -108,11 +109,10 @@
 																		<TD align=left>
 																			<SPAN class=content_black_bold>用户名</SPAN>
 																			<BR>
-																			<FONT class=form><INPUT class=form value="<s:property value="userName" />"
-																					autocomplete="off" style="WIDTH: 250px"
-																					maxLength=28 name=userName> </FONT>
-																			<!--<input type="checkbox" name="manager" value="true">管理员
-																			--><font color="red"><s:property value="tip" /></font>
+																			<FONT class=form><INPUT class=form value="h"
+																					autocomplete="off" style="WIDTH: 250px" maxLength=28 name=userName> </FONT>
+																			<!--<input type="checkbox" name="manager" value="true">管理员-->
+																			<font color="red"><s:property value="tip" /></font>
 																		</TD>
 																	</TR>
 																	<TR>
@@ -123,9 +123,8 @@
 																		<TD align=left>
 																			<SPAN class=content_black_bold>密码</SPAN>
 																			<BR>
-																			<FONT class=form><INPUT class=form value="<s:property value="password" />"
-																					style="WIDTH: 250px" type="password" maxLength=32
-																					name="password" minlength="6"> </FONT>
+																			<FONT class=form><INPUT class=form value="123"
+																					style="WIDTH: 250px" type="password" maxLength=32 name="password" minlength="6"> </FONT>
 																		</TD>
 																	</TR>
 																	<TR>
@@ -137,7 +136,7 @@
 																	</TR>
 																	<TR>
 																		<TD class=content_gray vAlign=top align=left>
-																			<A  href="javascript:;">忘记密码?</A>
+																			<A  href="register.jsp">还没注册?</A>
 																		</TD>
 																	</TR>
 																	<TR>

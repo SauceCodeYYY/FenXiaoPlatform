@@ -40,9 +40,9 @@
 	}
 </script>
 <body>
-<s:form action="register.do" method="post">
-	<s:textfield name="userName" label="用户名"></s:textfield>
-	<s:password name="password" label="密码"></s:password>
+<s:form action="login.do" method="post">
+	<s:textfield name="userName" label="用户名" value="h"></s:textfield>
+	<s:password name="password" label="密码" value="123"></s:password>
 	<s:submit value="注册"></s:submit>
 </s:form>
 </body>	

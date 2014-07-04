@@ -7,25 +7,8 @@
 	{"id": 6, "content": "公告6"},
 	{"id": 7, "content": "公告1"},
 	{"id": 8, "content": "公告1"},
-	{"id": 9, "content": "公告2"},
-	{"id": 10, "content": "公告3"},
-	{"id": 11, "content": "公告4"},
-	{"id": 12, "content": "公告5"},
-	{"id": 13, "content": "公告6"},
-	{"id": 14, "content": "公告1"},
-	{"id": 15, "content": "公告1"},
-	{"id": 16, "content": "公告2"},
-	{"id": 17, "content": "公告3"},
-	{"id": 18, "content": "公告1"},
-	{"id": 19, "content": "公告2"},
-	{"id": 20, "content": "公告3"},
-	{"id": 21, "content": "公告4"},
-	{"id": 22, "content": "公告5"},
-	{"id": 23, "content": "公告6"},
-	{"id": 24, "content": "公告1"},
-	{"id": 25, "content": "公告1"},
-	{"id": 26, "content": "公告2"},
-	{"id": 27, "content": "公告3"}
+	{"id": 9, "content": "公告2"}
+	
 ],
 "total": 27
 }
